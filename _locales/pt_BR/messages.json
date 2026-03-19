@@ -54,10 +54,13 @@
     "message": "Ative para esconder o preço e mostrar apenas o tempo necessário para comprar o produto."
   },
   "enableExternalSitesLabel": {
-    "message": "Ativar em sites externos"
+    "message": "Sites externos"
   },
   "enableExternalSitesHint": {
-    "message": "Marque para permitir a extensão em páginas que não batem com a heurística interna de sites suportados."
+    "message": "WIP — recurso ainda não disponível."
+  },
+  "enableExternalSitesWip": {
+    "message": "WIP"
   },
   "siteBlockTitle": {
     "message": "Desativar sites manualmente"

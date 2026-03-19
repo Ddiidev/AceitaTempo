@@ -54,10 +54,13 @@
     "message": "Turn it on to hide the price and show only the time needed to buy the product."
   },
   "enableExternalSitesLabel": {
-    "message": "Enable on external sites"
+    "message": "External sites"
   },
   "enableExternalSitesHint": {
-    "message": "Turn this on to allow the extension on pages that do not match the internal site heuristic."
+    "message": "WIP — feature not available yet."
+  },
+  "enableExternalSitesWip": {
+    "message": "WIP"
   },
   "siteBlockTitle": {
     "message": "Disable sites manually"

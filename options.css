@@ -117,6 +117,21 @@ p {
   color: var(--text);
 }
 
+.wip-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(217, 119, 6, 0.14);
+  color: #9a3412;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
 .toggle-desc {
   color: var(--muted);
   font-size: 13px;
@@ -129,6 +144,11 @@ p {
   align-items: center;
   flex: none;
   cursor: pointer;
+}
+
+.switch:has(input:disabled) {
+  cursor: not-allowed;
+  opacity: 0.55;
 }
 
 .switch input {
