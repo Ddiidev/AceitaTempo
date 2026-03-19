@@ -1,4 +1,3 @@
-import fs from 'fs';
 import fsp from 'fs/promises';
 import path from 'path';
 import { spawnSync } from 'child_process';
@@ -8,7 +7,7 @@ const DIST_DIR = path.join(ROOT, 'dist');
 const STAGING_DIR = path.join(DIST_DIR, 'aceita-tempo');
 const ZIP_PATH = path.join(DIST_DIR, 'aceita-tempo.zip');
 
-const FILES = [
+const INCLUDE = [
   'manifest.json',
   'background.js',
   'options.html',
@@ -17,40 +16,35 @@ const FILES = [
   'popup.html',
   'popup.css',
   'popup.js',
+  'src/content.js',
   'src/price-utils.js',
   'src/site-config.js',
-  'src/content.js',
-  'icons',
-  '_locales',
+  'icons/icon-16.png',
+  'icons/icon-32.png',
+  'icons/icon-48.png',
+  'icons/icon-128.png',
+  '_locales/en/messages.json',
+  '_locales/pt_BR/messages.json',
 ];
-
-async function copyEntry(source, destination) {
-  const stat = await fsp.stat(source);
-  if (stat.isDirectory()) {
-    await fsp.mkdir(destination, { recursive: true });
-    for (const entry of await fsp.readdir(source)) {
-      await copyEntry(path.join(source, entry), path.join(destination, entry));
-    }
-    return;
-  }
-
-  await fsp.mkdir(path.dirname(destination), { recursive: true });
-  await fsp.copyFile(source, destination);
-}
 
 async function cleanDir(target) {
   await fsp.rm(target, { recursive: true, force: true });
   await fsp.mkdir(target, { recursive: true });
 }
 
+async function copyTrackedFile(relative) {
+  const source = path.join(ROOT, relative);
+  const destination = path.join(STAGING_DIR, relative);
+  await fsp.mkdir(path.dirname(destination), { recursive: true });
+  await fsp.copyFile(source, destination);
+}
+
 async function main() {
   await cleanDir(STAGING_DIR);
   await fsp.rm(ZIP_PATH, { force: true });
 
-  for (const relative of FILES) {
-    const source = path.join(ROOT, relative);
-    const destination = path.join(STAGING_DIR, relative);
-    await copyEntry(source, destination);
+  for (const relative of INCLUDE) {
+    await copyTrackedFile(relative);
   }
 
   const result = spawnSync('powershell', [

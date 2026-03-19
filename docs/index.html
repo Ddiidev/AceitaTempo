@@ -3,78 +3,146 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AceitaTempo</title>
+    <title>AceitaTempo — Converta preços em horas de trabalho</title>
+    <meta
+      name="description"
+      content="AceitaTempo converte preços em horas de trabalho enquanto você navega em lojas como Amazon, Mercado Livre, Magalu, AliExpress, Steam, GOG e outras."
+    />
     <style>
       :root {
         color-scheme: light;
         --bg: #f8fafc;
         --card: rgba(255, 255, 255, 0.9);
+        --card-strong: #ffffff;
         --text: #0f172a;
         --muted: #475569;
         --line: rgba(15, 23, 42, 0.12);
         --green: #10b981;
         --green-dark: #059669;
+        --shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
       }
 
-      * { box-sizing: border-box; }
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
 
       body {
         margin: 0;
         font-family: Inter, Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
         background:
-          radial-gradient(circle at top, rgba(16, 185, 129, 0.18), transparent 38%),
-          linear-gradient(180deg, #f8fafc 0%, #edf7f4 100%);
+          radial-gradient(circle at top, rgba(16, 185, 129, 0.18), transparent 34%),
+          linear-gradient(180deg, #f8fafc 0%, #eef8f4 100%);
         color: var(--text);
       }
 
-      main {
-        max-width: 980px;
-        margin: 0 auto;
-        padding: 40px 24px 64px;
+      a {
+        color: inherit;
       }
 
-      .hero {
-        display: grid;
-        gap: 24px;
-        padding: 28px;
-        border: 1px solid var(--line);
-        border-radius: 24px;
-        background: var(--card);
-        box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
+      .container {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .shell {
+        padding: 28px 0 56px;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 20px;
       }
 
       .brand {
         display: flex;
         align-items: center;
-        gap: 18px;
-        flex-wrap: wrap;
+        gap: 14px;
       }
 
       .brand img {
-        width: 120px;
+        width: 84px;
         height: auto;
+      }
+
+      .brand strong {
+        display: block;
+        font-size: 18px;
+        line-height: 1.1;
+      }
+
+      .brand span {
+        display: block;
+        color: var(--muted);
+        font-size: 14px;
+        margin-top: 2px;
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .nav a {
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--muted);
+        padding: 9px 12px;
+        border-radius: 999px;
+      }
+
+      .nav a:hover {
+        background: rgba(16, 185, 129, 0.08);
+        color: var(--text);
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+        gap: 20px;
+        padding: 28px;
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        background: var(--card);
+        box-shadow: var(--shadow);
+      }
+
+      .hero-copy {
+        display: grid;
+        gap: 18px;
+        align-content: start;
       }
 
       .eyebrow {
         margin: 0;
         text-transform: uppercase;
-        letter-spacing: 0.14em;
+        letter-spacing: 0.16em;
         font-size: 12px;
-        font-weight: 700;
+        font-weight: 800;
         color: var(--green-dark);
       }
 
       h1 {
         margin: 0;
-        font-size: clamp(36px, 6vw, 60px);
-        line-height: 1;
+        font-size: clamp(38px, 5.8vw, 66px);
+        line-height: 0.96;
+        letter-spacing: -0.04em;
       }
 
       .lead {
         margin: 0;
         max-width: 62ch;
         font-size: 18px;
-        line-height: 1.6;
+        line-height: 1.7;
         color: var(--muted);
       }
 
@@ -88,7 +156,7 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 12px 18px;
+        padding: 13px 18px;
         border-radius: 999px;
         font-weight: 700;
         text-decoration: none;
@@ -111,89 +179,443 @@
         border: 1px solid var(--line);
       }
 
-      .cards {
+      .hero-panel {
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 16px;
-        margin-top: 24px;
+        gap: 14px;
+        padding: 18px;
+        border-radius: 22px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.96));
+        border: 1px solid var(--line);
       }
 
-      .card {
+      .panel-card {
+        padding: 16px;
+        border-radius: 18px;
+        background: var(--card-strong);
+        border: 1px solid rgba(16, 185, 129, 0.18);
+      }
+
+      .panel-title {
+        margin: 0 0 10px;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--green-dark);
+        font-weight: 800;
+      }
+
+      .price-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 10px;
+      }
+
+      .price {
+        font-size: 40px;
+        line-height: 1;
+        font-weight: 800;
+        letter-spacing: -0.05em;
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 7px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(15, 23, 42, 0.18);
+        background: rgba(15, 23, 42, 0.05);
+        color: #1f2937;
+        font-size: 14px;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .panel-note {
+        margin: 10px 0 0;
+        color: var(--muted);
+        line-height: 1.6;
+        font-size: 14px;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 18px;
+      }
+
+      .stat {
+        padding: 16px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.82);
+        border: 1px solid var(--line);
+      }
+
+      .stat strong {
+        display: block;
+        font-size: 26px;
+        line-height: 1;
+        margin-bottom: 6px;
+      }
+
+      .stat span {
+        color: var(--muted);
+        line-height: 1.5;
+        font-size: 14px;
+      }
+
+      .section {
+        margin-top: 20px;
+        padding: 24px;
+        border-radius: 24px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.76);
+        box-shadow: 0 12px 32px rgba(15, 23, 42, 0.04);
+      }
+
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+        align-items: end;
+        margin-bottom: 16px;
+      }
+
+      .section h2 {
+        margin: 0;
+        font-size: clamp(24px, 3vw, 34px);
+        line-height: 1.05;
+      }
+
+      .section p.sub {
+        margin: 0;
+        max-width: 66ch;
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .feature,
+      .step,
+      .store-card {
         padding: 18px;
         border-radius: 20px;
         background: rgba(255, 255, 255, 0.88);
         border: 1px solid var(--line);
       }
 
-      .card h2 {
+      .feature h3,
+      .step h3,
+      .store-card h3 {
         margin: 0 0 8px;
         font-size: 18px;
       }
 
-      .card p {
+      .feature p,
+      .step p,
+      .store-card p {
         margin: 0;
         color: var(--muted);
-        line-height: 1.55;
+        line-height: 1.6;
+      }
+
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .step-index {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 999px;
+        margin-bottom: 12px;
+        background: rgba(16, 185, 129, 0.12);
+        color: var(--green-dark);
+        font-weight: 800;
+      }
+
+      .stores {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .store {
+        padding: 10px 14px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.86);
+        color: var(--text);
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
+      .privacy {
+        display: grid;
+        gap: 12px;
+      }
+
+      .privacy ul {
+        margin: 0;
+        padding-left: 20px;
+        color: var(--muted);
+        line-height: 1.7;
       }
 
       .footer {
-        margin-top: 24px;
+        margin-top: 20px;
+        padding: 14px 0 0;
         color: var(--muted);
         font-size: 14px;
+        line-height: 1.6;
       }
 
-      @media (max-width: 760px) {
-        .cards {
+      @media (max-width: 920px) {
+        .hero,
+        .grid-2,
+        .feature-grid,
+        .steps,
+        .stats {
           grid-template-columns: 1fr;
         }
 
-        .hero {
-          padding: 22px;
+        .topbar {
+          align-items: start;
+          flex-direction: column;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .shell {
+          padding-top: 18px;
+        }
+
+        .hero,
+        .section {
+          padding: 20px;
+          border-radius: 22px;
+        }
+
+        .lead {
+          font-size: 17px;
+        }
+
+        .price {
+          font-size: 34px;
         }
       }
     </style>
   </head>
   <body>
-    <main>
-      <section class="hero">
-        <div class="brand">
-          <img src="assets/logo.svg" alt="AceitaTempo" />
-        </div>
+    <main class="shell">
+      <div class="container">
+        <header class="topbar">
+          <div class="brand" aria-label="AceitaTempo">
+            <img src="./assets/logo.svg" alt="Logo do AceitaTempo" />
+            <div>
+              <strong>AceitaTempo</strong>
+              <span>Converta preços em horas de trabalho</span>
+            </div>
+          </div>
 
-        <div>
-          <p class="eyebrow">Extensão Chrome</p>
-          <h1>Converta preços em horas de trabalho.</h1>
-          <p class="lead">
-            AceitaTempo mostra quanto do seu tempo custa um valor enquanto você navega em grandes lojas.
-            A extensão calcula o valor da hora com base no seu salário e horas mensais e exibe o resultado
-            ao lado do preço.
-          </p>
-        </div>
+          <nav class="nav" aria-label="Navegação">
+            <a href="#como-funciona">Como funciona</a>
+            <a href="#recursos">Recursos</a>
+            <a href="#privacidade">Privacidade</a>
+            <a href="./support.html">Suporte</a>
+          </nav>
+        </header>
 
-        <div class="actions">
-          <a class="button primary" href="./privacy-policy.html">Política de privacidade</a>
-          <a class="button secondary" href="./support.html">Suporte</a>
-        </div>
-      </section>
+        <section class="hero" aria-labelledby="hero-title">
+          <div class="hero-copy">
+            <p class="eyebrow">Extensão Chrome</p>
+            <h1 id="hero-title">Veja quanto do seu tempo custa cada preço.</h1>
+            <p class="lead">
+              O AceitaTempo converte valores em horas de trabalho enquanto você navega,
+              mantendo a leitura rápida e discreta em páginas de produto, listagens e carrinho/checkout.
+            </p>
 
-      <section class="cards" aria-label="Resumo">
-        <article class="card">
-          <h2>Leitura rápida</h2>
-          <p>Mostra um badge curto com o tempo estimado ao lado do preço em vez de mudar sua navegação.</p>
-        </article>
-        <article class="card">
-          <h2>Controle fino</h2>
-          <p>Você pode desligar a extensão em sites externos ou desativar lojas específicas manualmente.</p>
-        </article>
-        <article class="card">
-          <h2>Privacidade</h2>
-          <p>As preferências ficam no navegador e a extensão consulta apenas a taxa USD/BRL configurada.</p>
-        </article>
-      </section>
+            <div class="actions">
+              <a class="button primary" href="./privacy-policy.html">Política de privacidade</a>
+              <a class="button secondary" href="./support.html">Página de suporte</a>
+            </div>
 
-      <p class="footer">
-        Página oficial para publicação da extensão AceitaTempo no Chrome Web Store.
-      </p>
+            <div class="stats" aria-label="Resumo rápido">
+              <div class="stat">
+                <strong>+20</strong>
+                <span>lojas e marketplaces com cobertura dedicada e heurísticas específicas.</span>
+              </div>
+              <div class="stat">
+                <strong>2 modos</strong>
+                <span>badge ao lado do preço ou substituição completa pelo tempo estimado.</span>
+              </div>
+              <div class="stat">
+                <strong>Local</strong>
+                <span>preferências salvas no navegador, sem backend próprio para seus dados.</span>
+              </div>
+            </div>
+          </div>
+
+          <aside class="hero-panel" aria-label="Prévia visual">
+            <div class="panel-card">
+              <p class="panel-title">Exemplo de leitura</p>
+              <div class="price-row">
+                <div class="price">R$ 249</div>
+                <div class="chip">~5h 40m</div>
+              </div>
+              <p class="panel-note">
+                Em vez de pensar só no valor, você vê imediatamente o tempo de trabalho necessário.
+              </p>
+            </div>
+
+            <div class="panel-card">
+              <p class="panel-title">Compatível com</p>
+              <div class="stores" aria-label="Lojas suportadas">
+                <span class="store">Amazon</span>
+                <span class="store">Mercado Livre</span>
+                <span class="store">Magalu</span>
+                <span class="store">AliExpress</span>
+                <span class="store">Shopee</span>
+                <span class="store">Steam</span>
+                <span class="store">GOG</span>
+                <span class="store">Epic Games</span>
+              </div>
+            </div>
+          </aside>
+        </section>
+
+        <section class="section" id="recursos">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Recursos</p>
+              <h2>Simples de usar, fácil de entender e sem ruído visual.</h2>
+            </div>
+            <p class="sub">
+              O layout foi pensado para ficar bonito no GitHub Pages e refletir a mesma identidade visual
+              da extensão.
+            </p>
+          </div>
+
+          <div class="feature-grid">
+            <article class="feature">
+              <h3>Badges compactos</h3>
+              <p>Mostram o tempo de trabalho sem tomar o lugar do preço e sem quebrar o card.</p>
+            </article>
+            <article class="feature">
+              <h3>Controle por site</h3>
+              <p>Você pode bloquear a extensão em sites externos ou desativar lojas específicas manualmente.</p>
+            </article>
+            <article class="feature">
+              <h3>Privacidade por padrão</h3>
+              <p>As preferências ficam no navegador e a extensão consulta só o necessário para calcular os tempos.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="como-funciona">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Como funciona</p>
+              <h2>Três passos para transformar preço em tempo.</h2>
+            </div>
+            <p class="sub">
+              Você configura seu salário mensal e horas trabalhadas por mês, e a extensão faz o resto.
+            </p>
+          </div>
+
+          <div class="steps">
+            <article class="step">
+              <span class="step-index">1</span>
+              <h3>Defina seu perfil</h3>
+              <p>Informe salário, moeda e horas mensais para calcular seu valor-hora.</p>
+            </article>
+            <article class="step">
+              <span class="step-index">2</span>
+              <h3>Navegue normalmente</h3>
+              <p>Abra lojas e páginas de produto. A extensão identifica os preços suportados.</p>
+            </article>
+            <article class="step">
+              <span class="step-index">3</span>
+              <h3>Leia o tempo</h3>
+              <p>Os preços ganham um badge discreto com a quantidade de horas ou minutos equivalentes.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Visual</p>
+              <h2>Mesmo estilo da extensão, com fundo claro e detalhes em verde.</h2>
+            </div>
+            <p class="sub">
+              A página foi desenhada para parecer parte do mesmo produto, sem depender de scripts nem frameworks.
+            </p>
+          </div>
+
+          <div class="grid-2">
+            <article class="store-card">
+              <h3>Identidade consistente</h3>
+              <p>
+                Gradientes leves, cartões arredondados e sombras suaves para manter a leitura confortável
+                e a marca reconhecível.
+              </p>
+            </article>
+            <article class="store-card">
+              <h3>Publicação pronta para GitHub Pages</h3>
+              <p>
+                Basta apontar o repositório para a pasta <code>docs/</code> e publicar a landing page,
+                a política de privacidade e o suporte.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="privacidade">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Privacidade</p>
+              <h2>Transparente sobre dados e comportamento.</h2>
+            </div>
+            <p class="sub">
+              A landing page aponta para a política oficial e para o canal de suporte da extensão.
+            </p>
+          </div>
+
+          <div class="privacy">
+            <ul>
+              <li>As preferências do usuário ficam salvas no navegador via <code>chrome.storage</code>.</li>
+              <li>A extensão lê páginas para identificar preços e calcular o tempo de trabalho correspondente.</li>
+              <li>Não existe backend próprio para coleta ou compartilhamento comercial de dados.</li>
+              <li>O layout desta página é estático e compatível com GitHub Pages.</li>
+            </ul>
+          </div>
+        </section>
+
+        <p class="footer">
+          AceitaTempo — extensão Chrome para converter preços em horas de trabalho.
+          <a href="./privacy-policy.html">Privacidade</a> · <a href="./support.html">Suporte</a>
+        </p>
+      </div>
     </main>
   </body>
 </html>

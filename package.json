@@ -4,6 +4,7 @@
   "scripts": {
     "build:branding": "node scripts/generate-branding-assets.mjs",
     "build:store-assets": "node scripts/generate-store-assets.mjs",
+    "normalize:store-screenshots": "node scripts/normalize-store-screenshots.mjs",
     "build:assets": "npm run build:branding && npm run build:store-assets",
     "package:zip": "node scripts/package-extension.mjs",
     "smoke:aliexpress": "node tests/run-aliexpress-fixture.js",
