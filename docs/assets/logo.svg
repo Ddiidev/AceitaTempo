@@ -47,13 +47,14 @@
   </text>
   <text
     x="264"
-    y="172"
-    fill="#475569"
+    y="188"
+    fill="#334155"
     font-family="Inter, Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
-    font-size="28"
-    font-weight="600"
+    font-size="48"
+    font-weight="700"
     letter-spacing="0"
   >
     Converta preços em horas de trabalho
   </text>
 </svg>
+

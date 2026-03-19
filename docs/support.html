@@ -4,147 +4,343 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>AceitaTempo — Suporte</title>
+    <meta
+      name="description"
+      content="Página de suporte do AceitaTempo com orientações para reportar bugs, sites sem cobertura e dúvidas sobre configuração."
+    />
+    <meta name="theme-color" content="#f4efe7" />
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
     <style>
       :root {
         color-scheme: light;
-        --card: #ffffff;
-        --text: #0f172a;
-        --muted: #475569;
-        --line: rgba(15, 23, 42, 0.12);
-        --green: #10b981;
+        --bg: #f4efe7;
+        --bg-soft: #f7f2ec;
+        --text: #1e1a17;
+        --muted: #6b625a;
+        --accent: #0f766e;
+        --accent-strong: #115e59;
+        --line: rgba(30, 26, 23, 0.12);
+        --panel: rgba(255, 255, 255, 0.82);
+        --panel-strong: rgba(255, 255, 255, 0.94);
+        --shadow: 0 24px 70px rgba(53, 38, 25, 0.12);
+        --shadow-soft: 0 16px 34px rgba(53, 38, 25, 0.08);
+        --radius-xl: 32px;
+        --radius-lg: 24px;
       }
 
       * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
       body {
         margin: 0;
-        font-family: Inter, Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-        background: linear-gradient(180deg, #f8fafc, #edf7f4);
+        font-family: Aptos, "Segoe UI Variable Display", "Trebuchet MS", sans-serif;
         color: var(--text);
+        background:
+          radial-gradient(circle at top left, rgba(15, 118, 110, 0.14), transparent 28%),
+          radial-gradient(circle at top right, rgba(217, 119, 6, 0.12), transparent 30%),
+          linear-gradient(180deg, var(--bg-soft) 0%, var(--bg) 58%, #f1ebe2 100%);
       }
-      main {
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 40px 24px 64px;
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(30, 26, 23, 0.02) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(30, 26, 23, 0.02) 1px, transparent 1px);
+        background-size: 28px 28px;
+        mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.28), transparent 72%);
       }
-      .panel {
-        padding: 28px;
-        border: 1px solid var(--line);
-        border-radius: 24px;
-        background: var(--card);
-        box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
-      }
-      header {
+      a { color: inherit; }
+      .container { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+      .page { padding: 18px 0 64px; }
+      .topbar-shell { position: sticky; top: 16px; z-index: 20; margin-bottom: 24px; }
+      .topbar {
         display: flex;
         align-items: center;
+        justify-content: space-between;
         gap: 18px;
-        flex-wrap: wrap;
-        margin-bottom: 24px;
+        padding: 14px 18px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.74);
+        box-shadow: var(--shadow-soft);
+        backdrop-filter: blur(18px);
       }
-      header img {
-        width: 120px;
-        height: auto;
-      }
-      .eyebrow {
-        margin: 0;
-        text-transform: uppercase;
-        letter-spacing: 0.14em;
-        font-size: 12px;
-        font-weight: 700;
-        color: var(--green);
-      }
-      h1 {
-        margin: 0;
-        font-size: clamp(32px, 5vw, 48px);
-        line-height: 1.05;
-      }
-      p, li {
+      .brand { display: flex; align-items: center; text-decoration: none; }
+      .brand img { width: 220px; height: auto; }
+      .nav { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+      .nav a {
+        text-decoration: none;
         color: var(--muted);
-        line-height: 1.7;
+        font-size: 14px;
+        font-weight: 700;
+        padding: 10px 14px;
+        border-radius: 999px;
+        transition: color 180ms ease, background 180ms ease, transform 180ms ease;
       }
-      h2 {
-        margin: 28px 0 12px;
-        font-size: 22px;
+      .nav a:hover,
+      .nav a:focus-visible,
+      .nav a[aria-current="page"] {
+        background: rgba(15, 118, 110, 0.1);
+        color: var(--text);
+        transform: translateY(-1px);
+        outline: none;
       }
-      ul {
-        padding-left: 20px;
+      .surface {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-xl);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.65));
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(20px);
+      }
+      .surface::after {
+        content: "";
+        position: absolute;
+        inset: auto -8% -36% auto;
+        width: 320px;
+        height: 320px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(15, 118, 110, 0.12), transparent 70%);
+        pointer-events: none;
+      }
+      .hero,
+      .section { padding: 32px; }
+      .eyebrow {
+        margin: 0 0 10px;
+        color: var(--accent);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+      h1, h2, h3 {
         margin: 0;
+        font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+        letter-spacing: -0.04em;
       }
-      .faq {
+      h1 { font-size: clamp(2.8rem, 6vw, 5rem); line-height: 0.95; max-width: 11ch; }
+      h2 { font-size: clamp(2rem, 4vw, 3.1rem); line-height: 0.98; }
+      h3 { font-size: 1.45rem; line-height: 1.05; }
+      .lead,
+      .sub,
+      p,
+      li {
+        color: var(--muted);
+        line-height: 1.75;
+        font-size: 17px;
+      }
+      .hero .lead { max-width: 62ch; margin: 18px 0 0; }
+      .hero-actions,
+      .link-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 22px;
+      }
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 52px;
+        padding: 0 20px;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        font-weight: 800;
+        text-decoration: none;
+        transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, color 180ms ease;
+      }
+      .button:hover,
+      .button:focus-visible { transform: translateY(-1px); outline: none; }
+      .button.primary { color: #fff; background: linear-gradient(135deg, var(--accent), var(--accent-strong)); box-shadow: 0 14px 30px rgba(15, 118, 110, 0.22); }
+      .button.secondary { background: rgba(255, 255, 255, 0.64); color: var(--text); border-color: var(--line); }
+      .grid-3,
+      .faq-grid,
+      .links-grid {
         display: grid;
         gap: 16px;
       }
-      .qa {
-        padding: 16px 18px;
+      .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 24px; }
+      .faq-grid,
+      .links-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .section { margin-top: 22px; }
+      .section-head { display: flex; justify-content: space-between; align-items: end; gap: 18px; flex-wrap: wrap; margin-bottom: 22px; }
+      .section-head .sub { max-width: 62ch; margin: 0; }
+      .card {
+        position: relative;
+        z-index: 1;
+        padding: 22px;
         border: 1px solid var(--line);
-        border-radius: 18px;
-        background: rgba(15, 23, 42, 0.02);
+        border-radius: var(--radius-lg);
+        background: var(--panel-strong);
+        box-shadow: var(--shadow-soft);
       }
-      .qa h3 {
-        margin: 0 0 8px;
-        font-size: 18px;
+      .card p { margin: 10px 0 0; font-size: 15px; }
+      .card ul { margin: 12px 0 0; padding-left: 18px; }
+      .icon {
+        width: 30px;
+        height: 30px;
+        color: var(--accent-strong);
+        margin-bottom: 18px;
       }
-      .links a {
-        color: #0f766e;
-      }
+      .link-list a,
+      .card a { color: var(--accent-strong); font-weight: 700; }
       .meta {
-        margin-top: 28px;
-        padding-top: 16px;
-        border-top: 1px solid var(--line);
+        margin-top: 18px;
+        padding: 18px 22px;
+        border: 1px solid rgba(15, 118, 110, 0.18);
+        border-radius: var(--radius-lg);
+        background: linear-gradient(135deg, rgba(15, 118, 110, 0.1), rgba(217, 119, 6, 0.08));
+        color: var(--muted);
+      }
+      .footer {
+        margin-top: 22px;
+        padding: 0 4px;
+        color: var(--muted);
         font-size: 14px;
+        line-height: 1.7;
+      }
+      .footer a { font-weight: 700; }
+      @media (max-width: 920px) {
+        .grid-3,
+        .faq-grid,
+        .links-grid { grid-template-columns: 1fr; }
+        .topbar { border-radius: 28px; }
+      }
+      @media (max-width: 720px) {
+        .container { width: min(100% - 20px, 1180px); }
+        .page { padding-top: 14px; }
+        .topbar-shell { top: 10px; margin-bottom: 18px; }
+        .topbar, .nav { justify-content: flex-start; }
+        .topbar { padding: 16px; flex-direction: column; align-items: flex-start; }
+        .brand img { width: 188px; }
+        .hero, .section { padding: 22px; }
+        h1 { font-size: clamp(2.5rem, 13vw, 4rem); max-width: none; }
+        .lead, .sub, p, li { font-size: 16px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+        *, *::before, *::after { animation: none !important; transition: none !important; }
       }
     </style>
   </head>
   <body>
-    <main>
-      <section class="panel">
-        <header>
-          <img src="assets/logo.svg" alt="AceitaTempo" />
-          <div>
-            <p class="eyebrow">Suporte</p>
-            <h1>Precisa de ajuda com o AceitaTempo?</h1>
+    <main class="page">
+      <header class="topbar-shell">
+        <div class="container">
+          <div class="topbar">
+            <a class="brand" href="./index.html" aria-label="AceitaTempo">
+              <img src="./assets/logo.svg" alt="Logo do AceitaTempo" />
+            </a>
+            <nav class="nav" aria-label="Navegação principal">
+              <a href="./index.html">Início</a>
+              <a href="./privacy-policy.html">Privacidade</a>
+              <a href="./support.html" aria-current="page">Suporte</a>
+            </nav>
           </div>
-        </header>
-
-        <p>
-          A forma mais rápida de falar com o projeto é abrir uma issue no GitHub. Se você encontrou um site
-          que não está sendo detectado, envie a URL, um print e, se possível, o HTML do trecho do preço.
-        </p>
-
-        <div class="faq">
-          <article class="qa">
-            <h3>Por que não aparece em um site específico?</h3>
-            <p>
-              Alguns sites têm DOMs dinâmicos ou variações de layout. O recurso pode depender de heurística,
-              então um print do trecho do preço ajuda bastante.
-            </p>
-          </article>
-          <article class="qa">
-            <h3>Como desativo em um site?</h3>
-            <p>
-              Abra as opções, deixe o switch de sites externos do jeito desejado e desmarque o site na lista
-              de desativação manual.
-            </p>
-          </article>
-          <article class="qa">
-            <h3>Onde ficam as configurações?</h3>
-            <p>
-              As preferências ficam salvas no Chrome Storage do navegador. Elas podem sincronizar entre
-              aparelhos, dependendo da configuração da conta Chrome.
-            </p>
-          </article>
         </div>
+      </header>
 
-        <h2>Links úteis</h2>
-        <ul class="links">
-          <li><a href="https://github.com/Ddiidev/AceitaTempo" rel="noreferrer noopener" target="_blank">Repositório no GitHub</a></li>
-          <li><a href="https://github.com/Ddiidev/AceitaTempo/issues" rel="noreferrer noopener" target="_blank">Abrir issue de suporte</a></li>
-          <li><a href="./privacy-policy.html">Política de privacidade</a></li>
-        </ul>
+      <div class="container">
+        <section class="surface hero">
+          <p class="eyebrow">Suporte</p>
+          <h1>Precisa de ajuda com o AceitaTempo?</h1>
+          <p class="lead">
+            Se um site não estiver sendo convertido, se algo parecer quebrado ou se você tiver dúvida sobre configuração,
+            aqui estão os caminhos mais rápidos para resolver.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="https://github.com/Ddiidev/AceitaTempo/issues" rel="noreferrer noopener" target="_blank">Abrir issue no GitHub</a>
+            <a class="button secondary" href="./index.html">Voltar para a página inicial</a>
+          </div>
 
-        <p class="meta">
-          Se o problema for um bug visual, envie também a página exata e a resolução da janela.
+          <div class="grid-3">
+            <article class="card">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M12 4v16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><rect x="3.5" y="3.5" width="17" height="17" rx="4" stroke="currentColor" stroke-width="1.8" /></svg>
+              <h3>Site sem badge?</h3>
+              <p>Envie a URL da página, um print do preço e, se puder, o trecho de HTML correspondente.</p>
+            </article>
+            <article class="card">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 8v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><circle cx="12" cy="16.5" r="1" fill="currentColor" /><path d="M10.29 3.86 1.82 18A2 2 0 0 0 3.53 21h16.94a2 2 0 0 0 1.71-3l-8.47-14.14a2 2 0 0 0-3.42 0Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" /></svg>
+              <h3>Bug visual?</h3>
+              <p>Informe a página exata, o tamanho da janela e o que deveria aparecer para facilitar a reprodução.</p>
+            </article>
+            <article class="card">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M12 17v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M4.93 4.93l2.83 2.83" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M16.24 16.24l2.83 2.83" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M3 12h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M17 12h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M4.93 19.07l2.83-2.83" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M16.24 7.76l2.83-2.83" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8" /></svg>
+              <h3>Dúvida nas opções?</h3>
+              <p>Vale enviar também como seu salário, moeda e horas mensais estão configurados nas opções.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="surface section">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Perguntas frequentes</p>
+              <h2>Os casos mais comuns, sem rodeios.</h2>
+            </div>
+            <p class="sub">Se ainda assim o problema continuar, abra uma issue com o máximo de contexto possível.</p>
+          </div>
+
+          <div class="faq-grid">
+            <article class="card">
+              <h3>Por que não aparece em um site específico?</h3>
+              <p>Alguns sites mudam o layout com frequência ou carregam preços de forma dinâmica. Um print do trecho do preço costuma acelerar bastante a correção.</p>
+            </article>
+            <article class="card">
+              <h3>Como desativo em um site?</h3>
+              <p>Abra as opções da extensão e ajuste o comportamento por site. Se a loja estiver listada, você pode desligá-la manualmente.</p>
+            </article>
+            <article class="card">
+              <h3>Onde ficam as configurações?</h3>
+              <p>As preferências ficam no <code>chrome.storage</code> do navegador. Dependendo da sua conta Chrome, elas podem sincronizar entre dispositivos.</p>
+            </article>
+            <article class="card">
+              <h3>O que enviar em um reporte?</h3>
+              <p>URL, print da página, resolução da janela e uma descrição curta do que deveria acontecer já ajudam muito.</p>
+            </article>
+          </div>
+
+          <div class="meta">
+            Se o problema estiver em um carrinho ou checkout, inclua também o total exibido na página. Isso ajuda a validar se o cálculo foi aplicado no bloco certo.
+          </div>
+        </section>
+
+        <section class="surface section">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Links úteis</p>
+              <h2>Os canais certos para continuar.</h2>
+            </div>
+            <p class="sub">Se for um bug, a issue no GitHub é o caminho mais direto.</p>
+          </div>
+
+          <div class="links-grid">
+            <article class="card">
+              <h3>Projeto</h3>
+              <p><a href="https://github.com/Ddiidev/AceitaTempo" rel="noreferrer noopener" target="_blank">Abrir repositório no GitHub</a></p>
+            </article>
+            <article class="card">
+              <h3>Reporte</h3>
+              <p><a href="https://github.com/Ddiidev/AceitaTempo/issues" rel="noreferrer noopener" target="_blank">Abrir issue de suporte</a></p>
+            </article>
+            <article class="card">
+              <h3>Privacidade</h3>
+              <p><a href="./privacy-policy.html">Ler a política de privacidade</a></p>
+            </article>
+            <article class="card">
+              <h3>Início</h3>
+              <p><a href="./index.html">Voltar para a landing page</a></p>
+            </article>
+          </div>
+        </section>
+
+        <p class="footer">
+          AceitaTempo — extensão Chrome para converter preços em horas de trabalho.
+          <a href="./privacy-policy.html">Privacidade</a> · <a href="./support.html">Suporte</a>
         </p>
-      </section>
+      </div>
     </main>
   </body>
 </html>

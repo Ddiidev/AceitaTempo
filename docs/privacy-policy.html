@@ -4,130 +4,356 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>AceitaTempo — Política de Privacidade</title>
+    <meta
+      name="description"
+      content="Política de privacidade do AceitaTempo com resumo dos dados usados, tratamento local no navegador e consulta opcional de câmbio."
+    />
+    <meta name="theme-color" content="#f4efe7" />
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
     <style>
       :root {
         color-scheme: light;
-        --bg: #f8fafc;
-        --card: #ffffff;
-        --text: #0f172a;
-        --muted: #475569;
-        --line: rgba(15, 23, 42, 0.12);
-        --green: #10b981;
+        --bg: #f4efe7;
+        --bg-soft: #f7f2ec;
+        --text: #1e1a17;
+        --muted: #6b625a;
+        --accent: #0f766e;
+        --accent-strong: #115e59;
+        --line: rgba(30, 26, 23, 0.12);
+        --panel: rgba(255, 255, 255, 0.82);
+        --panel-strong: rgba(255, 255, 255, 0.94);
+        --shadow: 0 24px 70px rgba(53, 38, 25, 0.12);
+        --shadow-soft: 0 16px 34px rgba(53, 38, 25, 0.08);
+        --radius-xl: 32px;
+        --radius-lg: 24px;
       }
 
       * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
       body {
         margin: 0;
-        font-family: Inter, Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-        background: linear-gradient(180deg, #f8fafc, #edf7f4);
+        font-family: Aptos, "Segoe UI Variable Display", "Trebuchet MS", sans-serif;
         color: var(--text);
+        background:
+          radial-gradient(circle at top left, rgba(15, 118, 110, 0.14), transparent 28%),
+          radial-gradient(circle at top right, rgba(217, 119, 6, 0.12), transparent 30%),
+          linear-gradient(180deg, var(--bg-soft) 0%, var(--bg) 58%, #f1ebe2 100%);
       }
-      main {
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 40px 24px 64px;
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(30, 26, 23, 0.02) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(30, 26, 23, 0.02) 1px, transparent 1px);
+        background-size: 28px 28px;
+        mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.28), transparent 72%);
       }
-      .panel {
-        padding: 28px;
-        border: 1px solid var(--line);
-        border-radius: 24px;
-        background: var(--card);
-        box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
-      }
-      header {
+      a { color: inherit; }
+      .container { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+      .page { padding: 18px 0 64px; }
+      .topbar-shell { position: sticky; top: 16px; z-index: 20; margin-bottom: 24px; }
+      .topbar {
         display: flex;
         align-items: center;
+        justify-content: space-between;
         gap: 18px;
-        flex-wrap: wrap;
-        margin-bottom: 24px;
+        padding: 14px 18px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.74);
+        box-shadow: var(--shadow-soft);
+        backdrop-filter: blur(18px);
       }
-      header img {
-        width: 120px;
-        height: auto;
-      }
-      .eyebrow {
-        margin: 0;
-        text-transform: uppercase;
-        letter-spacing: 0.14em;
-        font-size: 12px;
-        font-weight: 700;
-        color: var(--green);
-      }
-      h1 {
-        margin: 0;
-        font-size: clamp(32px, 5vw, 48px);
-        line-height: 1.05;
-      }
-      p, li {
+      .brand { display: flex; align-items: center; text-decoration: none; }
+      .brand img { width: 220px; height: auto; }
+      .nav { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+      .nav a {
+        text-decoration: none;
         color: var(--muted);
+        font-size: 14px;
+        font-weight: 700;
+        padding: 10px 14px;
+        border-radius: 999px;
+        transition: color 180ms ease, background 180ms ease, transform 180ms ease;
+      }
+      .nav a:hover,
+      .nav a:focus-visible,
+      .nav a[aria-current="page"] {
+        background: rgba(15, 118, 110, 0.1);
+        color: var(--text);
+        transform: translateY(-1px);
+        outline: none;
+      }
+      .surface {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-xl);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.65));
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(20px);
+      }
+      .surface::after {
+        content: "";
+        position: absolute;
+        inset: auto -8% -36% auto;
+        width: 320px;
+        height: 320px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(15, 118, 110, 0.12), transparent 70%);
+        pointer-events: none;
+      }
+      .hero,
+      .section { padding: 32px; }
+      .eyebrow {
+        margin: 0 0 10px;
+        color: var(--accent);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+      h1, h2, h3 {
+        margin: 0;
+        font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+        letter-spacing: -0.04em;
+      }
+      h1 { font-size: clamp(2.8rem, 6vw, 5rem); line-height: 0.95; max-width: 12ch; }
+      h2 { font-size: clamp(2rem, 4vw, 3.1rem); line-height: 0.98; }
+      h3 { font-size: 1.4rem; line-height: 1.05; }
+      .lead,
+      .sub,
+      p,
+      li {
+        color: var(--muted);
+        line-height: 1.75;
+        font-size: 17px;
+      }
+      .hero .lead { max-width: 62ch; margin: 18px 0 0; }
+      .facts,
+      .grid-2,
+      .grid-3 {
+        display: grid;
+        gap: 16px;
+      }
+      .facts { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 24px; }
+      .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .section { margin-top: 22px; }
+      .section-head { display: flex; justify-content: space-between; align-items: end; gap: 18px; flex-wrap: wrap; margin-bottom: 22px; }
+      .section-head .sub { max-width: 62ch; margin: 0; }
+      .card {
+        position: relative;
+        z-index: 1;
+        padding: 22px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        background: var(--panel-strong);
+        box-shadow: var(--shadow-soft);
+      }
+      .card p,
+      .card li { margin-top: 10px; font-size: 15px; }
+      .card ul { margin: 12px 0 0; padding-left: 18px; }
+      .fact-value {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: var(--text);
+      }
+      .icon {
+        width: 30px;
+        height: 30px;
+        color: var(--accent-strong);
+        margin-bottom: 18px;
+      }
+      .notice {
+        margin-top: 18px;
+        padding: 18px 22px;
+        border: 1px solid rgba(15, 118, 110, 0.18);
+        border-radius: var(--radius-lg);
+        background: linear-gradient(135deg, rgba(15, 118, 110, 0.1), rgba(217, 119, 6, 0.08));
+      }
+      .notice p { margin: 0; }
+      .footer {
+        margin-top: 22px;
+        padding: 0 4px;
+        color: var(--muted);
+        font-size: 14px;
         line-height: 1.7;
       }
-      h2 {
-        margin: 28px 0 12px;
-        font-size: 22px;
+      .footer a { font-weight: 700; }
+      a.inline { color: var(--accent-strong); font-weight: 700; }
+      @media (max-width: 920px) {
+        .facts,
+        .grid-2,
+        .grid-3 { grid-template-columns: 1fr; }
+        .topbar { border-radius: 28px; }
       }
-      ul {
-        padding-left: 20px;
-        margin: 0;
+      @media (max-width: 720px) {
+        .container { width: min(100% - 20px, 1180px); }
+        .page { padding-top: 14px; }
+        .topbar-shell { top: 10px; margin-bottom: 18px; }
+        .topbar, .nav { justify-content: flex-start; }
+        .topbar { padding: 16px; flex-direction: column; align-items: flex-start; }
+        .brand img { width: 188px; }
+        .hero, .section { padding: 22px; }
+        h1 { font-size: clamp(2.5rem, 13vw, 4rem); max-width: none; }
+        .lead, .sub, p, li { font-size: 16px; }
       }
-      .meta {
-        margin-top: 28px;
-        padding-top: 16px;
-        border-top: 1px solid var(--line);
-        font-size: 14px;
-      }
-      a {
-        color: #0f766e;
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+        *, *::before, *::after { animation: none !important; transition: none !important; }
       }
     </style>
   </head>
   <body>
-    <main>
-      <section class="panel">
-        <header>
-          <img src="assets/logo.svg" alt="AceitaTempo" />
-          <div>
-            <p class="eyebrow">Privacidade</p>
-            <h1>Política de Privacidade do AceitaTempo</h1>
+    <main class="page">
+      <header class="topbar-shell">
+        <div class="container">
+          <div class="topbar">
+            <a class="brand" href="./index.html" aria-label="AceitaTempo">
+              <img src="./assets/logo.svg" alt="Logo do AceitaTempo" />
+            </a>
+            <nav class="nav" aria-label="Navegação principal">
+              <a href="./index.html">Início</a>
+              <a href="./privacy-policy.html" aria-current="page">Privacidade</a>
+              <a href="./support.html">Suporte</a>
+            </nav>
           </div>
-        </header>
+        </div>
+      </header>
 
-        <p>
-          O AceitaTempo foi projetado para processar dados localmente no navegador e exibir o equivalente
-          em horas de trabalho ao lado dos preços visitados pelo usuário.
+      <div class="container">
+        <section class="surface hero">
+          <p class="eyebrow">Privacidade</p>
+          <h1>Política de Privacidade do AceitaTempo</h1>
+          <p class="lead">
+            O AceitaTempo foi projetado para calcular tudo no próprio navegador sempre que possível.
+            Esta página resume quais dados entram no cálculo e como eles são tratados.
+          </p>
+
+          <div class="facts">
+            <article class="card">
+              <span class="fact-value">Local no navegador</span>
+              <p>Salário, horas trabalhadas e preferências ficam salvos no <code>chrome.storage</code>.</p>
+            </article>
+            <article class="card">
+              <span class="fact-value">Sem backend próprio</span>
+              <p>O projeto não mantém servidor para armazenar ou comercializar dados de navegação.</p>
+            </article>
+            <article class="card">
+              <span class="fact-value">Câmbio opcional</span>
+              <p>A consulta externa acontece apenas para taxa USD/BRL quando o modo automático está ativo.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="surface section">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Dados usados</p>
+              <h2>O necessário para calcular o tempo de trabalho.</h2>
+            </div>
+            <p class="sub">Nada além do que for preciso para converter preços e respeitar as preferências definidas por você.</p>
+          </div>
+
+          <div class="grid-2">
+            <article class="card">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M8.5 7.5c0-1.38 1.57-2.5 3.5-2.5s3.5 1.12 3.5 2.5S13.93 10 12 10 8.5 11.12 8.5 12.5 10.07 15 12 15s3.5 1.12 3.5 2.5S13.93 20 12 20s-3.5-1.12-3.5-2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+              <h3>Configurações informadas por você</h3>
+              <ul>
+                <li>Salário mensal</li>
+                <li>Horas trabalhadas por mês</li>
+                <li>Moeda selecionada</li>
+              </ul>
+            </article>
+            <article class="card">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M7 4v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M17 4v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><rect x="4" y="6" width="16" height="14" rx="3" stroke="currentColor" stroke-width="1.8" /></svg>
+              <h3>Preferências de comportamento</h3>
+              <ul>
+                <li>Substituir ou não preços por horas</li>
+                <li>Modo de câmbio automático ou manual</li>
+                <li>Ativação ou desativação por site</li>
+              </ul>
+            </article>
+            <article class="card">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M12 5v14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><rect x="3.5" y="3.5" width="17" height="17" rx="4" stroke="currentColor" stroke-width="1.8" /></svg>
+              <h3>Conteúdo visível da página</h3>
+              <ul>
+                <li>Preços exibidos</li>
+                <li>Totais de carrinho ou checkout</li>
+                <li>Contexto necessário para identificar o bloco correto</li>
+              </ul>
+            </article>
+            <article class="card">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12a8 8 0 1 0 16 0 8 8 0 1 0-16 0" stroke="currentColor" stroke-width="1.8" /><path d="M12 8v4l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              <h3>Taxa USD/BRL</h3>
+              <ul>
+                <li>Consultada apenas no modo automático</li>
+                <li>Fonte atual: <a class="inline" href="https://open.er-api.com/" rel="noreferrer noopener" target="_blank">open.er-api.com</a></li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section class="surface section">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Tratamento dos dados</p>
+              <h2>Como essas informações são usadas.</h2>
+            </div>
+            <p class="sub">O foco da extensão é calcular e exibir o equivalente em horas de trabalho, sem depender de infraestrutura própria.</p>
+          </div>
+
+          <div class="grid-3">
+            <article class="card">
+              <h3>Armazenamento</h3>
+              <p>As preferências ficam salvas no navegador para que o cálculo continue consistente entre páginas e sessões.</p>
+            </article>
+            <article class="card">
+              <h3>Processamento</h3>
+              <p>O conteúdo visível é processado localmente para localizar preços, entender contexto e gerar a conversão em horas.</p>
+            </article>
+            <article class="card">
+              <h3>Compartilhamento</h3>
+              <p>O AceitaTempo não vende dados, não usa analytics próprios e não compartilha conteúdo das páginas para fins comerciais.</p>
+            </article>
+          </div>
+
+          <div class="notice">
+            <p>Se o modo automático de câmbio estiver desativado, não há consulta externa de taxa USD/BRL.</p>
+          </div>
+        </section>
+
+        <section class="surface section">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Contato</p>
+              <h2>Dúvidas sobre privacidade ou suporte?</h2>
+            </div>
+            <p class="sub">Se você precisar de ajuda adicional, use a página de suporte do projeto.</p>
+          </div>
+
+          <div class="grid-2">
+            <article class="card">
+              <h3>Suporte</h3>
+              <p><a class="inline" href="./support.html">Abrir página de suporte</a></p>
+            </article>
+            <article class="card">
+              <h3>Atualização desta política</h3>
+              <p>Última atualização: 19 de março de 2026.</p>
+            </article>
+          </div>
+        </section>
+
+        <p class="footer">
+          AceitaTempo — extensão Chrome para converter preços em horas de trabalho.
+          <a href="./privacy-policy.html">Privacidade</a> · <a href="./support.html">Suporte</a>
         </p>
-
-        <h2>Dados que a extensão usa</h2>
-        <ul>
-          <li>Configurações definidas pelo usuário, como salário mensal, horas trabalhadas e moeda.</li>
-          <li>Preferências de comportamento, como substituir preços por horas e ativar/desativar sites.</li>
-          <li>Conteúdo visível das páginas visitadas para localizar preços, totais e contexto de compra.</li>
-          <li>A taxa de câmbio USD/BRL quando o modo automático está ativo.</li>
-        </ul>
-
-        <h2>Como os dados são tratados</h2>
-        <ul>
-          <li>As preferências ficam armazenadas no Chrome Storage do próprio navegador.</li>
-          <li>A extensão não mantém banco de dados próprio nem envia dados para um servidor operado pelo projeto.</li>
-          <li>O conteúdo da página é processado localmente para identificar preços e calcular o tempo correspondente.</li>
-          <li>Quando o modo automático está ativo, a extensão consulta apenas a taxa USD/BRL em <a href="https://open.er-api.com/" rel="noreferrer noopener" target="_blank">open.er-api.com</a>.</li>
-        </ul>
-
-        <h2>Compartilhamento</h2>
-        <p>
-          O AceitaTempo não vende dados, não usa analytics próprios e não compartilha conteúdo das páginas
-          com terceiros para fins comerciais.
-        </p>
-
-        <h2>Contato</h2>
-        <p>
-          Dúvidas e solicitações de suporte podem ser enviadas pela página de suporte do projeto.
-        </p>
-
-        <p class="meta">
-          Última atualização: 19 de março de 2026.
-        </p>
-      </section>
+      </div>
     </main>
   </body>
 </html>
