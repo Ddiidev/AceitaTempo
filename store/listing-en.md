@@ -7,7 +7,7 @@ AceitaTempo
 Turn prices into work hours while you browse.
 
 ## Long description
-AceitaTempo shows how much of your time a price costs in the browser. The extension calculates your hourly value from your salary and monthly hours, adds a short badge next to prices, and can replace the amount with the work time needed to buy the item when you want that behavior.
+AceitaTempo shows how much of your time a price costs in the browser. The extension calculates your hourly value from your monthly salary or directly from an hourly rate you provide, adds a short badge next to prices, and can replace the amount with the work time needed to buy the item when you want that behavior.
 
 It is designed for large marketplaces and digital stores, but it also includes a generic fallback for compatible layouts. You can keep it enabled on supported sites, disable it on external sites, and turn off specific stores manually from the options page.
 
@@ -18,6 +18,7 @@ It is designed for large marketplaces and digital stores, but it also includes a
 - Cart and checkout total conversion.
 - Salary in BRL or USD.
 - Automatic or manual exchange-rate mode.
+- Monthly or hourly mode — choose how you enter your wage.
 - Per-site controls for unwanted stores.
 
 ## Privacy
