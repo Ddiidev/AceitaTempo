@@ -17,6 +17,20 @@
       <section class="card">
         <form id="settingsForm" class="form">
           <div class="grid">
+            <label class="field field-wide toggle-field">
+              <span class="toggle-copy">
+                <span class="toggle-title" data-i18n="wageModeLabel"></span>
+              </span>
+              <span class="wage-mode-switch">
+                <span data-i18n="wageModeMonthly"></span>
+                <span class="switch">
+                  <input id="wageMode" name="wageMode" type="checkbox" />
+                  <span class="switch-track" aria-hidden="true"></span>
+                </span>
+                <span data-i18n="wageModeHourly"></span>
+              </span>
+            </label>
+
             <label class="field">
               <span data-i18n="salaryLabel"></span>
               <input id="salaryAmount" name="salaryAmount" type="number" min="0" step="0.01" inputmode="decimal" />
@@ -34,6 +48,15 @@
               <span data-i18n="monthlyHoursLabel"></span>
               <input id="monthlyHours" name="monthlyHours" type="number" min="1" step="1" inputmode="numeric" />
             </label>
+
+            <div id="hourlyRateGroup" class="field" style="display: none;">
+              <span data-i18n="hourlyRateLabel"></span>
+              <div class="input-with-affixes">
+                <span id="hourlyRateCurrencyPrefix" class="input-prefix">R$</span>
+                <input id="hourlyRate" name="hourlyRate" type="number" min="0" step="0.01" inputmode="decimal" />
+                <span class="input-suffix" data-i18n="perHourSuffix"></span>
+              </div>
+            </div>
 
             <label class="field field-wide toggle-field">
               <span class="toggle-copy">
