@@ -47,6 +47,7 @@
     observer: null,
     tooltipElement: null,
     tooltipAnchor: null,
+    tooltipRafId: null,
   };
 
   function storageArea() {
@@ -1213,6 +1214,11 @@
     const tooltip = state.tooltipElement;
     state.tooltipAnchor = null;
 
+    if (state.tooltipRafId) {
+      cancelAnimationFrame(state.tooltipRafId);
+      state.tooltipRafId = null;
+    }
+
     if (!tooltip) {
       return;
     }
@@ -1261,16 +1267,26 @@
       return;
     }
 
+    if (state.tooltipRafId) {
+      cancelAnimationFrame(state.tooltipRafId);
+      state.tooltipRafId = null;
+    }
+
     const tooltip = getTooltipElement();
     state.tooltipAnchor = anchor;
+    tooltip.style.transition = 'none';
     tooltip.removeAttribute('data-visible');
     tooltip.setAttribute('aria-hidden', 'true');
     renderTooltipContent(model);
 
     tooltip.style.left = '-9999px';
     tooltip.style.top = '-9999px';
-    requestAnimationFrame(() => {
+    state.tooltipRafId = requestAnimationFrame(() => {
+      state.tooltipRafId = null;
+      if (state.tooltipAnchor !== anchor) return;
       positionTooltip(anchor);
+      tooltip.style.transition = '';
+      void tooltip.offsetWidth;
       tooltip.setAttribute('aria-hidden', 'false');
       tooltip.setAttribute('data-visible', '1');
     });
@@ -1621,6 +1637,9 @@
     }
 
     if (mutation.type === 'attributes') {
+      if (mutation.attributeName?.startsWith('data-aceita-tempo-')) {
+        return false;
+      }
       const targetElement = mutation.target;
       return Boolean(targetElement && !targetElement.closest?.(`[${BADGE_ATTR}="1"], [${TOOLTIP_ATTR}="1"]`));
     }
