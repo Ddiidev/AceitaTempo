@@ -39,6 +39,24 @@ async function copyTrackedFile(relative) {
   await fsp.copyFile(source, destination);
 }
 
+function createZip() {
+  if (process.platform === 'win32') {
+    // Windows PowerShell
+    return spawnSync('powershell', [
+      '-NoProfile',
+      '-Command',
+      `$ErrorActionPreference = 'Stop'; Compress-Archive -Path (Join-Path '${STAGING_DIR.replace(/'/g, "''")}' '*') -DestinationPath '${ZIP_PATH.replace(/'/g, "''")}' -Force`,
+    ], { stdio: 'inherit', shell: false });
+  }
+
+  // macOS / Linux: native zip
+  return spawnSync('zip', ['-r', ZIP_PATH, '.'], {
+    stdio: 'inherit',
+    shell: false,
+    cwd: STAGING_DIR,
+  });
+}
+
 async function main() {
   await cleanDir(STAGING_DIR);
   await fsp.rm(ZIP_PATH, { force: true });
@@ -47,17 +65,10 @@ async function main() {
     await copyTrackedFile(relative);
   }
 
-  const result = spawnSync('powershell', [
-    '-NoProfile',
-    '-Command',
-    `$ErrorActionPreference = 'Stop'; Compress-Archive -Path (Join-Path '${STAGING_DIR.replace(/'/g, "''")}' '*') -DestinationPath '${ZIP_PATH.replace(/'/g, "''")}' -Force`,
-  ], {
-    stdio: 'inherit',
-    shell: false,
-  });
+  const zipResult = createZip();
 
-  if (result.status !== 0) {
-    throw new Error('Compress-Archive failed');
+  if (zipResult.status !== 0) {
+    throw new Error('Failed to create zip package');
   }
 
   console.log(`created ${path.relative(ROOT, ZIP_PATH)}`);
