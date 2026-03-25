@@ -3,3 +3,4 @@ dist/
 playwright-artifacts/
 playwright-*.png
 .codex/
+.DS_Store
