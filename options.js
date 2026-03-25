@@ -167,6 +167,7 @@ async function init() {
   localize();
   const settings = await readSettings();
   fillForm(settings);
+  updateHourlyRateCurrencyPrefix();
   updateRateSnapshot(settings);
   updateSiteBlockToggle();
 
@@ -187,6 +188,15 @@ async function init() {
   $("exchangeRateMode").addEventListener("change", () => {
     $("manualUsdToBrlRate").disabled = $("exchangeRateMode").value !== "manual";
   });
+
+  function updateHourlyRateCurrencyPrefix() {
+    const prefix = $("hourlyRateCurrencyPrefix");
+    if (prefix) {
+      prefix.textContent = $("salaryCurrency").value === "USD" ? "$" : "R$";
+    }
+  }
+
+  $("salaryCurrency").addEventListener("change", updateHourlyRateCurrencyPrefix);
 
   $("siteBlockToggle").addEventListener("click", () => {
     const body = $("siteBlockBody");
@@ -245,6 +255,7 @@ async function init() {
   $("resetButton").addEventListener("click", async () => {
     await saveSettings(DEFAULT_SETTINGS);
     fillForm(DEFAULT_SETTINGS);
+    updateHourlyRateCurrencyPrefix();
     updateRateSnapshot(DEFAULT_SETTINGS);
     updateSiteBlockToggle();
     setStatus(chrome.i18n.getMessage("resetMessage"));
