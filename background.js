@@ -2,6 +2,8 @@ const DEFAULT_SETTINGS = {
   salaryAmount: 5000,
   monthlyHours: 160,
   salaryCurrency: "BRL",
+  wageMode: "monthly",
+  hourlyRate: 0,
   exchangeRateMode: "auto",
   manualUsdToBrlRate: 5.5,
   exchangeRateUsdToBrl: 5.5,
