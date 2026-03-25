@@ -78,21 +78,44 @@ function renderSiteToggles(disabledSiteNames = []) {
   if (!container) return;
 
   const disabled = new Set((disabledSiteNames || []).map((value) => String(value)));
-  container.innerHTML = SITE_CONFIGS.map((site) => {
+
+  container.replaceChildren();
+
+  SITE_CONFIGS.forEach((site) => {
     const checked = !disabled.has(site.name);
-    return `
-      <label class="site-toggle">
-        <span class="site-toggle__text">
-          <span class="site-toggle__name">${site.name}</span>
-          <span class="site-toggle__meta">${site.hostPatterns?.map((pattern) => pattern.source).join(" • ") || ""}</span>
-        </span>
-        <span class="switch">
-          <input type="checkbox" data-site-name="${site.name}" ${checked ? "checked" : ""} />
-          <span class="switch-track" aria-hidden="true"></span>
-        </span>
-      </label>
-    `;
-  }).join("");
+
+    const label = document.createElement("label");
+    label.className = "site-toggle";
+
+    const textSpan = document.createElement("span");
+    textSpan.className = "site-toggle__text";
+
+    const nameSpan = document.createElement("span");
+    nameSpan.className = "site-toggle__name";
+    nameSpan.textContent = site.name; 
+
+    const metaSpan = document.createElement("span");
+    metaSpan.className = "site-toggle__meta";
+    metaSpan.textContent = site.hostPatterns?.map((p) => p.source).join(" • ") || "";
+
+    textSpan.append(nameSpan, metaSpan);
+
+    const switchSpan = document.createElement("span");
+    switchSpan.className = "switch";
+
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.dataset.siteName = site.name;
+    input.checked = checked;
+
+    const trackSpan = document.createElement("span");
+    trackSpan.className = "switch-track";
+    trackSpan.setAttribute("aria-hidden", "true");
+
+    switchSpan.append(input, trackSpan);
+    label.append(textSpan, switchSpan);
+    container.appendChild(label);
+  });
 }
 
 function updateSiteBlockToggle() {

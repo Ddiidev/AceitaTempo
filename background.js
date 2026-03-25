@@ -8,29 +8,30 @@ const DEFAULT_SETTINGS = {
   exchangeRateFetchedAt: null,
 };
 
+const EXTENSION_API = typeof browser !== "undefined" ? browser : chrome;
 const STORAGE_KEYS = Object.keys(DEFAULT_SETTINGS);
 const EXCHANGE_ALARM = "aceita-tempo-refresh-exchange-rate";
 const EXCHANGE_CACHE_TTL_MS = 12 * 60 * 60 * 1000;
 const EXCHANGE_ENDPOINT = "https://open.er-api.com/v6/latest/USD";
 
 async function getSettings() {
-  const stored = await chrome.storage.sync.get(STORAGE_KEYS);
+  const stored = await EXTENSION_API.storage.sync.get(STORAGE_KEYS);
   return { ...DEFAULT_SETTINGS, ...stored };
 }
 
 async function savePartialSettings(nextValues) {
-  await chrome.storage.sync.set(nextValues);
+  await EXTENSION_API.storage.sync.set(nextValues);
 }
 
 async function ensureDefaults() {
-  const current = await chrome.storage.sync.get(STORAGE_KEYS);
+  const current = await EXTENSION_API.storage.sync.get(STORAGE_KEYS);
   const missingEntries = Object.entries(DEFAULT_SETTINGS).filter(([key]) => current[key] === undefined);
 
   if (!missingEntries.length) {
     return;
   }
 
-  await chrome.storage.sync.set(Object.fromEntries(missingEntries));
+  await EXTENSION_API.storage.sync.set(Object.fromEntries(missingEntries));
 }
 
 async function fetchUsdToBrlRate() {
@@ -98,9 +99,9 @@ async function refreshExchangeRate({ force = false } = {}) {
   };
 }
 
-chrome.runtime.onInstalled.addListener(async () => {
+EXTENSION_API.runtime.onInstalled.addListener(async () => {
   await ensureDefaults();
-  await chrome.alarms.create(EXCHANGE_ALARM, {
+  await EXTENSION_API.alarms.create(EXCHANGE_ALARM, {
     periodInMinutes: 60,
   });
 
@@ -111,7 +112,7 @@ chrome.runtime.onInstalled.addListener(async () => {
   }
 });
 
-chrome.runtime.onStartup.addListener(async () => {
+EXTENSION_API.runtime.onStartup.addListener(async () => {
   await ensureDefaults();
 
   try {
@@ -121,7 +122,7 @@ chrome.runtime.onStartup.addListener(async () => {
   }
 });
 
-chrome.alarms.onAlarm.addListener(async (alarm) => {
+EXTENSION_API.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name !== EXCHANGE_ALARM) {
     return;
   }
@@ -133,7 +134,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
   }
 });
 
-chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+EXTENSION_API.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (!message || typeof message !== "object") {
     return undefined;
   }
