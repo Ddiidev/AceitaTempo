@@ -383,3 +383,62 @@ button {
     grid-template-columns: 1fr;
   }
 }
+
+.wage-mode-switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.input-with-affixes {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 1px solid rgba(30, 26, 23, 0.16);
+  border-radius: 14px;
+  background: var(--panel-strong);
+  overflow: hidden;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.input-with-affixes:focus-within {
+  border-color: rgba(15, 118, 110, 0.55);
+  box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.14);
+}
+
+.input-prefix,
+.input-suffix {
+  padding: 14px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.input-prefix {
+  padding-right: 4px;
+}
+
+.input-suffix {
+  padding-left: 4px;
+}
+
+.input-with-affixes input {
+  border: none;
+  border-radius: 0;
+  padding: 14px 4px;
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+}
+
+.input-with-affixes input:focus {
+  outline: none;
+  border-color: transparent;
+  box-shadow: none;
+}
