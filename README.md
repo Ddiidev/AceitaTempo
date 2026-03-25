@@ -1,6 +1,6 @@
 # AceitaTempo
 
-Extensao Chrome que converte preco em custo de tempo de trabalho.
+Extensao para Chrome e firefox que converte preco em custo de tempo de trabalho.
 
 ## Publicacao
 
@@ -76,12 +76,20 @@ A extensao foi desenhada para funcionar explicitamente em marketplaces grandes, 
 
 Tambem existe um detector generico para cobrir outros sites com estruturas parecidas.
 
-## Como instalar
+## Como instalar no Google Chrome
 
 1. Abra `chrome://extensions`.
 2. Ative `Developer mode`.
 3. Clique em `Load unpacked`.
 4. Selecione a pasta [`AceitaTempo`](e:\GitHub\AceitaTempo).
+
+## Como instalar no Firefox
+
+1. Abra `about:debugging`.
+2. Vá para `Este Firefox`.
+3. Clique em `Carregar extensão temporária...`.
+4. Selecione o pasta [`AceitaTempo`](e:\GitHub\AceitaTempo).
+5. Carregue o arqivo `manifest.json` dentro da pasta do projeto.
 
 ## Como usar
 
