@@ -1267,11 +1267,13 @@
     tooltip.setAttribute('aria-hidden', 'true');
     renderTooltipContent(model);
 
-    tooltip.style.left = '0px';
-    tooltip.style.top = '0px';
-    positionTooltip(anchor);
-    tooltip.setAttribute('aria-hidden', 'false');
-    tooltip.setAttribute('data-visible', '1');
+    tooltip.style.left = '-9999px';
+    tooltip.style.top = '-9999px';
+    requestAnimationFrame(() => {
+      positionTooltip(anchor);
+      tooltip.setAttribute('aria-hidden', 'false');
+      tooltip.setAttribute('data-visible', '1');
+    });
   }
 
   function parseRgbColor(color) {
