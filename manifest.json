@@ -10,10 +10,15 @@
     "48": "icons/icon-48.png",
     "128": "icons/icon-128.png"
   },
+    "browser_specific_settings": {
+    "gecko": {
+      "id": "aceitatempo@aceitatempo.com"
+    }
+  },
   "permissions": ["storage", "alarms"],
   "host_permissions": ["https://open.er-api.com/*"],
   "background": {
-    "service_worker": "background.js"
+    "scripts": ["background.js"]
   },
   "action": {
     "default_title": "__MSG_extensionName__",

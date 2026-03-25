@@ -7,6 +7,7 @@
     return;
   }
 
+  const EXTENSION_API = typeof browser !== "undefined" ? browser : chrome;
   const BADGE_ATTR = 'data-aceita-tempo-badge';
   const TARGET_ATTR = 'data-aceita-tempo-target';
   const SCOPE_ATTR = 'data-aceita-tempo-scope';
@@ -51,7 +52,7 @@
 
   function storageArea() {
     try {
-      return chrome.storage?.sync ?? chrome.storage?.local ?? null;
+      return EXTENSION_API.storage?.sync ?? EXTENSION_API.storage?.local ?? null;
     } catch {
       return null;
     }
@@ -1697,7 +1698,7 @@
 
   function boot() {
     try {
-      chrome.storage?.onChanged?.addListener(onStorageChange);
+      EXTENSION_API.storage?.onChanged?.addListener(onStorageChange);
     } catch {
       // ignore
     }
