@@ -175,7 +175,6 @@ async function init() {
     const isHourly = $("wageMode").checked;
     updateWageModeUI(isHourly ? "hourly" : "monthly");
 
-    // Pre-fill hourly rate on first switch
     if (isHourly && (!$("hourlyRate").value || Number($("hourlyRate").value) === 0)) {
       const salary = Number($("salaryAmount").value) || 0;
       const hours = Number($("monthlyHours").value) || 1;
