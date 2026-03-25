@@ -215,14 +215,25 @@
     if (!isFiniteNumber(priceAmount) || priceAmount <= 0) {
       return null;
     }
-    if (!isFiniteNumber(salaryMonthly) || salaryMonthly <= 0) {
-      return null;
-    }
-    if (!isFiniteNumber(hoursMonthly) || hoursMonthly <= 0) {
-      return null;
+    const wageMode = String(settings?.wageMode ?? 'monthly').toLowerCase();
+    const directHourlyRate = Number(settings?.hourlyRate ?? 0);
+
+    let hourlySalary;
+    if (wageMode === 'hourly') {
+      if (!isFiniteNumber(directHourlyRate) || directHourlyRate <= 0) {
+        return null;
+      }
+      hourlySalary = directHourlyRate;
+    } else {
+      if (!isFiniteNumber(salaryMonthly) || salaryMonthly <= 0) {
+        return null;
+      }
+      if (!isFiniteNumber(hoursMonthly) || hoursMonthly <= 0) {
+        return null;
+      }
+      hourlySalary = salaryMonthly / hoursMonthly;
     }
 
-    const hourlySalary = salaryMonthly / hoursMonthly;
     if (!isFiniteNumber(hourlySalary) || hourlySalary <= 0) {
       return null;
     }
