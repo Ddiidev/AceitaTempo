@@ -5,7 +5,7 @@
   }
 
   function normalizeWhitespace(value) {
-    return String(value ?? '').replace(/\s+/g, ' ').trim();
+    return String(value ?? '').replace(/[\s\u00a0]+/g, ' ').trim();
   }
 
   function normalizePriceText(value) {

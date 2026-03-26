@@ -98,6 +98,35 @@
         '#ppd',
         '#dp-container',
         '.s-result-item',
+        // Newer Amazon pages use CSS-Module hashed classes; a[data-asin] is stable
+        'a[data-asin]',
+        '[class*="_cDEzb_container" i]',
+        '[class*="_cDEzb_price" i]',
+        ...PRODUCT_SCOPE_SELECTORS,
+      ],
+    },
+    {
+      name: 'Temu',
+      hostPatterns: rx(['(^|\\.)temu\\.com$']),
+      selectors: [
+        // Visually-hidden srOnly span holds the clean concatenated price (e.g. R$769,57)
+        '[data-type="price"] [class*="srOnly" i]',
+        '[data-type="price"] [class*="price" i]',
+        '[data-priority-list]',
+        '[data-type="price"]',
+        // Search-result cards: goodsPrice wrapper (hash suffix varies per deploy)
+        '[class*="goodsPrice" i]',
+        '[class*="CountPrice" i]',
+        '[class*="afterCouponPrice" i]',
+      ],
+      preferTextWalker: true,
+      scopeSelectors: [
+        '[data-type="price"]',
+        '[class*="priceWrap" i]',
+        '[class*="saleInfo" i]',
+        // Search cards share a common item wrapper
+        '[class*="item-" i][class*="Card" i]',
+        '[class*="goods-" i]',
         ...PRODUCT_SCOPE_SELECTORS,
       ],
     },
@@ -178,6 +207,12 @@
         '.discount_prices',
         '.discount_block',
         '.game_purchase_price',
+        '.search_price',
+        '.cart_item_price .price',
+        '.total_value',
+        '[class*="PriceDisplay" i]',
+        '[class*="CartItem"] [class*="Price" i]',
+        '.market_listing_price_with_fee',
       ],
       cardSelectors: [
         'a.store_capsule',
@@ -187,6 +222,8 @@
         '.cluster_capsule',
         '[data-ds-itemkey]',
         '[data-ds-appid]',
+        '.search_result_row',
+        '[class*="CartItem" i]',
       ],
       cardRootSelectors: [
         'a.store_capsule',
@@ -194,21 +231,28 @@
         '.tab_item',
         '.sale_capsule',
         '.cluster_capsule',
+        '.search_result_row',
       ],
       primaryPriceRowSelectors: [
         '.discount_block',
         '.discount_prices',
         '.spotlight_price',
         '.game_purchase_price',
+        '.search_price',
+        '[class*="PriceDisplay" i]',
+        '[class*="CartItem"] [class*="Price" i]',
       ],
       primaryPriceValueSelectors: [
         '.discount_prices .discount_final_price',
         '.discount_final_price',
         '.game_purchase_price.price',
+        '.search_price',
+        '[class*="PriceDisplay" i]',
       ],
       secondaryPriceSelectors: [
         '.discount_original_price',
         '.discount_pct',
+        '[class*="Strike" i]',
       ],
       scopeSelectors: [
         'a.store_capsule',
@@ -218,6 +262,9 @@
         '.cluster_capsule',
         '[data-ds-itemkey]',
         '[data-ds-appid]',
+        '.search_result_row',
+        '[class*="CartItem" i]',
+        '[class*="PriceDisplay" i]',
         ...PRODUCT_SCOPE_SELECTORS,
       ],
     },
@@ -354,6 +401,35 @@
       hostPatterns: rx(['(^|\\.)americanas\\.com\\.br$']),
       selectors: ['[class*="SalesPrice" i]', '[class*="BestPrice" i]', '[class*="Price" i]'],
       scopeSelectors: ['[class*="Product" i]', '[class*="product" i]', '[class*="card" i]', ...PRODUCT_SCOPE_SELECTORS],
+    },
+    {
+      name: 'Alibaba',
+      hostPatterns: rx(['(^|\\.)alibaba\\.(com|com\\.br)$']),
+      selectors: [
+        // Layout A: ag-gruarantee-block carousel
+        '.product-price',
+        // Layout B: top-deals-floor carousel
+        '.final-price',
+        '[class*="price-wrapper" i] .final-price',
+        '[class*="price-wrapper" i] [class*="price" i]',
+        '[class*="product-price" i]',
+        // Search results: search-card layout
+        '.search-card-e-price-main',
+        '[class*="search-card-e-price" i]',
+        '[class*="gallery-offer-price" i]',
+      ],
+      preferTextWalker: true,
+      scopeSelectors: [
+        '.slick-slide',
+        '.bottom_content',
+        '[class*="price-wrapper" i]',
+        '[class*="custom-wrapper" i]',
+        // Search-card product containers
+        '[class*="search-card-e-detail" i]',
+        '[class*="search-card-item" i]',
+        '.home-dot-element',
+        ...PRODUCT_SCOPE_SELECTORS,
+      ],
     },
   ];
 
