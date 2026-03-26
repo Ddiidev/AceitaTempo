@@ -19,6 +19,7 @@ It is designed for large marketplaces and digital stores, but it also includes a
 - Salary in BRL or USD.
 - Automatic or manual exchange-rate mode.
 - Monthly or hourly mode — choose how you enter your wage.
+- Extended display — days, months and years for items that cost more than 24h.
 - Per-site controls for unwanted stores.
 
 ## Privacy
