@@ -84,7 +84,10 @@
         "https://*.shein.es/*",
         "https://*.shein.us/*",
         "https://*.armazemparaiba.com.br/*",
-        "https://*.americanas.com.br/*"
+        "https://*.americanas.com.br/*",
+        "https://*.temu.com/*",
+        "https://*.alibaba.com/*",
+        "https://*.alibaba.com.br/*"
       ],
       "js": ["src/price-utils.js", "src/site-config.js", "src/content.js"],
       "run_at": "document_idle"
