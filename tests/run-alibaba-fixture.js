@@ -38,10 +38,6 @@ async function injectExtension(page) {
 }
 
 async function runAlibabaAssertions(page) {
-  // HTML covers both Alibaba layouts identified in the task spec:
-  // Layout A: ag-gruarantee-block → div.product-price
-  // Layout B: top-deals-floor     → span.final-price
-  // Both use R$\u00a0 (non-breaking space) which must be normalised correctly.
   const html = String.raw`<!doctype html>
   <html lang="pt-BR">
     <head><style>
@@ -149,3 +145,4 @@ main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
+//Jiuk

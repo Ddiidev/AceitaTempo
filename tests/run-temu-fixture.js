@@ -38,9 +38,6 @@ async function injectExtension(page) {
 }
 
 async function runTemuAssertions(page) {
-  // HTML mirrors the real Temu structure provided in the task spec.
-  // The price lives in a visually-hidden srOnly span (innerText empty),
-  // so the extension must fall back to textContent to capture R$769,57.
   const html = String.raw`<!doctype html>
   <html lang="pt-BR">
     <head><style>
@@ -115,3 +112,4 @@ main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
+//Jiuk
