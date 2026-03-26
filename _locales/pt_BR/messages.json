@@ -130,5 +130,20 @@
   },
   "hourlyRateRequired": {
     "message": "Informe um valor por hora maior que zero."
+  },
+  "extendedTimeDisplayLabel": {
+    "message": "Exibição estendida de tempo"
+  },
+  "extendedTimeDisplayHint": {
+    "message": "Mostra dias, meses e anos para itens que custam mais de 24h de trabalho."
+  },
+  "extendedTimeDayModeLabel": {
+    "message": "Modo de cálculo de dias"
+  },
+  "extendedTimeDayModeCalendar": {
+    "message": "Calendário (dias de 24h)"
+  },
+  "extendedTimeDayModeWorking": {
+    "message": "Dias úteis"
   }
 }
