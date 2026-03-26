@@ -2,6 +2,8 @@ const DEFAULT_SETTINGS = {
   salaryAmount: 5000,
   salaryCurrency: "BRL",
   monthlyHours: 160,
+  wageMode: "monthly",
+  hourlyRate: 0,
   exchangeRateMode: "auto",
   manualUsdToBrlRate: 5.5,
   exchangeRateUsdToBrl: 5.5,
@@ -51,7 +53,10 @@ async function init() {
   localize();
 
   const settings = await readSettings();
-  const hourly = settings.salaryAmount && settings.monthlyHours ? settings.salaryAmount / settings.monthlyHours : 0;
+  const isHourly = settings.wageMode === "hourly";
+  const hourly = isHourly
+    ? settings.hourlyRate
+    : (settings.salaryAmount && settings.monthlyHours ? settings.salaryAmount / settings.monthlyHours : 0);
   const exchangeLabel =
     settings.exchangeRateMode === "manual"
       ? chrome.i18n.getMessage("manualRateStatus", [formatNumber(settings.manualUsdToBrlRate, 4)])
@@ -59,10 +64,21 @@ async function init() {
         ? chrome.i18n.getMessage("autoRateCompact", [formatNumber(settings.exchangeRateUsdToBrl, 4)])
         : chrome.i18n.getMessage("autoRatePending");
 
-  document.getElementById("salaryValue").textContent = formatMoney(settings.salaryAmount, settings.salaryCurrency);
-  document.getElementById("hoursValue").textContent = chrome.i18n.getMessage("hoursSummaryValue", [
-    formatNumber(settings.monthlyHours),
-  ]);
+  const salaryRow = document.getElementById("salaryRow");
+  const hoursRow = document.getElementById("hoursRow");
+
+  if (isHourly) {
+    salaryRow.style.display = "none";
+    hoursRow.style.display = "none";
+  } else {
+    salaryRow.style.display = "";
+    hoursRow.style.display = "";
+    document.getElementById("salaryValue").textContent = formatMoney(settings.salaryAmount, settings.salaryCurrency);
+    document.getElementById("hoursValue").textContent = chrome.i18n.getMessage("hoursSummaryValue", [
+      formatNumber(settings.monthlyHours),
+    ]);
+  }
+
   document.getElementById("hourlyValue").textContent = formatMoney(hourly, settings.salaryCurrency);
   document.getElementById("exchangeValue").textContent = exchangeLabel;
 

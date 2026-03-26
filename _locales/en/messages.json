@@ -112,5 +112,23 @@
   },
   "autoRatePending": {
     "message": "Automatic: waiting for refresh"
+  },
+  "wageModeLabel": {
+    "message": "Wage type"
+  },
+  "wageModeMonthly": {
+    "message": "Monthly"
+  },
+  "wageModeHourly": {
+    "message": "Hourly"
+  },
+  "hourlyRateLabel": {
+    "message": "Hourly rate"
+  },
+  "perHourSuffix": {
+    "message": "/h"
+  },
+  "hourlyRateRequired": {
+    "message": "Enter an hourly rate greater than zero."
   }
 }

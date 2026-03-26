@@ -112,5 +112,23 @@
   },
   "autoRatePending": {
     "message": "Automático: aguardando atualização"
+  },
+  "wageModeLabel": {
+    "message": "Tipo de salário"
+  },
+  "wageModeMonthly": {
+    "message": "Mensal"
+  },
+  "wageModeHourly": {
+    "message": "Por hora"
+  },
+  "hourlyRateLabel": {
+    "message": "Valor por hora"
+  },
+  "perHourSuffix": {
+    "message": "/h"
+  },
+  "hourlyRateRequired": {
+    "message": "Informe um valor por hora maior que zero."
   }
 }

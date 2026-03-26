@@ -2,6 +2,8 @@ const DEFAULT_SETTINGS = {
   salaryAmount: 5000,
   salaryCurrency: "BRL",
   monthlyHours: 160,
+  wageMode: "monthly",
+  hourlyRate: 0,
   replacePricesWithHours: false,
   enableExternalSites: false,
   disabledSiteNames: [],
@@ -49,6 +51,8 @@ function normalizeSettings(raw) {
     salaryAmount: Math.max(0, Number(raw.salaryAmount) || 0),
     salaryCurrency: raw.salaryCurrency === "USD" ? "USD" : "BRL",
     monthlyHours: Math.max(1, Math.round(Number(raw.monthlyHours) || DEFAULT_SETTINGS.monthlyHours)),
+    wageMode: raw.wageMode === "hourly" ? "hourly" : "monthly",
+    hourlyRate: Math.max(0, Number(raw.hourlyRate) || 0),
     replacePricesWithHours: isTruthySetting(raw.replacePricesWithHours),
     enableExternalSites: isTruthySetting(raw.enableExternalSites ?? raw.enableExternal ?? raw.allowExternalSites),
     disabledSiteNames: Array.isArray(raw.disabledSiteNames) ? raw.disabledSiteNames : [],
@@ -61,15 +65,26 @@ function formatRate(value) {
   return new Intl.NumberFormat(undefined, { maximumFractionDigits: 4 }).format(value);
 }
 
+function updateWageModeUI(mode) {
+  const isHourly = mode === "hourly";
+  $("wageMode").checked = isHourly;
+
+  $("salaryAmount").closest(".field").style.display = isHourly ? "none" : "";
+  $("monthlyHours").closest(".field").style.display = isHourly ? "none" : "";
+  $("hourlyRateGroup").style.display = isHourly ? "" : "none";
+}
+
 function fillForm(settings) {
   $("salaryAmount").value = settings.salaryAmount;
   $("salaryCurrency").value = settings.salaryCurrency;
   $("monthlyHours").value = settings.monthlyHours;
+  $("hourlyRate").value = settings.hourlyRate;
   $("replacePricesWithHours").checked = isTruthySetting(settings.replacePricesWithHours);
   $("enableExternalSites").checked = isTruthySetting(settings.enableExternalSites);
   $("exchangeRateMode").value = settings.exchangeRateMode;
   $("manualUsdToBrlRate").value = settings.manualUsdToBrlRate;
   $("manualUsdToBrlRate").disabled = settings.exchangeRateMode !== "manual";
+  updateWageModeUI(settings.wageMode);
   renderSiteToggles(settings.disabledSiteNames);
 }
 
@@ -152,12 +167,35 @@ async function init() {
   localize();
   const settings = await readSettings();
   fillForm(settings);
+  updateHourlyRateCurrencyPrefix();
   updateRateSnapshot(settings);
   updateSiteBlockToggle();
+
+  $("wageMode").addEventListener("change", () => {
+    const isHourly = $("wageMode").checked;
+    updateWageModeUI(isHourly ? "hourly" : "monthly");
+
+    if (isHourly && (!$("hourlyRate").value || Number($("hourlyRate").value) === 0)) {
+      const salary = Number($("salaryAmount").value) || 0;
+      const hours = Number($("monthlyHours").value) || 1;
+      if (salary > 0) {
+        $("hourlyRate").value = (salary / hours).toFixed(2);
+      }
+    }
+  });
 
   $("exchangeRateMode").addEventListener("change", () => {
     $("manualUsdToBrlRate").disabled = $("exchangeRateMode").value !== "manual";
   });
+
+  function updateHourlyRateCurrencyPrefix() {
+    const prefix = $("hourlyRateCurrencyPrefix");
+    if (prefix) {
+      prefix.textContent = $("salaryCurrency").value === "USD" ? "$" : "R$";
+    }
+  }
+
+  $("salaryCurrency").addEventListener("change", updateHourlyRateCurrencyPrefix);
 
   $("siteBlockToggle").addEventListener("click", () => {
     const body = $("siteBlockBody");
@@ -174,6 +212,8 @@ async function init() {
       salaryAmount: $("salaryAmount").value,
       salaryCurrency: $("salaryCurrency").value,
       monthlyHours: $("monthlyHours").value,
+      wageMode: $("wageMode").checked ? "hourly" : "monthly",
+      hourlyRate: $("hourlyRate").value,
       replacePricesWithHours: $("replacePricesWithHours").checked,
       enableExternalSites: $("enableExternalSites").checked,
       disabledSiteNames: Array.from(document.querySelectorAll("[data-site-name]"))
@@ -185,6 +225,11 @@ async function init() {
 
     if (payload.exchangeRateMode === "manual" && payload.manualUsdToBrlRate <= 0) {
       setStatus(chrome.i18n.getMessage("manualRateRequired"), true);
+      return;
+    }
+
+    if (payload.wageMode === "hourly" && payload.hourlyRate <= 0) {
+      setStatus(chrome.i18n.getMessage("hourlyRateRequired"), true);
       return;
     }
 
@@ -209,6 +254,7 @@ async function init() {
   $("resetButton").addEventListener("click", async () => {
     await saveSettings(DEFAULT_SETTINGS);
     fillForm(DEFAULT_SETTINGS);
+    updateHourlyRateCurrencyPrefix();
     updateRateSnapshot(DEFAULT_SETTINGS);
     updateSiteBlockToggle();
     setStatus(chrome.i18n.getMessage("resetMessage"));

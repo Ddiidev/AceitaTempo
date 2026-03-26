@@ -39,7 +39,7 @@ O pacote final sai em `dist/aceita-tempo.zip`.
 
 ## O que faz
 
-- Permite configurar salario mensal e horas trabalhadas por mes.
+- Permite configurar salario mensal e horas trabalhadas por mes, ou informar diretamente o valor por hora.
 - Suporta salario em `BRL` ou `USD`.
 - Converte precos em `BRL` e `USD` para tempo de trabalho equivalente.
 - Atualiza a taxa `USD -> BRL` automaticamente e aceita taxa manual.
@@ -87,8 +87,8 @@ Tambem existe um detector generico para cobrir outros sites com estruturas parec
 
 1. Abra as opcoes da extensao.
 2. Configure:
-   - salario mensal
-   - horas por mes
+   - tipo de salario: mensal ou por hora
+   - salario mensal e horas por mes (modo mensal), ou valor por hora (modo por hora)
    - moeda do salario
    - modo de cambio automatico ou manual
    - opcionalmente, ative a substituicao do preco pelas horas de trabalho

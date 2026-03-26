@@ -7,7 +7,7 @@ AceitaTempo
 Converta preços em horas de trabalho enquanto navega.
 
 ## Descrição longa
-AceitaTempo mostra quanto do seu tempo custa um preço no navegador. A extensão calcula o valor da hora com base no seu salário e nas suas horas mensais, adiciona um badge curto ao lado do preço e, quando você quiser, substitui o valor pelas horas de trabalho necessárias.
+AceitaTempo mostra quanto do seu tempo custa um preço no navegador. A extensão calcula o valor da hora com base no seu salário mensal ou a partir de um valor por hora que você mesmo informa, adiciona um badge curto ao lado do preço e, quando você quiser, substitui o valor pelas horas de trabalho necessárias.
 
 Ela foi pensada para grandes lojas e marketplaces, mas também inclui fallback genérico para outras páginas compatíveis. Você pode manter a extensão ativa em sites suportados, desligá-la em sites externos e desativar lojas específicas manualmente nas opções.
 
@@ -18,6 +18,7 @@ Ela foi pensada para grandes lojas e marketplaces, mas também inclui fallback g
 - Conversão em carrinho e checkout para o total do pedido.
 - Cálculo com salário em BRL ou USD.
 - Câmbio automático ou manual.
+- Modo mensal ou por hora — escolha como informar seu salário.
 - Controles por site para evitar páginas indesejadas.
 
 ## Privacidade
