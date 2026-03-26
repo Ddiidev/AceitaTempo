@@ -60,6 +60,25 @@
 
             <label class="field field-wide toggle-field">
               <span class="toggle-copy">
+                <span class="toggle-title" data-i18n="extendedTimeDisplayLabel"></span>
+                <span class="toggle-desc" data-i18n="extendedTimeDisplayHint"></span>
+              </span>
+              <span class="switch">
+                <input id="extendedTimeDisplay" name="extendedTimeDisplay" type="checkbox" />
+                <span class="switch-track" aria-hidden="true"></span>
+              </span>
+            </label>
+
+            <label id="extendedTimeDayModeGroup" class="field">
+              <span data-i18n="extendedTimeDayModeLabel"></span>
+              <select id="extendedTimeDayMode" name="extendedTimeDayMode">
+                <option value="calendar" data-i18n="extendedTimeDayModeCalendar"></option>
+                <option value="working" data-i18n="extendedTimeDayModeWorking"></option>
+              </select>
+            </label>
+
+            <label class="field field-wide toggle-field">
+              <span class="toggle-copy">
                 <span class="toggle-title" data-i18n="replacePricesWithHoursLabel"></span>
                 <span class="toggle-desc" data-i18n="replacePricesWithHoursHint"></span>
               </span>
