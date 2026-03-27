@@ -98,7 +98,6 @@
         '#ppd',
         '#dp-container',
         '.s-result-item',
-        // Newer Amazon pages use CSS-Module hashed classes; a[data-asin] is stable
         'a[data-asin]',
         '[class*="_cDEzb_container" i]',
         '[class*="_cDEzb_price" i]',
@@ -109,16 +108,16 @@
       name: 'Temu',
       hostPatterns: rx(['(^|\\.)temu\\.com$']),
       selectors: [
-        // Visually-hidden srOnly span holds the clean concatenated price
         '[data-type="price"] [class*="srOnly" i]',
         '[data-type="price"] [class*="price" i]',
         '[data-priority-list]',
         '[data-type="price"]',
-        // Search-result cards: goodsPrice wrapper
+        '[data-type="marketPrice"]',
+        '[aria-label*="R$"]',
+        '[aria-label*="US$"]',
         '[class*="goodsPrice" i]',
         '[class*="CountPrice" i]',
         '[class*="afterCouponPrice" i]',
-        // Generic patterns for obfuscated classes that still follow some naming
         '[class*="price" i]',
         '[class*="money" i]',
         '[class*="valor" i]',
@@ -127,7 +126,7 @@
         '[data-type="price"]',
         '[class*="priceWrap" i]',
         '[class*="saleInfo" i]',
-        // Search cards share a common item wrapper
+        '[class*="goods-container" i]',
         '[class*="item-" i][class*="Card" i]',
         '[class*="goods-" i]',
         '[role="group"][aria-label]',
@@ -137,19 +136,22 @@
         '[role="group"][aria-label]',
         '[class*="item-" i][class*="Card" i]',
         '[class*="goods-" i]',
-        '[data-type="price"]',
+        '[class*="goods-container" i]',
       ],
       primaryPriceRowSelectors: [
         '[data-type="price"]',
         '[class*="price" i]',
         '[class*="goodsPrice" i]',
         '[class*="saleInfo" i]',
+        '[aria-label*="R$"]',
+        '[aria-label*="US$"]',
       ],
       primaryPriceValueSelectors: [
         '[class*="srOnly" i]',
         '[class*="price" i]:not(span)',
         '[class*="Total" i]',
         '[class*="Main" i]',
+        '[data-type="price"]',
       ],
       secondaryPriceSelectors: [
         's',
@@ -160,7 +162,9 @@
         '[class*="PVR" i]',
         '[style*="line-through"]',
         '[class*="installment" i]',
-        '[class*="coupon" i]:not([class*="after" i])', // ignore coupon values that aren't the final price
+        '[class*="coupon" i]:not([class*="after" i])',
+        '[data-type="marketPrice"]',
+        '[data-type*="market" i]',
       ],
     },
     {

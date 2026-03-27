@@ -342,7 +342,15 @@
       return '';
     }
 
-    return PriceUtils.normalizePriceText(element.innerText || element.textContent || '');
+    let text = element.innerText || element.textContent || '';
+    if (!text.trim() || !/(R\$|US\$|USD|BRL|\$)/i.test(text)) {
+      const label = element.getAttribute('aria-label');
+      if (label && /(R\$|US\$|USD|BRL|\$)/i.test(label)) {
+        text = label;
+      }
+    }
+
+    return PriceUtils.normalizePriceText(text);
   }
 
   function getElementHintText(element) {
@@ -1077,6 +1085,12 @@
     const rowCandidates = queryElementsBySelectors(cardElement, state.siteConfig?.primaryPriceRowSelectors || []);
     const valueCandidates = queryElementsBySelectors(cardElement, state.siteConfig?.primaryPriceValueSelectors || []);
     const candidates = [...new Set([...valueCandidates, ...rowCandidates])];
+
+    if (elementMatchesAny(cardElement, state.siteConfig?.primaryPriceRowSelectors || []) ||
+        elementMatchesAny(cardElement, state.siteConfig?.primaryPriceValueSelectors || [])) {
+      candidates.push(cardElement);
+    }
+
     let best = null;
 
     candidates.forEach((candidate) => {
@@ -1127,11 +1141,13 @@
     });
 
     const winners = [];
+    const seenElements = new Set();
 
     cards.forEach((card) => {
       const resolved = resolveStructuredCardPrice(card, preferredCurrency);
-      if (resolved) {
+      if (resolved && !seenElements.has(resolved.element)) {
         winners.push(resolved);
+        seenElements.add(resolved.element);
       }
     });
 
