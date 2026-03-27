@@ -19,6 +19,7 @@ Ela foi pensada para grandes lojas e marketplaces, mas também inclui fallback g
 - Cálculo com salário em BRL ou USD.
 - Câmbio automático ou manual.
 - Modo mensal ou por hora — escolha como informar seu salário.
+- Exibição estendida — dias, meses e anos para itens que custam mais de 24h.
 - Controles por site para evitar páginas indesejadas.
 
 ## Privacidade

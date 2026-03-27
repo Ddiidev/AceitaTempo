@@ -4,6 +4,8 @@ const DEFAULT_SETTINGS = {
   salaryCurrency: "BRL",
   wageMode: "monthly",
   hourlyRate: 0,
+  extendedTimeDisplay: true,
+  extendedTimeDayMode: "calendar",
   exchangeRateMode: "auto",
   manualUsdToBrlRate: 5.5,
   exchangeRateUsdToBrl: 5.5,

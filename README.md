@@ -32,6 +32,13 @@ npm run package:zip
 
 O pacote final sai em `dist/aceita-tempo.zip`.
 
+## Novidades da 1.0.1
+
+- Modo por hora no painel de opções e no popup.
+- Exibição estendida em dias, meses e anos para compras mais caras.
+- Correções de estabilidade no tooltip e na recriação do badge.
+- Empacotamento `package:zip` funcionando em Windows, macOS e Linux.
+
 ### URLs publicas
 
 - Politica de privacidade: `https://ddiidev.github.io/AceitaTempo/privacy-policy.html`
@@ -45,6 +52,7 @@ O pacote final sai em `dist/aceita-tempo.zip`.
 - Atualiza a taxa `USD -> BRL` automaticamente e aceita taxa manual.
 - Exibe o calculo ao lado do preco em grandes e-commerces e usa fallback generico.
 - Exibe um badge curto `~tempo` ao lado do preco e mostra os detalhes no hover.
+- Para itens caros, mostra o tempo em dias, meses e anos em vez de apenas horas.
 - Opcionalmente, pode substituir o preco pelas horas de trabalho no lugar do valor.
 - Em carrinho/checkout, a extensao tenta calcular o total do pedido em vez de cada item separado.
 - UI multilanguage com `pt-BR` e `en`.
