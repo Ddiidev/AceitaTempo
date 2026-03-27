@@ -133,6 +133,8 @@ async function main() {
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 
+  page.on('console', (msg) => console.log('BROWSER:', msg.text()));
+
   try {
     await runAlibabaAssertions(page);
     console.log('Alibaba fixture checks passed.');

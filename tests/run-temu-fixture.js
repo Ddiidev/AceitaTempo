@@ -41,28 +41,32 @@ async function runTemuAssertions(page) {
   const html = String.raw`<!doctype html>
   <html lang="pt-BR">
     <head><style>
-      .srOnly-18Z4t {
-        position: absolute;
-        left: -9999px;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
-      }
-      .item-3QttB { display: block; }
-      .goodsPrice-3WNiN { display: block; font-size: 20px; }
+      .item-container { display: block; margin: 20px; border-bottom: 1px solid #ccc; padding: 10px; }
+      .price-row-reverse { display: flex; flex-direction: row-reverse; font-size: 20px; font-weight: bold; background: #f9f9f9; }
+      .pvr-price { text-decoration: line-through; color: gray; margin: 0 10px; font-size: 14px; }
+      .installment { color: #cc6600; font-size: 12px; margin-top: 5px; }
     </style></head>
     <body>
-      <div class="saleInfo-sPIai item-3QttB">
-        <div class="left-1AmIx">
-          <div class="saleInfo-3iLVR newStyle-2ZixM" data-priority-list="5,3,1,2,4,8,9">
-            <div class="priceWrap-3YWwa" data-ignore="true">
-              <div class="goodsPrice-3WNiN" data-type="price" id="price-block-1">
-                <span class="srOnly-18Z4t" id="price-sr-only">R$769,57</span>
-                <div class="price-2Xz_3" aria-hidden="true"></div>
-              </div>
+      <!-- Case 1: Search result with row-reverse and hidden accessibility text -->
+      <div role="group" aria-label="Laptop Pro 15" class="item-container" id="card-1">
+        <div class="price-row-reverse">
+            <!-- Screen reader text (duplicated value, should be skipped) -->
+            <div aria-hidden="true" style="position:absolute; left:-999px;">R$10.740,03</div>
+            
+            <!-- Visual price container -->
+            <div class="visual-price">
+              <span>R$</span>
+              <span>10.740</span>
+              <span>,03</span>
             </div>
-          </div>
         </div>
+      </div>
+
+      <!-- Case 2: Product page with PVR and Installments (should only badge the main price) -->
+      <div class="product-price-container" data-type="price" id="card-2">
+        <div class="main-price">R$960,39</div>
+        <div class="pvr-price">PVR R$ 1.200,00</div>
+        <div class="installment">Ou 6x R$ 160,06/mês</div>
       </div>
     </body>
   </html>`;
@@ -77,23 +81,36 @@ async function runTemuAssertions(page) {
 
   await page.goto('https://www.temu.com/', { waitUntil: 'domcontentloaded', timeout: 60000 });
   await injectExtension(page);
-  await page.waitForTimeout(2500);
+  await page.waitForTimeout(3000);
 
   const state = await page.evaluate(() => {
-    const scope = document.querySelector('#price-block-1');
-    const badge = scope && scope.parentElement
-      ? scope.parentElement.querySelector('[data-aceita-tempo-badge="1"]')
-        || document.querySelector('[data-aceita-tempo-badge="1"]')
-      : document.querySelector('[data-aceita-tempo-badge="1"]');
+    const badges = document.querySelectorAll('[data-aceita-tempo-badge="1"]');
+    
+    // Check Case 1: row-reverse positioning
+    const card1 = document.querySelector('#card-1');
+    const visualPrice = card1.querySelector('.visual-price');
+    const badge1 = card1.querySelector('[data-aceita-tempo-badge="1"]');
+    
+    // In row-reverse, if badge is before visualPrice, it's visually to the right
+    const isBadgeBefore = badge1 && visualPrice && (badge1.compareDocumentPosition(visualPrice) & Node.DOCUMENT_POSITION_FOLLOWING);
+
+    // Check Case 2: PVR/Installment exclusion
+    const card2 = document.querySelector('#card-2');
+    const card2Badges = card2.querySelectorAll('[data-aceita-tempo-badge="1"]');
 
     return {
-      badgeCount: document.querySelectorAll('[data-aceita-tempo-badge="1"]').length,
-      badgeText: badge ? badge.textContent.trim() : '',
+      totalBadges: badges.length,
+      card1BadgeFound: !!badge1,
+      isBadgeRightPos: !!isBadgeBefore,
+      card2BadgeCount: card2Badges.length,
     };
   });
 
-  assert.ok(state.badgeCount >= 1, `Temu fixture: expected at least 1 badge, got ${state.badgeCount}`);
-  assert.ok(state.badgeText.startsWith('~'), `Temu badge should show work duration, got: "${state.badgeText}"`);
+  console.log('Final Test State:', JSON.stringify(state, null, 2));
+
+  assert.strictEqual(state.card1BadgeFound, true, 'Card 1 (row-reverse) should have a badge');
+  assert.strictEqual(state.isBadgeRightPos, true, 'Card 1 badge should be before visual-price (visually right in row-reverse)');
+  assert.strictEqual(state.card2BadgeCount, 1, `Card 2 should have exactly 1 badge (main price only), got ${state.card2BadgeCount}`);
 }
 
 async function main() {

@@ -109,17 +109,20 @@
       name: 'Temu',
       hostPatterns: rx(['(^|\\.)temu\\.com$']),
       selectors: [
-        // Visually-hidden srOnly span holds the clean concatenated price (e.g. R$769,57)
+        // Visually-hidden srOnly span holds the clean concatenated price
         '[data-type="price"] [class*="srOnly" i]',
         '[data-type="price"] [class*="price" i]',
         '[data-priority-list]',
         '[data-type="price"]',
-        // Search-result cards: goodsPrice wrapper (hash suffix varies per deploy)
+        // Search-result cards: goodsPrice wrapper
         '[class*="goodsPrice" i]',
         '[class*="CountPrice" i]',
         '[class*="afterCouponPrice" i]',
+        // Generic patterns for obfuscated classes that still follow some naming
+        '[class*="price" i]',
+        '[class*="money" i]',
+        '[class*="valor" i]',
       ],
-      preferTextWalker: true,
       scopeSelectors: [
         '[data-type="price"]',
         '[class*="priceWrap" i]',
@@ -127,7 +130,37 @@
         // Search cards share a common item wrapper
         '[class*="item-" i][class*="Card" i]',
         '[class*="goods-" i]',
+        '[role="group"][aria-label]',
         ...PRODUCT_SCOPE_SELECTORS,
+      ],
+      cardSelectors: [
+        '[role="group"][aria-label]',
+        '[class*="item-" i][class*="Card" i]',
+        '[class*="goods-" i]',
+        '[data-type="price"]',
+      ],
+      primaryPriceRowSelectors: [
+        '[data-type="price"]',
+        '[class*="price" i]',
+        '[class*="goodsPrice" i]',
+        '[class*="saleInfo" i]',
+      ],
+      primaryPriceValueSelectors: [
+        '[class*="srOnly" i]',
+        '[class*="price" i]:not(span)',
+        '[class*="Total" i]',
+        '[class*="Main" i]',
+      ],
+      secondaryPriceSelectors: [
+        's',
+        'strike',
+        'del',
+        '[class*="original" i]',
+        '[class*="strike" i]',
+        '[class*="PVR" i]',
+        '[style*="line-through"]',
+        '[class*="installment" i]',
+        '[class*="coupon" i]:not([class*="after" i])', // ignore coupon values that aren't the final price
       ],
     },
     {

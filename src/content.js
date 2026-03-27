@@ -316,6 +316,11 @@
       return false;
     }
 
+    // Skip elements explicitly hidden for accessibility (often used by Temu for redundant price text)
+    if (element.getAttribute('aria-hidden') === 'true') {
+      return false;
+    }
+
     return element.getClientRects().length > 0;
   }
 
@@ -434,8 +439,11 @@
       SECONDARY_HINT_PATTERN.test(hintText) ||
       (normalizedText.length <= 36 && SECONDARY_TEXT_PATTERN.test(normalizedText)) ||
       String(element.getAttribute('data-a-strike') || '').toLowerCase() === 'true' ||
-      hasStrikeThrough(element) ||
-      element.closest('.a-text-price,[data-a-strike="true"],s,strike,del')
+      /(\%|\bOFF\b|desconto|economize|save|original|pvr|recomendado)/i.test(text) ||
+      // Installments usually follow the price or are small values with /mês (Portuguese) or /mo (English)
+      /\/\s*(mês|mês\.|mes|mo\b|month)/i.test(text) ||
+      /\dx\s*R\$/i.test(text) || // e.g. 6x R$ 10.00
+      element.closest('del, s, strike, [class*="strike" i], [class*="original" i], [class*="PVR" i]')
     );
   }
 
@@ -577,6 +585,12 @@
     score -= level * 2;
     score -= NOISE_TEXT_PATTERN.test(text) ? 6 : 0;
     score -= isSecondaryPriceCandidate(element, text) ? 12 : 0;
+
+    // Penalize targets that do not contain any digits (e.g. solitary currency symbols like "R$")
+    // This forces the badge to be attached to a more complete price container.
+    if (!/\d/.test(text)) {
+      score -= 10;
+    }
 
     return score;
   }
@@ -1043,6 +1057,11 @@
     score += elementMatchesAny(rowElement, state.siteConfig?.primaryPriceRowSelectors || []) ? 4 : 0;
     score += rowElement === target ? 0 : 2;
 
+    // Penalize targets that do not contain any digits to ensure right-alignment after the value
+    if (!/\d/.test(target.textContent)) {
+      score -= 12;
+    }
+
     return score;
   }
 
@@ -1440,8 +1459,23 @@
       target.addEventListener('pointerleave', leaveHandler);
       target.addEventListener('mouseleave', leaveHandler);
     }
+    
+    // Detect flex row-reverse to fix left-side positioning on sites like Temu
+    const targetStyle = window.getComputedStyle(target);
+    const parentStyle = window.getComputedStyle(target.parentElement || target);
+    
+    const isTargetRowReverse = targetStyle.display === 'flex' && targetStyle.flexDirection === 'row-reverse';
+    const isParentRowReverse = parentStyle.display === 'flex' && parentStyle.flexDirection === 'row-reverse';
 
-    target.insertAdjacentElement('afterend', badge);
+    if (isTargetRowReverse) {
+      // If target is the container itself, prepend to make it appear on the rightmost visually
+      target.insertAdjacentElement('afterbegin', badge);
+    } else if (isParentRowReverse) {
+      // If target is a child, being "before" it makes it appear to its right visually
+      target.insertAdjacentElement('beforebegin', badge);
+    } else {
+      target.insertAdjacentElement('afterend', badge);
+    }
   }
 
   function annotateResolvedPrice(resolved, locale, targetsToHide) {
@@ -1480,6 +1514,7 @@
     const targetsToHide = new Set();
     const structuredScopeElements = [];
 
+    clearBadges();
     setHiddenTargets([], false);
 
     if (usesStructuredPriceConfig()) {
@@ -1504,7 +1539,12 @@
       }
 
       const scopeId = getScopeId(getScopeElement(resolved.element, preferredCurrency));
-      if (structuredScopeElements.some((scopeElement) => scopeElement && scopeElement.contains(resolved.element))) {
+      if (structuredScopeElements.some((scopeElement) => scopeElement === resolved.element || (scopeElement && scopeElement.contains(resolved.element)))) {
+        return;
+      }
+      
+      // Also skip if the element itself already has a target attribute (already handled by structured logic)
+      if (resolved.element.hasAttribute(TARGET_ATTR)) {
         return;
       }
 
@@ -1516,8 +1556,6 @@
         winners.set(scopeId, resolved);
       }
     });
-
-    clearBadges();
 
     resolvedWinners.forEach((winner) => annotateResolvedPrice(winner, locale, targetsToHide));
     winners.forEach((winner) => annotateResolvedPrice(winner, locale, targetsToHide));
@@ -1724,7 +1762,6 @@
     try {
       chrome.storage?.onChanged?.addListener(onStorageChange);
     } catch {
-      // ignore
     }
 
     refreshSettingsAndScan();
