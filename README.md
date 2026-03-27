@@ -45,6 +45,7 @@ O pacote final sai em `dist/aceita-tempo.zip`.
 - Atualiza a taxa `USD -> BRL` automaticamente e aceita taxa manual.
 - Exibe o calculo ao lado do preco em grandes e-commerces e usa fallback generico.
 - Exibe um badge curto `~tempo` ao lado do preco e mostra os detalhes no hover.
+- Para itens caros, mostra o tempo em dias, meses e anos em vez de apenas horas.
 - Opcionalmente, pode substituir o preco pelas horas de trabalho no lugar do valor.
 - Em carrinho/checkout, a extensao tenta calcular o total do pedido em vez de cada item separado.
 - UI multilanguage com `pt-BR` e `en`.

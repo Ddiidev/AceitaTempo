@@ -20,6 +20,8 @@
     'salaryCurrency',
     'wageMode',
     'hourlyRate',
+    'extendedTimeDisplay',
+    'extendedTimeDayMode',
     'replacePricesWithHours',
     'exchangeRateMode',
     'exchangeRateUsdToBrl',
@@ -92,6 +94,8 @@
       salaryCurrency: String(raw.salaryCurrency ?? 'BRL').toUpperCase() === 'USD' ? 'USD' : 'BRL',
       wageMode: String(raw.wageMode ?? 'monthly').toLowerCase() === 'hourly' ? 'hourly' : 'monthly',
       hourlyRate: Math.max(0, Number(raw.hourlyRate) || 0),
+      extendedTimeDisplay: isTruthySetting(raw.extendedTimeDisplay ?? true),
+      extendedTimeDayMode: String(raw.extendedTimeDayMode ?? 'calendar').toLowerCase() === 'working' ? 'working' : 'calendar',
       replacePricesWithHours: isTruthySetting(raw.replacePricesWithHours ?? raw.replacePrices ?? raw.substituteValuesWithHours),
       exchangeRateMode: String(raw.exchangeRateMode ?? raw.exchangeMode ?? 'auto').toLowerCase() === 'manual' ? 'manual' : 'auto',
       exchangeRateUsdToBrl: Number(raw.exchangeRateUsdToBrl ?? raw.exchangeRate ?? raw.exchange_rate) || 0,
@@ -1393,7 +1397,8 @@
         badge.style.display = 'block';
         badge.style.width = 'fit-content';
         badge.style.marginInlineStart = '0';
-        badge.style.marginTop = '0.2em';
+        badge.style.marginTop = '0.1em';
+        badge.style.marginBottom = '0.4em';
         badge.style.clear = 'both';
       }
     }
@@ -1441,7 +1446,9 @@
       target.addEventListener('mouseleave', leaveHandler);
     }
 
-    target.insertAdjacentElement('afterend', badge);
+    const dropBelow = state.siteConfig?.name === 'Magazine Luiza';
+    const anchor = dropBelow && target.parentElement ? target.parentElement : target;
+    anchor.insertAdjacentElement('afterend', badge);
   }
 
   function annotateResolvedPrice(resolved, locale, targetsToHide) {
@@ -1457,7 +1464,7 @@
 
     annotateTarget(
       resolved.element,
-      PriceUtils.formatDurationShort(workDuration.minutes),
+      PriceUtils.formatDurationShort(workDuration.minutes, state.settings),
       PriceUtils.buildTooltipCard(resolved.parsedPrice, workDuration, state.settings, locale)
     );
 
@@ -1579,7 +1586,7 @@
 
     annotateTarget(
       best.element,
-      PriceUtils.formatDurationShort(workDuration.minutes),
+      PriceUtils.formatDurationShort(workDuration.minutes, state.settings),
       PriceUtils.buildTooltipCard(best.parsedPrice, workDuration, state.settings, locale)
     );
 

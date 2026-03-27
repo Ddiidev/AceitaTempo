@@ -4,6 +4,8 @@ const DEFAULT_SETTINGS = {
   monthlyHours: 160,
   wageMode: "monthly",
   hourlyRate: 0,
+  extendedTimeDisplay: true,
+  extendedTimeDayMode: "calendar",
   replacePricesWithHours: false,
   enableExternalSites: false,
   disabledSiteNames: [],
@@ -53,6 +55,8 @@ function normalizeSettings(raw) {
     monthlyHours: Math.max(1, Math.round(Number(raw.monthlyHours) || DEFAULT_SETTINGS.monthlyHours)),
     wageMode: raw.wageMode === "hourly" ? "hourly" : "monthly",
     hourlyRate: Math.max(0, Number(raw.hourlyRate) || 0),
+    extendedTimeDisplay: isTruthySetting(raw.extendedTimeDisplay ?? true),
+    extendedTimeDayMode: raw.extendedTimeDayMode === "working" ? "working" : "calendar",
     replacePricesWithHours: isTruthySetting(raw.replacePricesWithHours),
     enableExternalSites: isTruthySetting(raw.enableExternalSites ?? raw.enableExternal ?? raw.allowExternalSites),
     disabledSiteNames: Array.isArray(raw.disabledSiteNames) ? raw.disabledSiteNames : [],
@@ -74,6 +78,11 @@ function updateWageModeUI(mode) {
   $("hourlyRateGroup").style.display = isHourly ? "" : "none";
 }
 
+function updateExtendedTimeUI(enabled) {
+  $("extendedTimeDisplay").checked = enabled;
+  $("extendedTimeDayModeGroup").style.display = enabled ? "" : "none";
+}
+
 function fillForm(settings) {
   $("salaryAmount").value = settings.salaryAmount;
   $("salaryCurrency").value = settings.salaryCurrency;
@@ -84,6 +93,8 @@ function fillForm(settings) {
   $("exchangeRateMode").value = settings.exchangeRateMode;
   $("manualUsdToBrlRate").value = settings.manualUsdToBrlRate;
   $("manualUsdToBrlRate").disabled = settings.exchangeRateMode !== "manual";
+  $("extendedTimeDayMode").value = settings.extendedTimeDayMode;
+  updateExtendedTimeUI(settings.extendedTimeDisplay);
   updateWageModeUI(settings.wageMode);
   renderSiteToggles(settings.disabledSiteNames);
 }
@@ -184,6 +195,10 @@ async function init() {
     }
   });
 
+  $("extendedTimeDisplay").addEventListener("change", () => {
+    updateExtendedTimeUI($("extendedTimeDisplay").checked);
+  });
+
   $("exchangeRateMode").addEventListener("change", () => {
     $("manualUsdToBrlRate").disabled = $("exchangeRateMode").value !== "manual";
   });
@@ -214,6 +229,8 @@ async function init() {
       monthlyHours: $("monthlyHours").value,
       wageMode: $("wageMode").checked ? "hourly" : "monthly",
       hourlyRate: $("hourlyRate").value,
+      extendedTimeDisplay: $("extendedTimeDisplay").checked,
+      extendedTimeDayMode: $("extendedTimeDayMode").value,
       replacePricesWithHours: $("replacePricesWithHours").checked,
       enableExternalSites: $("enableExternalSites").checked,
       disabledSiteNames: Array.from(document.querySelectorAll("[data-site-name]"))

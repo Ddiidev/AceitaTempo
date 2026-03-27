@@ -130,5 +130,20 @@
   },
   "hourlyRateRequired": {
     "message": "Enter an hourly rate greater than zero."
+  },
+  "extendedTimeDisplayLabel": {
+    "message": "Extended time display"
+  },
+  "extendedTimeDisplayHint": {
+    "message": "Show days, months and years for items that cost more than 24h of work."
+  },
+  "extendedTimeDayModeLabel": {
+    "message": "Day calculation mode"
+  },
+  "extendedTimeDayModeCalendar": {
+    "message": "Calendar (24h days)"
+  },
+  "extendedTimeDayModeWorking": {
+    "message": "Working days"
   }
 }
