@@ -156,8 +156,52 @@
     return isFiniteNumber(hours) && hours > 0 ? Math.max(1, Math.round(hours * 60)) : null;
   }
 
-  function formatDurationShort(minutes) {
+  function decomposeMinutesToUnits(totalMinutes, settings) {
+    const hours = totalMinutes / 60;
+    const monthlyHours = Number(settings?.monthlyHours) || 0;
+    const isWorking = settings?.extendedTimeDayMode === 'working' && monthlyHours > 0;
+
+    let hoursPerDay, daysPerMonth, daysPerYear;
+    if (isWorking) {
+      hoursPerDay = monthlyHours / 22;
+      daysPerMonth = 22;
+      daysPerYear = 264;
+    } else {
+      hoursPerDay = 24;
+      daysPerMonth = 30;
+      daysPerYear = 365;
+    }
+
+    let totalDays = Math.floor(hours / hoursPerDay);
+    const remainderHours = Math.floor(hours % hoursPerDay);
+    const remainderMinutes = Math.round(totalMinutes % 60);
+
+    const years = Math.floor(totalDays / daysPerYear);
+    totalDays -= years * daysPerYear;
+    const months = Math.floor(totalDays / daysPerMonth);
+    const days = totalDays - months * daysPerMonth;
+
+    return { years, months, days, hours: remainderHours, minutes: remainderMinutes };
+  }
+
+  function formatExtendedUnits(units) {
+    const parts = [];
+    if (units.years > 0) parts.push(`${units.years}y`);
+    if (units.months > 0) parts.push(`${units.months}mo`);
+    if (units.days > 0) parts.push(`${units.days}d`);
+    if (units.hours > 0) parts.push(`${units.hours}h`);
+    if (units.minutes > 0) parts.push(`${units.minutes}m`);
+    return parts.slice(0, 3).join(' ') || '0m';
+  }
+
+  function formatDurationShort(minutes, settings) {
     const totalMinutes = Math.max(1, Math.round(minutes));
+
+    if (settings?.extendedTimeDisplay && totalMinutes >= 1440) {
+      const units = decomposeMinutesToUnits(totalMinutes, settings);
+      return `~${formatExtendedUnits(units)}`;
+    }
+
     const hours = Math.floor(totalMinutes / 60);
     const remainingMinutes = totalMinutes % 60;
 
@@ -172,11 +216,18 @@
     return `~${hours}h ${remainingMinutes}m`;
   }
 
-  function formatDurationLong(minutes, locale) {
+  function formatDurationLong(minutes, locale, settings) {
     const totalMinutes = Math.max(1, Math.round(minutes));
+    const isPt = /^pt/i.test(locale || '');
+
+    if (settings?.extendedTimeDisplay && totalMinutes >= 1440) {
+      const units = decomposeMinutesToUnits(totalMinutes, settings);
+      const formatted = formatExtendedUnits(units);
+      return isPt ? `${formatted} de trabalho` : `${formatted} of work`;
+    }
+
     const hours = Math.floor(totalMinutes / 60);
     const remainingMinutes = totalMinutes % 60;
-    const isPt = /^pt/i.test(locale || '');
 
     if (hours <= 0) {
       return isPt ? `${totalMinutes} min de trabalho` : `${totalMinutes}m of work`;
@@ -277,7 +328,7 @@
     const originalPrice = formatCurrency(price.amount, price.currency, locale);
     const convertedPrice = formatCurrency(duration.convertedPrice, duration.salaryCurrency, locale);
     const hourlySalary = formatCurrency(duration.hourlySalary, duration.salaryCurrency, locale);
-    const durationText = formatDurationLong(duration.minutes, locale);
+    const durationText = formatDurationLong(duration.minutes, locale, settings);
 
     if (price.currency === duration.salaryCurrency) {
       return isPt
@@ -299,7 +350,7 @@
     const originalPrice = formatCurrency(price.amount, price.currency, locale);
     const convertedPrice = formatCurrency(duration.convertedPrice, duration.salaryCurrency, locale);
     const hourlySalary = formatCurrency(duration.hourlySalary, duration.salaryCurrency, locale);
-    const durationText = formatDurationLong(duration.minutes, locale);
+    const durationText = formatDurationLong(duration.minutes, locale, settings);
     const sameCurrency = price.currency === duration.salaryCurrency;
 
     return {
