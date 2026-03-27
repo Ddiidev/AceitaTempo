@@ -32,6 +32,13 @@ npm run package:zip
 
 O pacote final sai em `dist/aceita-tempo.zip`.
 
+## Novidades da 1.0.1
+
+- Modo por hora no painel de opções e no popup.
+- Exibição estendida em dias, meses e anos para compras mais caras.
+- Correções de estabilidade no tooltip e na recriação do badge.
+- Empacotamento `package:zip` funcionando em Windows, macOS e Linux.
+
 ### URLs publicas
 
 - Politica de privacidade: `https://ddiidev.github.io/AceitaTempo/privacy-policy.html`
