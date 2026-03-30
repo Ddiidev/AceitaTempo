@@ -28,6 +28,8 @@ const SITES = [
   { key: 'armazem-paraiba', url: 'https://www.armazemparaiba.com.br/' },
   { key: 'americanas', url: 'https://www.americanas.com.br/' },
   { key: 'mercado-livre', url: 'https://www.mercadolivre.com.br/' },
+  { key: 'temu', url: 'https://www.temu.com/' },
+  { key: 'alibaba', url: 'https://www.alibaba.com/' },
 ];
 
 async function injectExtension(page, scripts) {
