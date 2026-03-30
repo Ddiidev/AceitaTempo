@@ -276,6 +276,60 @@ async function runEpicStyleAssertion(page) {
   assert.strictEqual(state.priceHidden, '1', 'Epic-style price should be hidden in replace mode');
 }
 
+async function runSteamSearchAndCartAssertions(page) {
+  const html = String.raw`<!doctype html>
+  <html lang="pt-BR">
+    <body>
+      <!-- Search result item -->
+      <div id="steam-search-row" class="search_result_row">
+        <div class="col search_price_discount_combined">
+          <div class="col search_price discounted responsive_secondrow">
+            <span style="color: #888888;"><strike>R$ 107,99</strike></span><br>R$ 10,79
+          </div>
+        </div>
+      </div>
+
+      <!-- New React Cart item -->
+      <div id="steam-new-cart-row" class="_3CartItem_12345">
+        <div class="_1PriceDisplay_67890">R$ 59,99</div>
+      </div>
+      
+      <!-- Market listing -->
+      <div id="steam-market-item">
+        <span class="market_listing_price market_listing_price_with_fee">R$ 1,50</span>
+      </div>
+    </body>
+  </html>`;
+
+  await loadFixture(page, 'https://store.steampowered.com/search/', html, '', false);
+
+  const state = await page.evaluate(() => {
+    const read = (id) => {
+      const scope = document.querySelector(`#${id}`);
+      const badge = scope.querySelector('[data-aceita-tempo-badge="1"]');
+      return {
+        badgeCount: scope.querySelectorAll('[data-aceita-tempo-badge="1"]').length,
+        badgeText: badge ? badge.textContent.trim() : '',
+      };
+    };
+
+    return {
+      search: read('steam-search-row'),
+      cart: read('steam-new-cart-row'),
+      market: read('steam-market-item'),
+    };
+  });
+
+  assert.strictEqual(state.search.badgeCount, 1, 'Steam search row should have a badge');
+  assert.ok(state.search.badgeText.startsWith('~'), 'Steam search badge should show duration');
+  
+  assert.strictEqual(state.cart.badgeCount, 1, 'Steam new cart row should have a badge');
+  assert.ok(state.cart.badgeText.startsWith('~'), 'Steam cart badge should show duration');
+
+  assert.strictEqual(state.market.badgeCount, 1, 'Steam market item should have a badge');
+  assert.ok(state.market.badgeText.startsWith('~'), 'Steam market badge should show duration');
+}
+
 async function main() {
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
@@ -283,6 +337,7 @@ async function main() {
   try {
     await runSteamAssertions(page, false);
     await runSteamAssertions(page, true);
+    await runSteamSearchAndCartAssertions(page);
     await runGogAssertions(page, false);
     await runGogAssertions(page, true);
     await runEpicStyleAssertion(page);

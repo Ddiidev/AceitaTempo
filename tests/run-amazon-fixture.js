@@ -152,6 +152,61 @@ async function runAmazonAssertions(page) {
   }
 }
 
+async function runAmazonCssModulesAssertions(page) {
+  // Regression test for the newer Amazon card layout using CSS-Module hashed classes.
+  // The stable attribute a[data-asin] must act as the scope so the badge is placed correctly.
+  const html = String.raw`<!doctype html>
+  <html lang="en">
+    <body>
+      <a data-asin="B09MWHKL2Y" id="cssmod-card" href="#"
+         class="a-link-normal _cDEzb_productLink_1X6Zg">
+        <div class="a-section a-spacing-none _cDEzb_container_2YT70"></div>
+        <div class="a-section a-spacing-none _cDEzb_container__xzc2"></div>
+        <div class="a-section a-spacing-none _cDEzb_flex_3xPEG _cDEzb_price_2S471">
+          <span id="savingspercent-id" class="a-size-extra-large _cDEzb_savings_kVYU">-7%</span>
+          <span id="price-id" class="a-price" data-a-size="xl">
+            <span class="a-offscreen">R$&#160;395,99</span>
+            <span aria-hidden="true"></span>
+          </span>
+        </div>
+      </a>
+    </body>
+  </html>`;
+
+  const css = `
+    a[data-asin] { display: block; }
+    .a-section { display: block; }
+    .a-price { display: inline-flex; font-family: Amazon Ember, Arial, sans-serif; font-size: 20px; }
+    .a-offscreen { position: absolute; left: -9999px; }
+  `;
+
+  await page.route('https://www.amazon.com/cssmod', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'text/html; charset=utf-8',
+      body: html,
+    });
+  });
+
+  await page.goto('https://www.amazon.com/cssmod', { waitUntil: 'domcontentloaded', timeout: 60000 });
+  await page.addStyleTag({ content: css });
+  await injectExtension(page);
+  await page.waitForTimeout(2500);
+
+  const state = await page.evaluate(() => {
+    const card = document.querySelector('#cssmod-card');
+    const badge = document.querySelector('[data-aceita-tempo-badge="1"]');
+    return {
+      badgeCount: document.querySelectorAll('[data-aceita-tempo-badge="1"]').length,
+      badgeText: badge ? badge.textContent.trim() : '',
+      badgeInsideCard: Boolean(badge && card && card.contains(badge)),
+    };
+  });
+
+  assert.ok(state.badgeCount >= 1, `Amazon _cDEzb_ fixture: expected at least 1 badge, got ${state.badgeCount}`);
+  assert.ok(state.badgeText.startsWith('~'), `Amazon _cDEzb_ badge should show work duration, got: "${state.badgeText}"`);
+}
+
 async function main() {
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
@@ -159,6 +214,8 @@ async function main() {
   try {
     await runAmazonAssertions(page);
     console.log('Amazon fixture checks passed.');
+    await runAmazonCssModulesAssertions(page);
+    console.log('Amazon _cDEzb_ CSS-Modules fixture checks passed.');
   } finally {
     await browser.close();
   }
