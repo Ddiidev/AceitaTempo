@@ -60,7 +60,7 @@
     '[class*="box" i]',
   ];
 
-  const SITE_CONFIGS = [
+  const RAW_SITE_CONFIGS = [
     {
       name: 'Amazon',
       hostPatterns: rx([
@@ -433,9 +433,84 @@
     },
   ];
 
-  function getSiteConfig(hostname) {
-    const normalized = normalizeHostname(hostname);
-    return SITE_CONFIGS.find((config) => config.hostPatterns.some((pattern) => pattern.test(normalized))) || null;
+  const SOCIAL_SITE_CONFIGS = [
+    {
+      name: 'Instagram',
+      siteId: 'instagram',
+      kind: 'social',
+      hostPatterns: rx(['(^|\\.)instagram\\.com$']),
+    },
+    {
+      name: 'YouTube (Shorts)',
+      siteId: 'youtube-shorts',
+      kind: 'social',
+      hostPatterns: rx(['(^|\\.)youtube\\.com$']),
+      matchesLocation: ({ pathname }) => /^\/shorts(?:\/|$)/i.test(String(pathname || '')),
+    },
+    {
+      name: 'YouTube',
+      siteId: 'youtube',
+      kind: 'social',
+      hostPatterns: rx(['(^|\\.)youtube\\.com$']),
+      matchesLocation: ({ pathname }) => !/^\/shorts(?:\/|$)/i.test(String(pathname || '')),
+    },
+    {
+      name: 'TikTok',
+      siteId: 'tiktok',
+      kind: 'social',
+      hostPatterns: rx(['(^|\\.)tiktok\\.com$']),
+    },
+  ];
+
+  function toSiteId(name) {
+    return String(name || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
+
+  const SITE_CONFIGS = [
+    ...RAW_SITE_CONFIGS.map((config) => ({
+      kind: 'commerce',
+      siteId: toSiteId(config.name),
+      ...config,
+    })),
+    ...SOCIAL_SITE_CONFIGS,
+  ];
+
+  function normalizeLocationInput(input) {
+    if (typeof input === 'string') {
+      return {
+        hostname: input,
+        pathname: '',
+        href: '',
+      };
+    }
+
+    return {
+      hostname: input?.hostname || '',
+      pathname: input?.pathname || '',
+      href: input?.href || '',
+    };
+  }
+
+  function getSiteConfig(input) {
+    const locationLike = normalizeLocationInput(input);
+    const normalizedHostname = normalizeHostname(locationLike.hostname);
+
+    return SITE_CONFIGS.find((config) => {
+      if (!config.hostPatterns.some((pattern) => pattern.test(normalizedHostname))) {
+        return false;
+      }
+
+      if (typeof config.matchesLocation === 'function') {
+        return config.matchesLocation(locationLike);
+      }
+
+      return true;
+    }) || null;
   }
 
   globalObj.AceitaTempoSiteConfig = {
@@ -443,6 +518,7 @@
     sharedExclusions: SHARED_EXCLUSIONS,
     productScopeSelectors: PRODUCT_SCOPE_SELECTORS,
     siteConfigs: SITE_CONFIGS,
+    getSiteConfigs: () => SITE_CONFIGS.slice(),
     getSiteConfig,
     normalizeHostname,
   };

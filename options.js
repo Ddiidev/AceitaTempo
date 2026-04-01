@@ -1,3 +1,11 @@
+const DEFAULT_SOCIAL_SITES = ["instagram", "youtube", "youtube-shorts", "tiktok"];
+const SOCIAL_SITE_OPTIONS = [
+  { id: "instagram", labelKey: "socialAwarenessSiteInstagram" },
+  { id: "youtube", labelKey: "socialAwarenessSiteYouTube" },
+  { id: "youtube-shorts", labelKey: "socialAwarenessSiteYouTubeShorts" },
+  { id: "tiktok", labelKey: "socialAwarenessSiteTikTok" },
+];
+
 const DEFAULT_SETTINGS = {
   salaryAmount: 5000,
   salaryCurrency: "BRL",
@@ -13,12 +21,19 @@ const DEFAULT_SETTINGS = {
   manualUsdToBrlRate: 5.5,
   exchangeRateUsdToBrl: 5.5,
   exchangeRateFetchedAt: null,
+  socialAwarenessEnabled: false,
+  socialAwarenessSites: [...DEFAULT_SOCIAL_SITES],
+  socialPromptEnabled: true,
+  socialTrackingEnabled: true,
+  socialReflectionEnabled: true,
+  socialMonetaryOptIn: false,
 };
 
 const STORAGE_KEYS = Object.keys(DEFAULT_SETTINGS);
 const SITE_CONFIGS = globalThis.AceitaTempoSiteConfig?.siteConfigs
   || globalThis.AceitaTempoSiteConfig?.getSiteConfigs?.()
   || [];
+const COMMERCE_SITE_CONFIGS = SITE_CONFIGS.filter((site) => site.kind !== "social");
 
 const $ = (id) => document.getElementById(id);
 
@@ -28,7 +43,7 @@ function getStorageArea() {
 
 function readSettings() {
   return new Promise((resolve) => {
-    getStorageArea().get(STORAGE_KEYS, (items) => resolve({ ...DEFAULT_SETTINGS, ...items }));
+    getStorageArea().get(STORAGE_KEYS, (items) => resolve(normalizeSettings({ ...DEFAULT_SETTINGS, ...items })));
   });
 }
 
@@ -48,6 +63,12 @@ function isTruthySetting(value) {
   return value === true || value === 1 || value === "1" || value === "true";
 }
 
+function normalizeSocialSites(rawSites) {
+  const values = Array.isArray(rawSites) ? rawSites : DEFAULT_SOCIAL_SITES;
+  const normalized = values.map((value) => String(value || "").toLowerCase()).filter(Boolean);
+  return normalized.length ? [...new Set(normalized)] : [...DEFAULT_SOCIAL_SITES];
+}
+
 function normalizeSettings(raw) {
   return {
     salaryAmount: Math.max(0, Number(raw.salaryAmount) || 0),
@@ -62,6 +83,14 @@ function normalizeSettings(raw) {
     disabledSiteNames: Array.isArray(raw.disabledSiteNames) ? raw.disabledSiteNames : [],
     exchangeRateMode: raw.exchangeRateMode === "manual" ? "manual" : "auto",
     manualUsdToBrlRate: Math.max(0, Number(raw.manualUsdToBrlRate) || 0),
+    exchangeRateUsdToBrl: Math.max(0, Number(raw.exchangeRateUsdToBrl) || 0),
+    exchangeRateFetchedAt: raw.exchangeRateFetchedAt || null,
+    socialAwarenessEnabled: isTruthySetting(raw.socialAwarenessEnabled),
+    socialAwarenessSites: normalizeSocialSites(raw.socialAwarenessSites),
+    socialPromptEnabled: isTruthySetting(raw.socialPromptEnabled ?? true),
+    socialTrackingEnabled: isTruthySetting(raw.socialTrackingEnabled ?? true),
+    socialReflectionEnabled: isTruthySetting(raw.socialReflectionEnabled ?? true),
+    socialMonetaryOptIn: isTruthySetting(raw.socialMonetaryOptIn),
   };
 }
 
@@ -83,6 +112,17 @@ function updateExtendedTimeUI(enabled) {
   $("extendedTimeDayModeGroup").style.display = enabled ? "" : "none";
 }
 
+function updateSocialAwarenessUI(enabled) {
+  const controls = $("socialAwarenessControls");
+  if (!controls) return;
+
+  $("socialAwarenessEnabled").checked = enabled;
+  controls.hidden = !enabled;
+  controls.querySelectorAll("input").forEach((input) => {
+    input.disabled = !enabled;
+  });
+}
+
 function fillForm(settings) {
   $("salaryAmount").value = settings.salaryAmount;
   $("salaryCurrency").value = settings.salaryCurrency;
@@ -94,9 +134,16 @@ function fillForm(settings) {
   $("manualUsdToBrlRate").value = settings.manualUsdToBrlRate;
   $("manualUsdToBrlRate").disabled = settings.exchangeRateMode !== "manual";
   $("extendedTimeDayMode").value = settings.extendedTimeDayMode;
+  $("socialPromptEnabled").checked = settings.socialPromptEnabled;
+  $("socialTrackingEnabled").checked = settings.socialTrackingEnabled;
+  $("socialReflectionEnabled").checked = settings.socialReflectionEnabled;
+  $("socialMonetaryOptIn").checked = settings.socialMonetaryOptIn;
+
   updateExtendedTimeUI(settings.extendedTimeDisplay);
   updateWageModeUI(settings.wageMode);
   renderSiteToggles(settings.disabledSiteNames);
+  renderSocialSiteToggles(settings.socialAwarenessSites);
+  updateSocialAwarenessUI(settings.socialAwarenessEnabled);
 }
 
 function renderSiteToggles(disabledSiteNames = []) {
@@ -104,7 +151,7 @@ function renderSiteToggles(disabledSiteNames = []) {
   if (!container) return;
 
   const disabled = new Set((disabledSiteNames || []).map((value) => String(value)));
-  container.innerHTML = SITE_CONFIGS.map((site) => {
+  container.innerHTML = COMMERCE_SITE_CONFIGS.map((site) => {
     const checked = !disabled.has(site.name);
     return `
       <label class="site-toggle">
@@ -119,6 +166,43 @@ function renderSiteToggles(disabledSiteNames = []) {
       </label>
     `;
   }).join("");
+}
+
+function renderSocialSiteToggles(selectedSiteIds = []) {
+  const container = $("socialAwarenessSiteToggles");
+  if (!container) return;
+
+  const selected = new Set(normalizeSocialSites(selectedSiteIds));
+  container.innerHTML = SOCIAL_SITE_OPTIONS.map((site) => `
+    <label class="site-toggle site-toggle--checkbox">
+      <span class="site-toggle__text">
+        <span class="site-toggle__name">${chrome.i18n.getMessage(site.labelKey)}</span>
+      </span>
+      <input type="checkbox" data-social-site-id="${site.id}" ${selected.has(site.id) ? "checked" : ""} />
+    </label>
+  `).join("");
+}
+
+function getSelectedSocialSites() {
+  return Array.from(document.querySelectorAll("[data-social-site-id]"))
+    .filter((input) => input.checked)
+    .map((input) => input.getAttribute("data-social-site-id"))
+    .filter(Boolean);
+}
+
+function ensureAllSocialSitesSelectedIfNeeded() {
+  if (!$("socialAwarenessEnabled").checked) {
+    return;
+  }
+
+  const inputs = Array.from(document.querySelectorAll("[data-social-site-id]"));
+  if (!inputs.length || inputs.some((input) => input.checked)) {
+    return;
+  }
+
+  inputs.forEach((input) => {
+    input.checked = true;
+  });
 }
 
 function updateSiteBlockToggle() {
@@ -199,6 +283,11 @@ async function init() {
     updateExtendedTimeUI($("extendedTimeDisplay").checked);
   });
 
+  $("socialAwarenessEnabled").addEventListener("change", () => {
+    updateSocialAwarenessUI($("socialAwarenessEnabled").checked);
+    ensureAllSocialSitesSelectedIfNeeded();
+  });
+
   $("exchangeRateMode").addEventListener("change", () => {
     $("manualUsdToBrlRate").disabled = $("exchangeRateMode").value !== "manual";
   });
@@ -222,6 +311,7 @@ async function init() {
 
   $("settingsForm").addEventListener("submit", async (event) => {
     event.preventDefault();
+    ensureAllSocialSitesSelectedIfNeeded();
 
     const payload = normalizeSettings({
       salaryAmount: $("salaryAmount").value,
@@ -238,6 +328,12 @@ async function init() {
         .map((input) => input.getAttribute("data-site-name")),
       exchangeRateMode: $("exchangeRateMode").value,
       manualUsdToBrlRate: $("manualUsdToBrlRate").value,
+      socialAwarenessEnabled: $("socialAwarenessEnabled").checked,
+      socialAwarenessSites: getSelectedSocialSites(),
+      socialPromptEnabled: $("socialPromptEnabled").checked,
+      socialTrackingEnabled: $("socialTrackingEnabled").checked,
+      socialReflectionEnabled: $("socialReflectionEnabled").checked,
+      socialMonetaryOptIn: $("socialMonetaryOptIn").checked,
     });
 
     if (payload.exchangeRateMode === "manual" && payload.manualUsdToBrlRate <= 0) {
@@ -247,6 +343,11 @@ async function init() {
 
     if (payload.wageMode === "hourly" && payload.hourlyRate <= 0) {
       setStatus(chrome.i18n.getMessage("hourlyRateRequired"), true);
+      return;
+    }
+
+    if (payload.socialAwarenessEnabled && payload.socialAwarenessSites.length === 0) {
+      setStatus(chrome.i18n.getMessage("socialAwarenessSiteRequired"), true);
       return;
     }
 
@@ -262,7 +363,10 @@ async function init() {
     }
 
     const nextSettings = await readSettings();
+    fillForm(nextSettings);
+    updateHourlyRateCurrencyPrefix();
     updateRateSnapshot(nextSettings);
+    updateSiteBlockToggle();
     if (!hadExchangeWarning) {
       setStatus(chrome.i18n.getMessage("savedMessage"));
     }

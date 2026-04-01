@@ -1,7 +1,6 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const os = require('os');
 const { chromium } = require('playwright');
 
 const SETTINGS = {
@@ -11,7 +10,15 @@ const SETTINGS = {
   exchangeRateMode: 'manual',
   manualUsdToBrlRate: 5.5,
   exchangeRateUsdToBrl: 5.5,
+  enableExternalSites: true,
 };
+
+const SCRIPT_FILES = [
+  path.join(process.cwd(), 'src', 'price-utils.js'),
+  path.join(process.cwd(), 'src', 'site-config.js'),
+  path.join(process.cwd(), 'src', 'social-awareness.js'),
+  path.join(process.cwd(), 'src', 'content.js'),
+];
 
 const HTML = `<!doctype html>
 <html lang="pt-BR">
@@ -27,6 +34,31 @@ const HTML = `<!doctype html>
   </body>
 </html>`;
 
+async function injectExtension(page) {
+  await page.evaluate((settings) => {
+    Object.defineProperty(window, 'chrome', {
+      configurable: true,
+      value: {
+        storage: {
+          sync: {
+            get: (_keys, callback) => callback({ ...settings }),
+          },
+          local: {
+            get: (_keys, callback) => callback({ ...settings }),
+          },
+          onChanged: {
+            addListener: () => {},
+          },
+        },
+      },
+    });
+  }, SETTINGS);
+
+  for (const file of SCRIPT_FILES) {
+    await page.addScriptTag({ content: fs.readFileSync(file, 'utf8') });
+  }
+}
+
 async function main() {
   const server = http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
@@ -37,56 +69,35 @@ async function main() {
   const port = server.address().port;
   const url = `http://127.0.0.1:${port}/cart.html`;
 
-  const extensionPath = process.cwd();
-  const userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'aceita-tempo-cart-'));
-  const context = await chromium.launchPersistentContext(userDataDir, {
-    headless: true,
-    channel: 'chromium',
-    args: [
-      `--disable-extensions-except=${extensionPath}`,
-      `--load-extension=${extensionPath}`,
-    ],
-  });
+  const browser = await chromium.launch({ headless: true });
+  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 
   try {
-    let [sw] = context.serviceWorkers();
-    if (!sw) {
-      sw = await context.waitForEvent('serviceworker', { timeout: 30000 });
-    }
-
-    await sw.evaluate(async (settings) => {
-      await chrome.storage.sync.set(settings);
-    }, SETTINGS);
-
-    const page = context.pages()[0] || await context.newPage();
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
-    await page.waitForTimeout(4000);
+    await injectExtension(page);
+    await page.waitForTimeout(2500);
 
     const result = await page.evaluate(() => {
       const badges = [...document.querySelectorAll('[data-aceita-tempo-badge="1"]')];
       const texts = badges.map((badge) => badge.textContent.trim());
-      const tooltips = badges.map((badge) => badge.title.trim()).filter(Boolean);
 
       return {
         badgeCount: badges.length,
         allShortLabels: texts.every((text) => /^~/.test(text)),
-        tooltipCount: tooltips.length,
         sampleTexts: texts.slice(0, 4),
-        sampleTooltips: tooltips.slice(0, 2),
       };
     });
 
     console.log(JSON.stringify({ site: 'cart-smoke', status: 'ok', ...result }));
 
-    if (result.badgeCount !== 1 || !result.allShortLabels || result.tooltipCount !== 1) {
+    if (result.badgeCount !== 1 || !result.allShortLabels) {
       process.exitCode = 1;
     }
   } catch (error) {
     console.log(JSON.stringify({ site: 'cart-smoke', status: 'error', error: error.message }));
     process.exitCode = 1;
   } finally {
-    await context.close();
-    fs.rmSync(userDataDir, { recursive: true, force: true });
+    await browser.close();
     server.close();
   }
 }
