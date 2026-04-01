@@ -52,6 +52,8 @@
     tooltipElement: null,
     tooltipAnchor: null,
     tooltipRafId: null,
+    scanSession: 0,
+    targetToBadge: new WeakMap(),
   };
 
   function storageArea() {
@@ -1154,6 +1156,25 @@
     document.querySelectorAll(`[${TARGET_ATTR}="1"]`).forEach((element) => element.removeAttribute(TARGET_ATTR));
   }
 
+  function cleanupStaleBadges() {
+    const sessionStr = String(state.scanSession);
+    document.querySelectorAll(`[${BADGE_ATTR}="1"]`).forEach((badge) => {
+      if (badge.getAttribute('data-scan-session') !== sessionStr) {
+        if (state.tooltipAnchor === badge) {
+          hideTooltip();
+        }
+        badge.remove();
+      }
+    });
+
+    document.querySelectorAll(`[${TARGET_ATTR}="1"]`).forEach((target) => {
+      const badge = state.targetToBadge.get(target);
+      if (!badge || !document.contains(badge) || badge.getAttribute('data-scan-session') !== sessionStr) {
+        target.removeAttribute(TARGET_ATTR);
+      }
+    });
+  }
+
   function stopObserving() {
     if (state.observer) {
       state.observer.disconnect();
@@ -1275,17 +1296,25 @@
       return;
     }
 
+    const tooltip = getTooltipElement();
+    const isAlreadyShowingThisAnchor = state.tooltipAnchor === anchor && tooltip.getAttribute('data-visible') === '1';
+
     if (state.tooltipRafId) {
       cancelAnimationFrame(state.tooltipRafId);
       state.tooltipRafId = null;
     }
 
-    const tooltip = getTooltipElement();
     state.tooltipAnchor = anchor;
+    renderTooltipContent(model);
+
+    if (isAlreadyShowingThisAnchor) {
+      positionTooltip(anchor);
+      return;
+    }
+
     tooltip.style.transition = 'none';
     tooltip.removeAttribute('data-visible');
     tooltip.setAttribute('aria-hidden', 'true');
-    renderTooltipContent(model);
 
     tooltip.style.left = '-9999px';
     tooltip.style.top = '-9999px';
@@ -1404,7 +1433,8 @@
     }
 
     if (tooltipModel) {
-      const enterHandler = () => showTooltip(badge, tooltipModel);
+      badge._tooltipModel = tooltipModel;
+      const enterHandler = () => showTooltip(badge, badge._tooltipModel);
       const leaveHandler = hideTooltip;
       badge.addEventListener('pointerenter', enterHandler);
       badge.addEventListener('mouseenter', enterHandler);
@@ -1425,30 +1455,40 @@
       target.setAttribute(HIDDEN_ATTR, '1');
     }
 
-    const preferredTextStyle = getPreferredTextStyle(target);
-    const badge = createBadge(label, tooltipModel, {
-      inline: replaceMode,
-      fontSize: preferredTextStyle.fontSize,
-      color: preferredTextStyle.color,
-      lineHeight: preferredTextStyle.lineHeight,
-      fontFamily: preferredTextStyle.fontFamily,
-      compact: true,
-      fontScale: state.siteConfig ? 0.75 : 0.45,
-      dropBelow: state.siteConfig?.name === 'Magazine Luiza',
-    });
-
-    if (tooltipModel) {
-      const enterHandler = () => showTooltip(badge, tooltipModel);
-      const leaveHandler = hideTooltip;
-      target.addEventListener('pointerenter', enterHandler);
-      target.addEventListener('mouseenter', enterHandler);
-      target.addEventListener('pointerleave', leaveHandler);
-      target.addEventListener('mouseleave', leaveHandler);
-    }
-
+    let badge = state.targetToBadge.get(target);
     const dropBelow = state.siteConfig?.name === 'Magazine Luiza';
     const anchor = dropBelow && target.parentElement ? target.parentElement : target;
-    anchor.insertAdjacentElement('afterend', badge);
+
+    if (badge && document.contains(badge) && (badge.parentElement === anchor || badge.parentElement === anchor.parentElement)) {
+      badge.textContent = label;
+      badge._tooltipModel = tooltipModel;
+    } else {
+      const preferredTextStyle = getPreferredTextStyle(target);
+      badge = createBadge(label, tooltipModel, {
+        inline: replaceMode,
+        fontSize: preferredTextStyle.fontSize,
+        color: preferredTextStyle.color,
+        lineHeight: preferredTextStyle.lineHeight,
+        fontFamily: preferredTextStyle.fontFamily,
+        compact: true,
+        fontScale: state.siteConfig ? 0.75 : 0.45,
+        dropBelow: dropBelow,
+      });
+
+      if (tooltipModel) {
+        const enterHandler = () => showTooltip(badge, badge._tooltipModel);
+        const leaveHandler = hideTooltip;
+        target.addEventListener('pointerenter', enterHandler);
+        target.addEventListener('mouseenter', enterHandler);
+        target.addEventListener('pointerleave', leaveHandler);
+        target.addEventListener('mouseleave', leaveHandler);
+      }
+
+      state.targetToBadge.set(target, badge);
+      anchor.insertAdjacentElement('afterend', badge);
+    }
+
+    badge.setAttribute('data-scan-session', String(state.scanSession));
   }
 
   function annotateResolvedPrice(resolved, locale, targetsToHide) {
@@ -1524,8 +1564,6 @@
       }
     });
 
-    clearBadges();
-
     resolvedWinners.forEach((winner) => annotateResolvedPrice(winner, locale, targetsToHide));
     winners.forEach((winner) => annotateResolvedPrice(winner, locale, targetsToHide));
 
@@ -1565,8 +1603,6 @@
       }
     });
 
-    clearBadges();
-
     if (!best) {
       if (replaceMode) {
         setHiddenTargets(targetsToHide, true);
@@ -1603,12 +1639,15 @@
       return;
     }
 
+    state.scanSession++;
+
     if (isCartOrCheckoutPage()) {
       scanOrderTotals();
-      return;
+    } else {
+      scanItemPrices();
     }
 
-    scanItemPrices();
+    cleanupStaleBadges();
   }
 
   function scheduleScan() {
@@ -1678,11 +1717,16 @@
     });
 
     window.addEventListener('scroll', () => {
-      hideTooltip();
+      if (state.tooltipAnchor && state.tooltipElement?.getAttribute('data-visible') === '1') {
+        positionTooltip(state.tooltipAnchor);
+      }
       scheduleScan();
     }, { passive: true });
+
     window.addEventListener('resize', () => {
-      hideTooltip();
+      if (state.tooltipAnchor && state.tooltipElement?.getAttribute('data-visible') === '1') {
+        positionTooltip(state.tooltipAnchor);
+      }
       scheduleScan();
     }, { passive: true });
   }
