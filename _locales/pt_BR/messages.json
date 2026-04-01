@@ -23,9 +23,18 @@
   "popupSubtitle": {
     "message": "Abra as opções para ajustar sua referência de custo por hora."
   },
-  "salaryLabel": {
-    "message": "Salário mensal"
+  "popupSocialEyebrow": {
+    "message": "Tempo ativo nesta rede"
   },
+  "popupSocialHint": {
+    "message": "Contador da sessão atual"
+  },
+  "popupSocialDefaultSite": {
+    "message": "Rede social"
+  },
+  "salaryLabel": {
+      "message": "Salário mensal"
+    },
   "salaryCurrencyLabel": {
     "message": "Moeda do salário"
   },
@@ -145,5 +154,113 @@
   },
   "extendedTimeDayModeWorking": {
     "message": "Dias úteis"
+  },
+  "socialAwarenessSectionTitle": {
+    "message": "Consciência em redes sociais"
+  },
+  "socialAwarenessSectionHint": {
+    "message": "Monitore Instagram, YouTube, YouTube (Shorts) e TikTok de forma opcional, com prompts discretos e sem tom moralista."
+  },
+  "socialAwarenessEnabledLabel": {
+    "message": "Ativar check-ins em redes sociais"
+  },
+  "socialAwarenessEnabledHint": {
+    "message": "Liga o acompanhamento opcional de uso ativo com toasts discretos e resumo reflexivo no fim da sessão."
+  },
+  "socialAwarenessSitesLabel": {
+    "message": "Sites monitorados"
+  },
+  "socialAwarenessSitesHint": {
+    "message": "Ao ativar o recurso, os sites suportados ficam marcados por padrão. Você pode desmarcar qualquer um deles."
+  },
+  "socialAwarenessSiteInstagram": {
+    "message": "Instagram"
+  },
+  "socialAwarenessSiteYouTube": {
+    "message": "YouTube"
+  },
+  "socialAwarenessSiteYouTubeShorts": {
+    "message": "YouTube (Shorts)"
+  },
+  "socialAwarenessSiteTikTok": {
+    "message": "TikTok"
+  },
+  "socialPromptEnabledLabel": {
+    "message": "Mostrar check-ins discretos"
+  },
+  "socialPromptEnabledHint": {
+      "message": "Mostra o primeiro check-in entre 1 e 3 minutos e, depois da primeira resposta, sorteia novos check-ins entre 3 e 7 minutos de uso visível."
+    },
+  "socialTrackingEnabledLabel": {
+    "message": "Registrar tempo ativo"
+  },
+  "socialTrackingEnabledHint": {
+    "message": "Conta enquanto a aba estiver visível; ao sair da página ou trocar de aba a contagem pausa automaticamente."
+  },
+  "socialReflectionEnabledLabel": {
+    "message": "Perguntar no fim da sessão"
+  },
+  "socialReflectionEnabledHint": {
+    "message": "Retoma a última sessão monitorada e só mostra resumo quando você disser que o uso não ficou alinhado."
+  },
+  "socialMonetaryOptInLabel": {
+    "message": "Permitir conversão monetária"
+  },
+  "socialMonetaryOptInHint": {
+    "message": "Desligado por padrão. Só mostra o valor aproximado da sessão se você optar por essa leitura."
+  },
+  "socialAwarenessSiteRequired": {
+    "message": "Selecione ao menos uma rede social para monitorar."
+  },
+  "socialPromptTitleInitial": {
+    "message": "Check-in discreto"
+  },
+  "socialPromptTitleInterim": {
+    "message": "Ainda está valendo?"
+  },
+  "socialPromptBodyInitial": {
+    "message": "Este uso está alinhado com o que você queria fazer aqui?"
+  },
+  "socialPromptBodyInterim": {
+    "message": "Sua sessão ainda está alinhada com o que você abriu para fazer?"
+  },
+  "socialPromptGoalLabel": {
+    "message": "Anotação opcional"
+  },
+  "socialPromptGoalPlaceholder": {
+    "message": "Ex.: ver um vídeo específico, responder alguém, relaxar"
+  },
+  "socialPromptYes": {
+    "message": "Sim, está alinhado"
+  },
+  "socialPromptNo": {
+    "message": "Não muito"
+  },
+  "socialPromptDismiss": {
+    "message": "Descartar"
+  },
+  "socialReflectionTitle": {
+    "message": "Antes de começar de novo"
+  },
+  "socialReflectionBody": {
+    "message": "Na última sessão no $1, você ficou $2 em tempo ativo. Isso ficou alinhado com o que queria fazer?"
+  },
+  "socialSummaryTitle": {
+    "message": "Resumo da sessão"
+  },
+  "socialSummaryBody": {
+      "message": "Tempo ativo nesta sessão: $1 no $2."
+    },
+  "socialSummaryResponse": {
+      "message": "Na revisão final, você marcou: $1."
+    },
+  "socialSummaryGoal": {
+      "message": "Anotação inicial: $1"
+    },
+  "socialSummaryMoney": {
+    "message": "Conversão aproximada pela sua referência atual: $1."
+  },
+  "socialSummaryClose": {
+    "message": "Entendi"
   }
 }

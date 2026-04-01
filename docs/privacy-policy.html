@@ -238,7 +238,7 @@
           <div class="facts">
             <article class="card">
               <span class="fact-value">Local no navegador</span>
-              <p>Salário, horas trabalhadas e preferências ficam salvos no <code>chrome.storage</code>.</p>
+              <p>Salário, horas trabalhadas, preferências e snapshots temporários da feature social ficam salvos no <code>chrome.storage</code>.</p>
             </article>
             <article class="card">
               <span class="fact-value">Sem backend próprio</span>
@@ -277,6 +277,7 @@
                 <li>Substituir ou não preços por horas</li>
                 <li>Modo de câmbio automático ou manual</li>
                 <li>Ativação ou desativação por site</li>
+                <li>Check-ins opcionais em redes sociais e conversão monetária opt-in</li>
               </ul>
             </article>
             <article class="card">
@@ -296,6 +297,15 @@
                 <li>Fonte atual: <a class="inline" href="https://open.er-api.com/" rel="noreferrer noopener" target="_blank">open.er-api.com</a></li>
               </ul>
             </article>
+            <article class="card">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M8 8h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M8 16h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+              <h3>Sessões sociais opcionais</h3>
+              <ul>
+                <li>Guardam apenas tempo ativo, site monitorado e anotação opcional</li>
+                <li>Ficam em <code>chrome.storage.local</code> para retomar um resumo discreto ao voltar ao site</li>
+                <li>São temporárias e removidas após a reflexão final ou depois de 24 horas</li>
+              </ul>
+            </article>
           </div>
         </section>
 
@@ -311,11 +321,11 @@
           <div class="grid-3">
             <article class="card">
               <h3>Armazenamento</h3>
-              <p>As preferências ficam salvas no navegador para que o cálculo continue consistente entre páginas e sessões.</p>
+              <p>As preferências ficam salvas no navegador para que o cálculo continue consistente entre páginas e sessões. Se você ativar a feature social, snapshots temporários locais ajudam a retomar a reflexão final.</p>
             </article>
             <article class="card">
               <h3>Processamento</h3>
-              <p>O conteúdo visível é processado localmente para localizar preços, entender contexto e gerar a conversão em horas.</p>
+              <p>O conteúdo visível é processado localmente para localizar preços, entender contexto e gerar a conversão em horas. Nas redes sociais opcionais, a extensão mede apenas tempo ativo e o alinhamento informado por você.</p>
             </article>
             <article class="card">
               <h3>Compartilhamento</h3>

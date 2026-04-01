@@ -15,6 +15,16 @@
       </section>
 
       <section class="card summary">
+        <div id="socialCounterCard" class="social-counter" hidden>
+          <div class="eyebrow social-counter__eyebrow" data-i18n="popupSocialEyebrow"></div>
+          <div class="social-counter__row">
+            <div>
+              <strong id="socialSiteName">-</strong>
+              <p id="socialCounterHint" data-i18n="popupSocialHint"></p>
+            </div>
+            <div class="social-counter__time" id="socialActiveTime">-</div>
+          </div>
+        </div>
         <div id="salaryRow" class="summary-row">
           <span data-i18n="salaryLabel"></span>
           <strong id="salaryValue">-</strong>
@@ -38,6 +48,7 @@
       </section>
     </main>
 
+    <script src="src/site-config.js"></script>
     <script src="popup.js"></script>
   </body>
 </html>
