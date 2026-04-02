@@ -3,7 +3,7 @@
     "message": "AceitaTempo"
   },
   "extensionDescription": {
-    "message": "Converte valores em lojas para tempo de trabalho com base no seu salário e horas mensais."
+    "message": "Converte valores em lojas para tempo de trabalho com base no seu salário e na sua rotina de trabalho."
   },
   "optionsEyebrow": {
     "message": "Configuração"
@@ -12,7 +12,7 @@
     "message": "Quanto do seu tempo custa isso"
   },
   "optionsSubtitle": {
-    "message": "Defina seu salário, jornada mensal e a regra de câmbio usada para transformar preços em tempo."
+    "message": "Defina seu salário, período de referência e a regra de câmbio usada para transformar preços em tempo."
   },
   "popupEyebrow": {
     "message": "Resumo rápido"
@@ -33,13 +33,37 @@
     "message": "Rede social"
   },
   "salaryLabel": {
-      "message": "Salário mensal"
+      "message": "Valor do salário"
     },
+  "salaryPeriodLabel": {
+    "message": "Período de referência"
+  },
+  "salaryPeriodMonthly": {
+    "message": "Mensal"
+  },
+  "salaryPeriodBiweekly": {
+    "message": "Quinzenal"
+  },
+  "salaryPeriodWeekly": {
+    "message": "Semanal"
+  },
+  "salaryPeriodDaily": {
+    "message": "Diário"
+  },
   "salaryCurrencyLabel": {
     "message": "Moeda do salário"
   },
-  "monthlyHoursLabel": {
-    "message": "Horas trabalhadas por mês"
+  "periodHoursLabel": {
+    "message": "Horas trabalhadas por período"
+  },
+  "timeDisplayModeLabel": {
+    "message": "Modo de exibição do tempo"
+  },
+  "timeDisplayModeHours": {
+    "message": "Horas"
+  },
+  "timeDisplayModePeriod": {
+    "message": "Período real"
   },
   "exchangeModeLabel": {
     "message": "Modo de câmbio"
@@ -125,8 +149,8 @@
   "wageModeLabel": {
     "message": "Tipo de salário"
   },
-  "wageModeMonthly": {
-    "message": "Mensal"
+  "wageModeFixed": {
+    "message": "Fixo"
   },
   "wageModeHourly": {
     "message": "Por hora"

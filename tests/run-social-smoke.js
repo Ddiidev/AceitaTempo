@@ -429,6 +429,8 @@ async function runOptionsAssertions(browser) {
   await page.waitForTimeout(300);
 
   assert.strictEqual(await page.isChecked('#socialAwarenessEnabled'), false, 'social master toggle should start disabled');
+  assert.strictEqual(await page.locator('#salaryPeriod').inputValue(), 'monthly', 'salary period should default to monthly');
+  assert.strictEqual(await page.locator('#timeDisplayMode').inputValue(), 'hours', 'time display mode should default to hours');
   const selectedCount = await page.locator('[data-social-site-id]:checked').count();
   assert.strictEqual(selectedCount, 4, 'all supported social sites should be selected by default');
   assert.strictEqual(await page.locator('[data-social-site-id=\"youtube-shorts\"]').count(), 1, 'options should expose a dedicated YouTube Shorts toggle');
