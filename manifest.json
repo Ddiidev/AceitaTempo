@@ -10,7 +10,7 @@
     "48": "icons/icon-48.png",
     "128": "icons/icon-128.png"
   },
-  "permissions": ["storage", "alarms"],
+  "permissions": ["storage", "alarms", "tabs"],
   "host_permissions": ["https://open.er-api.com/*"],
   "background": {
     "service_worker": "background.js"
@@ -87,9 +87,19 @@
         "https://*.americanas.com.br/*",
         "https://*.temu.com/*",
         "https://*.alibaba.com/*",
-        "https://*.alibaba.com.br/*"
+        "https://*.alibaba.com.br/*",
+        "https://instagram.com/*",
+        "https://www.instagram.com/*",
+        "https://m.instagram.com/*",
+        "https://youtube.com/*",
+        "https://www.youtube.com/*",
+        "https://m.youtube.com/*",
+        "https://music.youtube.com/*",
+        "https://tiktok.com/*",
+        "https://www.tiktok.com/*",
+        "https://m.tiktok.com/*"
       ],
-      "js": ["src/price-utils.js", "src/site-config.js", "src/content.js"],
+      "js": ["src/price-utils.js", "src/site-config.js", "src/social-awareness.js", "src/content.js"],
       "run_at": "document_idle"
     }
   ]

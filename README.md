@@ -54,6 +54,8 @@ O pacote final sai em `dist/aceita-tempo.zip`.
 - Exibe um badge curto `~tempo` ao lado do preco e mostra os detalhes no hover.
 - Para itens caros, mostra o tempo em dias, meses e anos em vez de apenas horas.
 - Opcionalmente, pode substituir o preco pelas horas de trabalho no lugar do valor.
+- Opcionalmente, pode monitorar sessoes em Instagram, YouTube e TikTok com toasts discretos de alinhamento, contagem de tempo ativo e resumo reflexivo.
+- A conversao monetaria da sessao social existe, mas fica desligada por padrao e so aparece se voce optar por isso.
 - Em carrinho/checkout, a extensao tenta calcular o total do pedido em vez de cada item separado.
 - UI multilanguage com `pt-BR` e `en`.
 
@@ -82,6 +84,12 @@ A extensao foi desenhada para funcionar explicitamente em marketplaces grandes, 
 - Temu
 - Best Buy
 
+De forma separada do modo e-commerce, a extensao tambem pode acompanhar uso ativo em:
+
+- Instagram
+- YouTube
+- TikTok
+
 Tambem existe um detector generico para cobrir outros sites com estruturas parecidas.
 
 ## Como instalar
@@ -100,10 +108,12 @@ Tambem existe um detector generico para cobrir outros sites com estruturas parec
    - moeda do salario
    - modo de cambio automatico ou manual
    - opcionalmente, ative a substituicao do preco pelas horas de trabalho
+   - opcionalmente, ative a secao de redes sociais para acompanhar tempo ativo em Instagram, YouTube e TikTok
 3. Visite paginas de produto ou listagem em sites suportados.
 4. A extensao adiciona um badge ao lado do preco com o tempo de trabalho estimado, ou substitui o preco pelas horas quando a opcao estiver ativa.
 5. Ao passar o mouse no badge, a extensao mostra detalhes de preco, cambio e valor/hora.
 6. Em carrinho/checkout, ela tenta destacar o total da compra.
+7. Se a opcao social estiver ligada, a extensao usa toasts discretos para checar alinhamento e registrar apenas o tempo ativo, sem custo financeiro por padrao.
 
 ## Smoke test
 
@@ -113,6 +123,7 @@ Para rodar a validacao com Playwright:
 2. Rode `npm run smoke:sites`.
 3. Rode `npm run smoke:cart` para validar o modo de carrinho.
 4. Rode `npm run smoke:aliexpress` e `npm run smoke:games` para cobrir fixtures especificas.
+5. Rode `npm run smoke:social` para validar o fluxo opcional de redes sociais e a tela de opcoes.
 
 As evidencias sao salvas em `playwright-artifacts/`.
 
@@ -130,5 +141,7 @@ Antes de publicar:
 
 - O calculo usa `salario / horas-mes` para encontrar o valor da hora.
 - Em modo automatico, a taxa de cambio fica em cache e e atualizada periodicamente.
+- O modo de redes sociais mede o tempo enquanto a aba monitorada estiver visivel; ao trocar de aba ou sair da pagina a contagem pausa.
+- Sessoes sociais e anotacoes opcionais ficam em `chrome.storage.local`, sao usadas so no navegador e sao limpas de forma temporaria.
 - O detector tenta evitar elementos promocionais, campos de formulario e conteudo nao relacionado a compra, mas o DOM de marketplaces muda com frequencia.
 - Alguns marketplaces podem responder com login, captcha ou anti-bot durante a automacao.
