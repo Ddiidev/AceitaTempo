@@ -22,7 +22,7 @@
                 <span class="toggle-title" data-i18n="wageModeLabel"></span>
               </span>
               <span class="wage-mode-switch">
-                <span data-i18n="wageModeMonthly"></span>
+                <span data-i18n="wageModeFixed"></span>
                 <span class="switch">
                   <input id="wageMode" name="wageMode" type="checkbox" />
                   <span class="switch-track" aria-hidden="true"></span>
@@ -37,6 +37,16 @@
             </label>
 
             <label class="field">
+              <span data-i18n="salaryPeriodLabel"></span>
+              <select id="salaryPeriod" name="salaryPeriod">
+                <option value="monthly" data-i18n="salaryPeriodMonthly"></option>
+                <option value="biweekly" data-i18n="salaryPeriodBiweekly"></option>
+                <option value="weekly" data-i18n="salaryPeriodWeekly"></option>
+                <option value="daily" data-i18n="salaryPeriodDaily"></option>
+              </select>
+            </label>
+
+            <label class="field">
               <span data-i18n="salaryCurrencyLabel"></span>
               <select id="salaryCurrency" name="salaryCurrency">
                 <option value="BRL">BRL</option>
@@ -45,8 +55,16 @@
             </label>
 
             <label class="field">
-              <span data-i18n="monthlyHoursLabel"></span>
+              <span data-i18n="periodHoursLabel"></span>
               <input id="monthlyHours" name="monthlyHours" type="number" min="1" step="1" inputmode="numeric" />
+            </label>
+
+            <label class="field">
+              <span data-i18n="timeDisplayModeLabel"></span>
+              <select id="timeDisplayMode" name="timeDisplayMode">
+                <option value="hours" data-i18n="timeDisplayModeHours"></option>
+                <option value="period" data-i18n="timeDisplayModePeriod"></option>
+              </select>
             </label>
 
             <div id="hourlyRateGroup" class="field" style="display: none;">

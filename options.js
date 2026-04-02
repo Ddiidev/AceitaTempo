@@ -10,8 +10,10 @@ const DEFAULT_SETTINGS = {
   salaryAmount: 5000,
   salaryCurrency: "BRL",
   monthlyHours: 160,
+  salaryPeriod: "monthly",
   wageMode: "monthly",
   hourlyRate: 0,
+  timeDisplayMode: "hours",
   extendedTimeDisplay: true,
   extendedTimeDayMode: "calendar",
   replacePricesWithHours: false,
@@ -74,8 +76,12 @@ function normalizeSettings(raw) {
     salaryAmount: Math.max(0, Number(raw.salaryAmount) || 0),
     salaryCurrency: raw.salaryCurrency === "USD" ? "USD" : "BRL",
     monthlyHours: Math.max(1, Math.round(Number(raw.monthlyHours) || DEFAULT_SETTINGS.monthlyHours)),
+    salaryPeriod: ["monthly", "biweekly", "weekly", "daily"].includes(String(raw.salaryPeriod || "").toLowerCase())
+      ? String(raw.salaryPeriod).toLowerCase()
+      : DEFAULT_SETTINGS.salaryPeriod,
     wageMode: raw.wageMode === "hourly" ? "hourly" : "monthly",
     hourlyRate: Math.max(0, Number(raw.hourlyRate) || 0),
+    timeDisplayMode: String(raw.timeDisplayMode || "").toLowerCase() === "period" ? "period" : "hours",
     extendedTimeDisplay: isTruthySetting(raw.extendedTimeDisplay ?? true),
     extendedTimeDayMode: raw.extendedTimeDayMode === "working" ? "working" : "calendar",
     replacePricesWithHours: isTruthySetting(raw.replacePricesWithHours),
@@ -103,6 +109,7 @@ function updateWageModeUI(mode) {
   $("wageMode").checked = isHourly;
 
   $("salaryAmount").closest(".field").style.display = isHourly ? "none" : "";
+  $("salaryPeriod").closest(".field").style.display = isHourly ? "none" : "";
   $("monthlyHours").closest(".field").style.display = isHourly ? "none" : "";
   $("hourlyRateGroup").style.display = isHourly ? "" : "none";
 }
@@ -127,7 +134,9 @@ function fillForm(settings) {
   $("salaryAmount").value = settings.salaryAmount;
   $("salaryCurrency").value = settings.salaryCurrency;
   $("monthlyHours").value = settings.monthlyHours;
+  $("salaryPeriod").value = settings.salaryPeriod;
   $("hourlyRate").value = settings.hourlyRate;
+  $("timeDisplayMode").value = settings.timeDisplayMode;
   $("replacePricesWithHours").checked = isTruthySetting(settings.replacePricesWithHours);
   $("enableExternalSites").checked = isTruthySetting(settings.enableExternalSites);
   $("exchangeRateMode").value = settings.exchangeRateMode;
@@ -317,8 +326,10 @@ async function init() {
       salaryAmount: $("salaryAmount").value,
       salaryCurrency: $("salaryCurrency").value,
       monthlyHours: $("monthlyHours").value,
+      salaryPeriod: $("salaryPeriod").value,
       wageMode: $("wageMode").checked ? "hourly" : "monthly",
       hourlyRate: $("hourlyRate").value,
+      timeDisplayMode: $("timeDisplayMode").value,
       extendedTimeDisplay: $("extendedTimeDisplay").checked,
       extendedTimeDayMode: $("extendedTimeDayMode").value,
       replacePricesWithHours: $("replacePricesWithHours").checked,

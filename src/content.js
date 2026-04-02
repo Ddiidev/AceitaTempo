@@ -18,9 +18,11 @@
   const STORAGE_KEYS = [
     'salaryAmount',
     'monthlyHours',
+    'salaryPeriod',
     'salaryCurrency',
     'wageMode',
     'hourlyRate',
+    'timeDisplayMode',
     'extendedTimeDisplay',
     'extendedTimeDayMode',
     'replacePricesWithHours',
@@ -102,9 +104,17 @@
     return {
       salaryAmount: Number(raw.salaryAmount ?? raw.salaryMonthly ?? raw.salary_value ?? raw.salary) || 0,
       monthlyHours: Number(raw.monthlyHours ?? raw.hoursMonthly ?? raw.hours_value ?? raw.hours) || 0,
+      salaryPeriod: String(raw.salaryPeriod ?? raw.wagePeriod ?? 'monthly').toLowerCase() === 'biweekly'
+        ? 'biweekly'
+        : String(raw.salaryPeriod ?? raw.wagePeriod ?? 'monthly').toLowerCase() === 'weekly'
+          ? 'weekly'
+          : String(raw.salaryPeriod ?? raw.wagePeriod ?? 'monthly').toLowerCase() === 'daily'
+            ? 'daily'
+            : 'monthly',
       salaryCurrency: String(raw.salaryCurrency ?? 'BRL').toUpperCase() === 'USD' ? 'USD' : 'BRL',
       wageMode: String(raw.wageMode ?? 'monthly').toLowerCase() === 'hourly' ? 'hourly' : 'monthly',
       hourlyRate: Math.max(0, Number(raw.hourlyRate) || 0),
+      timeDisplayMode: String(raw.timeDisplayMode ?? raw.displayMode ?? 'hours').toLowerCase() === 'period' ? 'period' : 'hours',
       extendedTimeDisplay: isTruthySetting(raw.extendedTimeDisplay ?? true),
       extendedTimeDayMode: String(raw.extendedTimeDayMode ?? 'calendar').toLowerCase() === 'working' ? 'working' : 'calendar',
       replacePricesWithHours: isTruthySetting(raw.replacePricesWithHours ?? raw.replacePrices ?? raw.substituteValuesWithHours),
@@ -139,6 +149,18 @@
 
   function shouldSkipCurrentPage() {
     return isSiteDisabled(location.hostname);
+  }
+
+  function hasValidWorkReference() {
+    if (!state.settings) {
+      return false;
+    }
+
+    if (state.settings.wageMode === 'hourly') {
+      return state.settings.hourlyRate > 0;
+    }
+
+    return state.settings.salaryAmount > 0 && state.settings.monthlyHours > 0;
   }
 
   function stopSocialController(clearLocalState = false) {
@@ -1573,7 +1595,7 @@
 
     annotateTarget(
       resolved.element,
-      PriceUtils.formatDurationShort(workDuration.minutes, state.settings),
+      PriceUtils.formatWorkDurationShort(workDuration, state.settings, locale),
       PriceUtils.buildTooltipCard(resolved.parsedPrice, workDuration, state.settings, locale)
     );
 
@@ -1583,7 +1605,7 @@
   }
 
   function scanItemPrices() {
-    if (!document.body || !state.settings || state.settings.salaryAmount <= 0 || state.settings.monthlyHours <= 0) {
+    if (!document.body || !hasValidWorkReference()) {
       clearBadges();
       return;
     }
@@ -1642,7 +1664,7 @@
   }
 
   function scanOrderTotals() {
-    if (!document.body || !state.settings || state.settings.salaryAmount <= 0 || state.settings.monthlyHours <= 0) {
+    if (!document.body || !hasValidWorkReference()) {
       clearBadges();
       return;
     }
@@ -1691,7 +1713,7 @@
 
     annotateTarget(
       best.element,
-      PriceUtils.formatDurationShort(workDuration.minutes, state.settings),
+      PriceUtils.formatWorkDurationShort(workDuration, state.settings, locale),
       PriceUtils.buildTooltipCard(best.parsedPrice, workDuration, state.settings, locale)
     );
 
