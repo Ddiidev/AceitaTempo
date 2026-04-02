@@ -12,6 +12,7 @@
     "smoke:games": "node tests/run-game-stores-fixture.js",
     "smoke:sites": "node tests/run-sites-smoke.js",
     "smoke:cart": "node tests/run-cart-smoke.js",
+    "smoke:social": "node tests/run-social-smoke.js",
     "smoke:temu": "node tests/run-temu-fixture.js",
     "smoke:alibaba": "node tests/run-alibaba-fixture.js"
   },

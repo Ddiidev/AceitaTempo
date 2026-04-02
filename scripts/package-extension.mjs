@@ -18,6 +18,7 @@ const INCLUDE = [
   'popup.js',
   'src/content.js',
   'src/price-utils.js',
+  'src/social-awareness.js',
   'src/site-config.js',
   'icons/icon-16.png',
   'icons/icon-32.png',

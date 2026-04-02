@@ -23,9 +23,18 @@
   "popupSubtitle": {
     "message": "Open the options to adjust your hourly cost reference."
   },
-  "salaryLabel": {
-    "message": "Monthly salary"
+  "popupSocialEyebrow": {
+    "message": "Active time on this network"
   },
+  "popupSocialHint": {
+    "message": "Current session counter"
+  },
+  "popupSocialDefaultSite": {
+    "message": "Social network"
+  },
+  "salaryLabel": {
+      "message": "Monthly salary"
+    },
   "salaryCurrencyLabel": {
     "message": "Salary currency"
   },
@@ -145,5 +154,113 @@
   },
   "extendedTimeDayModeWorking": {
     "message": "Working days"
+  },
+  "socialAwarenessSectionTitle": {
+    "message": "Social awareness"
+  },
+  "socialAwarenessSectionHint": {
+    "message": "Optionally monitor Instagram, YouTube, YouTube (Shorts), and TikTok with discreet prompts and a non-judgmental tone."
+  },
+  "socialAwarenessEnabledLabel": {
+    "message": "Enable social check-ins"
+  },
+  "socialAwarenessEnabledHint": {
+    "message": "Turns on optional active-use tracking with discreet toasts and a reflective end-of-session summary."
+  },
+  "socialAwarenessSitesLabel": {
+    "message": "Tracked sites"
+  },
+  "socialAwarenessSitesHint": {
+    "message": "When you enable the feature, all supported sites start checked by default. You can uncheck any of them."
+  },
+  "socialAwarenessSiteInstagram": {
+    "message": "Instagram"
+  },
+  "socialAwarenessSiteYouTube": {
+    "message": "YouTube"
+  },
+  "socialAwarenessSiteYouTubeShorts": {
+    "message": "YouTube (Shorts)"
+  },
+  "socialAwarenessSiteTikTok": {
+    "message": "TikTok"
+  },
+  "socialPromptEnabledLabel": {
+    "message": "Show discreet check-ins"
+  },
+  "socialPromptEnabledHint": {
+      "message": "Shows the first check-in between 1 and 3 minutes and, after your first response, schedules new check-ins randomly between 3 and 7 minutes of visible use."
+    },
+  "socialTrackingEnabledLabel": {
+    "message": "Track active time"
+  },
+  "socialTrackingEnabledHint": {
+    "message": "Counts while the tab stays visible; leaving the page or switching tabs pauses the timer automatically."
+  },
+  "socialReflectionEnabledLabel": {
+    "message": "Ask at the end of the session"
+  },
+  "socialReflectionEnabledHint": {
+    "message": "Resumes the last monitored session and only shows a summary when you say it did not stay aligned."
+  },
+  "socialMonetaryOptInLabel": {
+    "message": "Allow monetary conversion"
+  },
+  "socialMonetaryOptInHint": {
+    "message": "Off by default. The approximate value of the session only appears if you opt into that view."
+  },
+  "socialAwarenessSiteRequired": {
+    "message": "Select at least one social network to monitor."
+  },
+  "socialPromptTitleInitial": {
+    "message": "Quick check-in"
+  },
+  "socialPromptTitleInterim": {
+    "message": "Still on track?"
+  },
+  "socialPromptBodyInitial": {
+    "message": "Is this session aligned with what you wanted to do here?"
+  },
+  "socialPromptBodyInterim": {
+    "message": "Is this session still aligned with what you opened the site to do?"
+  },
+  "socialPromptGoalLabel": {
+    "message": "Optional note"
+  },
+  "socialPromptGoalPlaceholder": {
+    "message": "e.g. watch one specific video, reply to someone, relax"
+  },
+  "socialPromptYes": {
+    "message": "Yes, still aligned"
+  },
+  "socialPromptNo": {
+    "message": "Not really"
+  },
+  "socialPromptDismiss": {
+    "message": "Dismiss"
+  },
+  "socialReflectionTitle": {
+    "message": "Before you start again"
+  },
+  "socialReflectionBody": {
+    "message": "On your last session on $1, you spent $2 of active time. Did that stay aligned with what you wanted to do?"
+  },
+  "socialSummaryTitle": {
+    "message": "Session summary"
+  },
+  "socialSummaryBody": {
+      "message": "Active time in this session: $1 on $2."
+    },
+  "socialSummaryResponse": {
+      "message": "In the final check-in, you chose: $1."
+    },
+  "socialSummaryGoal": {
+      "message": "Initial note: $1"
+    },
+  "socialSummaryMoney": {
+    "message": "Approximate value at your current hourly reference: $1."
+  },
+  "socialSummaryClose": {
+    "message": "Got it"
   }
 }

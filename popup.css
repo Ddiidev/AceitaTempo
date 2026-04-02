@@ -77,6 +77,38 @@ p {
   gap: 10px;
 }
 
+.social-counter {
+  padding: 12px 0 14px;
+  border-bottom: 1px solid rgba(30, 26, 23, 0.08);
+  margin-bottom: 2px;
+}
+
+.social-counter__eyebrow {
+  margin-bottom: 6px;
+}
+
+.social-counter__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.social-counter__row strong {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.social-counter__time {
+  flex: none;
+  min-width: 72px;
+  text-align: right;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--accent-strong);
+}
+
 .summary-row {
   display: flex;
   justify-content: space-between;

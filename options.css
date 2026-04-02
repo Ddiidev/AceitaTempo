@@ -232,6 +232,10 @@ select {
     transform 150ms ease;
 }
 
+select {
+  padding-right: 40px;
+}
+
 input:focus,
 select:focus {
   outline: none;
@@ -247,6 +251,11 @@ select:focus {
 .hint-strong {
   color: var(--accent-strong);
   font-weight: 600;
+}
+
+.inline-hint {
+  margin-top: -2px;
+  font-size: 13px;
 }
 
 .actions {
@@ -288,6 +297,34 @@ button {
   background: rgba(255, 255, 255, 0.55);
 }
 
+.settings-section {
+  display: grid;
+  gap: 14px;
+  padding: 18px 20px 20px;
+  border: 1px solid rgba(30, 26, 23, 0.1);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.settings-section__header {
+  display: grid;
+  gap: 6px;
+}
+
+.settings-section__header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.settings-section__header p {
+  margin: 0;
+}
+
+.settings-section__body {
+  display: grid;
+  gap: 14px;
+}
+
 .site-block__header h2 {
   margin: 0 0 6px;
   font-size: 18px;
@@ -301,6 +338,10 @@ button {
   margin-top: 14px;
   display: grid;
   gap: 12px;
+}
+
+.site-grid--compact {
+  margin-top: 8px;
 }
 
 .site-block__body {
@@ -367,6 +408,18 @@ button {
 .site-toggle__meta {
   font-size: 12px;
   color: var(--muted);
+}
+
+.site-toggle--checkbox {
+  align-items: flex-start;
+}
+
+.site-toggle--checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--accent);
+  flex: none;
 }
 
 @media (max-width: 720px) {

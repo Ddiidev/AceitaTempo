@@ -102,6 +102,76 @@
               </span>
             </label>
 
+            <section class="settings-section field-wide" aria-labelledby="socialAwarenessSectionTitle">
+              <div class="settings-section__header">
+                <h2 id="socialAwarenessSectionTitle" data-i18n="socialAwarenessSectionTitle"></h2>
+                <p data-i18n="socialAwarenessSectionHint"></p>
+              </div>
+
+              <label class="field field-wide toggle-field">
+                <span class="toggle-copy">
+                  <span class="toggle-title" data-i18n="socialAwarenessEnabledLabel"></span>
+                  <span class="toggle-desc" data-i18n="socialAwarenessEnabledHint"></span>
+                </span>
+                <span class="switch">
+                  <input id="socialAwarenessEnabled" name="socialAwarenessEnabled" type="checkbox" />
+                  <span class="switch-track" aria-hidden="true"></span>
+                </span>
+              </label>
+
+              <div id="socialAwarenessControls" class="settings-section__body" hidden>
+                <div class="field field-wide">
+                  <span data-i18n="socialAwarenessSitesLabel"></span>
+                  <p class="inline-hint" data-i18n="socialAwarenessSitesHint"></p>
+                  <div id="socialAwarenessSiteToggles" class="site-grid site-grid--compact"></div>
+                </div>
+
+                <label class="field field-wide toggle-field">
+                  <span class="toggle-copy">
+                    <span class="toggle-title" data-i18n="socialPromptEnabledLabel"></span>
+                    <span class="toggle-desc" data-i18n="socialPromptEnabledHint"></span>
+                  </span>
+                  <span class="switch">
+                    <input id="socialPromptEnabled" name="socialPromptEnabled" type="checkbox" />
+                    <span class="switch-track" aria-hidden="true"></span>
+                  </span>
+                </label>
+
+                <label class="field field-wide toggle-field">
+                  <span class="toggle-copy">
+                    <span class="toggle-title" data-i18n="socialTrackingEnabledLabel"></span>
+                    <span class="toggle-desc" data-i18n="socialTrackingEnabledHint"></span>
+                  </span>
+                  <span class="switch">
+                    <input id="socialTrackingEnabled" name="socialTrackingEnabled" type="checkbox" />
+                    <span class="switch-track" aria-hidden="true"></span>
+                  </span>
+                </label>
+
+                <label class="field field-wide toggle-field">
+                  <span class="toggle-copy">
+                    <span class="toggle-title" data-i18n="socialReflectionEnabledLabel"></span>
+                    <span class="toggle-desc" data-i18n="socialReflectionEnabledHint"></span>
+                  </span>
+                  <span class="switch">
+                    <input id="socialReflectionEnabled" name="socialReflectionEnabled" type="checkbox" />
+                    <span class="switch-track" aria-hidden="true"></span>
+                  </span>
+                </label>
+
+                <label class="field field-wide toggle-field">
+                  <span class="toggle-copy">
+                    <span class="toggle-title" data-i18n="socialMonetaryOptInLabel"></span>
+                    <span class="toggle-desc" data-i18n="socialMonetaryOptInHint"></span>
+                  </span>
+                  <span class="switch">
+                    <input id="socialMonetaryOptIn" name="socialMonetaryOptIn" type="checkbox" />
+                    <span class="switch-track" aria-hidden="true"></span>
+                  </span>
+                </label>
+              </div>
+            </section>
+
             <label class="field">
               <span data-i18n="exchangeModeLabel"></span>
               <select id="exchangeRateMode" name="exchangeRateMode">

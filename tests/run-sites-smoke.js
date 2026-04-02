@@ -15,6 +15,7 @@ const ARTIFACT_DIR = path.join(process.cwd(), 'playwright-artifacts');
 const SCRIPT_FILES = [
   path.join(process.cwd(), 'src', 'price-utils.js'),
   path.join(process.cwd(), 'src', 'site-config.js'),
+  path.join(process.cwd(), 'src', 'social-awareness.js'),
   path.join(process.cwd(), 'src', 'content.js'),
 ];
 

@@ -10,6 +10,12 @@ const DEFAULT_SETTINGS = {
   manualUsdToBrlRate: 5.5,
   exchangeRateUsdToBrl: 5.5,
   exchangeRateFetchedAt: null,
+  socialAwarenessEnabled: false,
+  socialAwarenessSites: ["instagram", "youtube", "youtube-shorts", "tiktok"],
+  socialPromptEnabled: true,
+  socialTrackingEnabled: true,
+  socialReflectionEnabled: true,
+  socialMonetaryOptIn: false,
 };
 
 const STORAGE_KEYS = Object.keys(DEFAULT_SETTINGS);

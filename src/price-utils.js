@@ -252,20 +252,10 @@
     }
   }
 
-  function calculateWorkDuration(priceAmount, priceCurrency, settings) {
+  function resolveHourlyReference(settings) {
     const salaryMonthly = Number(settings?.salaryAmount ?? settings?.salaryMonthly);
     const hoursMonthly = Number(settings?.monthlyHours ?? settings?.hoursMonthly);
     const salaryCurrency = String(settings?.salaryCurrency ?? 'BRL').toUpperCase() === 'USD' ? 'USD' : 'BRL';
-    const exchangeRateMode = String(settings?.exchangeRateMode ?? settings?.exchangeMode ?? 'auto').toLowerCase() === 'manual'
-      ? 'manual'
-      : 'auto';
-    const manualRate = Number(settings?.manualUsdToBrlRate ?? settings?.manualExchangeRate);
-    const automaticRate = Number(settings?.exchangeRateUsdToBrl ?? settings?.exchangeRate ?? settings?.exchange_rate);
-    const exchangeRateUsdToBrl = exchangeRateMode === 'manual' ? manualRate : automaticRate;
-
-    if (!isFiniteNumber(priceAmount) || priceAmount <= 0) {
-      return null;
-    }
     const wageMode = String(settings?.wageMode ?? 'monthly').toLowerCase();
     const directHourlyRate = Number(settings?.hourlyRate ?? 0);
 
@@ -288,6 +278,31 @@
     if (!isFiniteNumber(hourlySalary) || hourlySalary <= 0) {
       return null;
     }
+
+    return {
+      hourlySalary,
+      salaryCurrency,
+    };
+  }
+
+  function calculateWorkDuration(priceAmount, priceCurrency, settings) {
+    const hourlyReference = resolveHourlyReference(settings);
+    const exchangeRateMode = String(settings?.exchangeRateMode ?? settings?.exchangeMode ?? 'auto').toLowerCase() === 'manual'
+      ? 'manual'
+      : 'auto';
+    const manualRate = Number(settings?.manualUsdToBrlRate ?? settings?.manualExchangeRate);
+    const automaticRate = Number(settings?.exchangeRateUsdToBrl ?? settings?.exchangeRate ?? settings?.exchange_rate);
+    const exchangeRateUsdToBrl = exchangeRateMode === 'manual' ? manualRate : automaticRate;
+
+    if (!isFiniteNumber(priceAmount) || priceAmount <= 0) {
+      return null;
+    }
+
+    if (!hourlyReference) {
+      return null;
+    }
+
+    const { hourlySalary, salaryCurrency } = hourlyReference;
 
     let convertedPrice = priceAmount;
     if (salaryCurrency !== priceCurrency) {
@@ -316,6 +331,34 @@
       salaryCurrency,
       convertedPrice,
       exchangeRateUsdToBrl,
+    };
+  }
+
+  function calculateApproximateValueForMinutes(minutes, settings, allowZero = false) {
+    const hourlyReference = resolveHourlyReference(settings);
+    const numericMinutes = Number(minutes);
+
+    if (!hourlyReference || !isFiniteNumber(numericMinutes) || numericMinutes < 0) {
+      return null;
+    }
+
+    if (!allowZero && numericMinutes <= 0) {
+      return null;
+    }
+
+    const hours = numericMinutes / 60;
+    const amount = hourlyReference.hourlySalary * hours;
+
+    if (!allowZero && (!isFiniteNumber(amount) || amount <= 0)) {
+      return null;
+    }
+
+    return {
+      amount: Math.max(0, amount),
+      currency: hourlyReference.salaryCurrency,
+      hourlySalary: hourlyReference.hourlySalary,
+      minutes: Math.max(0, numericMinutes),
+      hours,
     };
   }
 
@@ -380,6 +423,7 @@
     formatDurationLong,
     formatDurationShort,
     formatCurrency,
+    calculateApproximateValueForMinutes,
     buildTooltipCard,
     buildTooltip,
   };

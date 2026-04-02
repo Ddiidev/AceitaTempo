@@ -2,6 +2,7 @@
   const globalObj = typeof globalThis !== 'undefined' ? globalThis : window;
   const PriceUtils = globalObj.AceitaTempoPriceUtils;
   const SiteConfig = globalObj.AceitaTempoSiteConfig;
+  const SocialAwareness = globalObj.AceitaTempoSocialAwareness;
 
   if (!PriceUtils || !SiteConfig) {
     return;
@@ -31,6 +32,12 @@
     'enableExternalSites',
     'disableExternalSites',
     'disabledSiteNames',
+    'socialAwarenessEnabled',
+    'socialAwarenessSites',
+    'socialPromptEnabled',
+    'socialTrackingEnabled',
+    'socialReflectionEnabled',
+    'socialMonetaryOptIn',
   ];
   const GENERIC_SCOPE_SELECTORS = SiteConfig.productScopeSelectors || [];
   const NOISE_TEXT_PATTERN = /(shipping|delivery|coupon|save\s+\d+%|frete|cupom|parcelad|sem juros|bought|reviews?|avalia|termina em|off\b|pix\b)/i;
@@ -49,12 +56,14 @@
     scopeSeq: 0,
     scheduled: false,
     observer: null,
+    socialController: null,
     tooltipElement: null,
     tooltipAnchor: null,
     tooltipRafId: null,
     scanSession: 0,
     targetToBadge: new WeakMap(),
   };
+  let popupMessageListenerBound = false;
 
   function storageArea() {
     try {
@@ -104,7 +113,19 @@
       manualUsdToBrlRate: Number(raw.manualUsdToBrlRate ?? raw.manualExchangeRate) || 0,
       enableExternalSites: isTruthySetting(raw.enableExternalSites ?? raw.enableExternal ?? raw.allowExternalSites),
       disabledSiteNames: disabledSiteNames.map((value) => String(value)).filter(Boolean),
+      socialAwarenessEnabled: isTruthySetting(raw.socialAwarenessEnabled),
+      socialAwarenessSites: Array.isArray(raw.socialAwarenessSites) && raw.socialAwarenessSites.length
+        ? raw.socialAwarenessSites.map((value) => String(value || '').toLowerCase()).filter(Boolean)
+        : ['instagram', 'youtube', 'youtube-shorts', 'tiktok'],
+      socialPromptEnabled: isTruthySetting(raw.socialPromptEnabled ?? true),
+      socialTrackingEnabled: isTruthySetting(raw.socialTrackingEnabled ?? true),
+      socialReflectionEnabled: isTruthySetting(raw.socialReflectionEnabled ?? true),
+      socialMonetaryOptIn: isTruthySetting(raw.socialMonetaryOptIn),
     };
+  }
+
+  function isSocialPage() {
+    return state.siteConfig?.kind === 'social';
   }
 
   function isSiteDisabled(hostname) {
@@ -118,6 +139,54 @@
 
   function shouldSkipCurrentPage() {
     return isSiteDisabled(location.hostname);
+  }
+
+  function stopSocialController(clearLocalState = false) {
+    const controller = state.socialController;
+    state.socialController = null;
+
+    if (!controller?.stop) {
+      return Promise.resolve();
+    }
+
+    return Promise.resolve(controller.stop({ clearLocalState })).catch(() => {});
+  }
+
+  function getPopupStatus() {
+    const socialStatus = state.socialController?.getStatus?.();
+    if (isSocialPage()) {
+      return {
+        kind: 'social',
+        siteId: socialStatus?.siteId || state.siteConfig?.siteId || null,
+        siteName: socialStatus?.siteName || state.siteConfig?.name || null,
+        activeMs: Number(socialStatus?.activeMs) || 0,
+        tracking: Boolean(socialStatus?.tracking),
+      };
+    }
+
+    return {
+      kind: 'commerce',
+      siteId: state.siteConfig?.siteId || null,
+      siteName: state.siteConfig?.name || null,
+      activeMs: 0,
+      tracking: false,
+    };
+  }
+
+  function bindPopupMessageListener() {
+    if (popupMessageListenerBound || !chrome.runtime?.onMessage?.addListener) {
+      return;
+    }
+
+    popupMessageListenerBound = true;
+    chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+      if (message?.type !== 'aceitaTempo:getPopupStatus') {
+        return undefined;
+      }
+
+      sendResponse(getPopupStatus());
+      return false;
+    });
   }
 
   function getLocale() {
@@ -1633,6 +1702,12 @@
   }
 
   function scan() {
+    if (isSocialPage()) {
+      clearBadges();
+      stopObserving();
+      return;
+    }
+
     if (shouldSkipCurrentPage()) {
       clearBadges();
       stopObserving();
@@ -1731,34 +1806,47 @@
     }, { passive: true });
   }
 
-  function refreshSettingsAndScan() {
-    return readSettings()
-      .then((raw) => {
-        state.settings = normalizeSettings(raw);
-        state.locale = getLocale();
-        state.siteConfig = SiteConfig.getSiteConfig(location.hostname);
-        if (shouldSkipCurrentPage()) {
-          clearBadges();
-          stopObserving();
-          return;
-        }
-        ensureStyle();
-        scan();
-        observe();
-      })
-      .catch(() => {
-        state.settings = normalizeSettings({});
-        state.locale = getLocale();
-        state.siteConfig = SiteConfig.getSiteConfig(location.hostname);
-        if (shouldSkipCurrentPage()) {
-          clearBadges();
-          stopObserving();
-          return;
-        }
-        ensureStyle();
-        scan();
-        observe();
+  async function refreshSettingsAndScan() {
+    try {
+      state.settings = normalizeSettings(await readSettings());
+    } catch {
+      state.settings = normalizeSettings({});
+    }
+
+    state.locale = getLocale();
+    state.siteConfig = SiteConfig.getSiteConfig(location);
+
+    if (isSocialPage()) {
+      clearBadges();
+      stopObserving();
+
+      const shouldTrackSocialSite = SocialAwareness?.shouldTrackSite?.(state.settings, state.siteConfig);
+      await stopSocialController(!shouldTrackSocialSite);
+
+      if (!shouldTrackSocialSite || !SocialAwareness?.createController) {
+        return;
+      }
+
+      state.socialController = SocialAwareness.createController({
+        siteConfig: state.siteConfig,
+        settings: state.settings,
+        locale: state.locale,
       });
+      await state.socialController?.start?.();
+      return;
+    }
+
+    await stopSocialController();
+
+    if (shouldSkipCurrentPage()) {
+      clearBadges();
+      stopObserving();
+      return;
+    }
+
+    ensureStyle();
+    scan();
+    observe();
   }
 
   function onStorageChange(changes, areaName) {
@@ -1772,6 +1860,8 @@
   }
 
   function boot() {
+    bindPopupMessageListener();
+
     try {
       chrome.storage?.onChanged?.addListener(onStorageChange);
     } catch {
