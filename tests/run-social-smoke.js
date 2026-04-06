@@ -40,8 +40,10 @@ async function installChromeStub(page, {
   activeTab = null,
   tabMessageResponse = null,
   tabMessageResponseStepMs = 0,
+  storageSetDelayMs = 0,
+  runtimeSendMessageDelayMs = 0,
 } = {}) {
-  await page.evaluate(({ syncSettings, localState, messages, uiLanguage, activeTab, tabMessageResponse, tabMessageResponseStepMs }) => {
+  await page.evaluate(({ syncSettings, localState, messages, uiLanguage, activeTab, tabMessageResponse, tabMessageResponseStepMs, storageSetDelayMs, runtimeSendMessageDelayMs }) => {
     const storageState = {
       sync: { ...syncSettings },
       local: { ...localState },
@@ -83,8 +85,17 @@ async function installChromeStub(page, {
           callback(response);
         },
         set(values, callback) {
-          Object.assign(storageState[areaName], values || {});
-          callback?.();
+          const applyValues = () => {
+            Object.assign(storageState[areaName], values || {});
+            callback?.();
+          };
+
+          if (Number.isFinite(storageSetDelayMs) && storageSetDelayMs > 0) {
+            setTimeout(applyValues, storageSetDelayMs);
+            return;
+          }
+
+          applyValues();
         },
         remove(keys, callback) {
           const entries = Array.isArray(keys) ? keys : [keys];
@@ -109,7 +120,15 @@ async function installChromeStub(page, {
         },
         runtime: {
           lastError: null,
-          sendMessage: (_message, callback) => callback?.({ ok: true }),
+          sendMessage: (_message, callback) => {
+            const respond = () => callback?.({ ok: true });
+            if (Number.isFinite(runtimeSendMessageDelayMs) && runtimeSendMessageDelayMs > 0) {
+              setTimeout(respond, runtimeSendMessageDelayMs);
+              return;
+            }
+
+            respond();
+          },
           openOptionsPage: async () => {},
         },
         tabs: {
@@ -135,7 +154,17 @@ async function installChromeStub(page, {
         },
       },
     });
-  }, { syncSettings, localState, messages, uiLanguage, activeTab, tabMessageResponse, tabMessageResponseStepMs });
+  }, {
+    syncSettings,
+    localState,
+    messages,
+    uiLanguage,
+    activeTab,
+    tabMessageResponse,
+    tabMessageResponseStepMs,
+    storageSetDelayMs,
+    runtimeSendMessageDelayMs,
+  });
 }
 
 async function injectContentScripts(page) {
@@ -422,7 +451,10 @@ async function runOptionsAssertions(browser) {
   await installChromeStub(page, {
     syncSettings: {},
     messages: loadMessages('en'),
+    storageSetDelayMs: 800,
+    runtimeSendMessageDelayMs: 300,
   });
+  await page.addStyleTag({ content: fs.readFileSync(path.join(ROOT, 'options.css'), 'utf8') });
 
   await page.addScriptTag({ content: fs.readFileSync(path.join(ROOT, 'src', 'site-config.js'), 'utf8') });
   await page.addScriptTag({ content: fs.readFileSync(path.join(ROOT, 'options.js'), 'utf8') });
@@ -431,15 +463,37 @@ async function runOptionsAssertions(browser) {
   assert.strictEqual(await page.isChecked('#socialAwarenessEnabled'), false, 'social master toggle should start disabled');
   assert.strictEqual(await page.locator('#salaryPeriod').inputValue(), 'monthly', 'salary period should default to monthly');
   assert.strictEqual(await page.locator('#timeDisplayMode').inputValue(), 'hours', 'time display mode should default to hours');
+  assert.strictEqual(await page.locator('.form-dock').evaluate((node) => getComputedStyle(node).position), 'fixed', 'actions dock should stay fixed to the viewport');
+  const sectionTitles = await page.locator('.settings-section__header h2').allInnerTexts();
+  assert.deepStrictEqual(
+    sectionTitles,
+    ['Calculation basics', 'Time display', 'Sites and exceptions', 'Social awareness'],
+    'settings should be grouped in the expected order'
+  );
   const selectedCount = await page.locator('[data-social-site-id]:checked').count();
   assert.strictEqual(selectedCount, 4, 'all supported social sites should be selected by default');
   assert.strictEqual(await page.locator('[data-social-site-id=\"youtube-shorts\"]').count(), 1, 'options should expose a dedicated YouTube Shorts toggle');
   assert.strictEqual(await page.locator('#socialAwarenessControls').evaluate((node) => node.hidden), true, 'social suboptions should stay hidden while master toggle is off');
 
-  await page.click('#socialAwarenessEnabled');
+  await page.locator('#socialAwarenessEnabled').check({ force: true });
   await page.waitForTimeout(100);
   assert.strictEqual(await page.locator('#socialAwarenessControls').evaluate((node) => node.hidden), false, 'social suboptions should appear after enabling the feature');
   assert.strictEqual(await page.locator('#socialPromptEnabled').isDisabled(), false, 'social suboptions should become interactive when the master toggle is on');
+
+  await page.fill('#salaryAmount', '6123.45');
+  await page.click('#saveButton');
+  await page.waitForTimeout(100);
+  assert.strictEqual(await page.locator('#saveButton').isDisabled(), true, 'save button should disable while saving');
+  assert.match(await page.locator('#saveButtonLabel').innerText(), /Saving/i, 'save button should show a loading label');
+  assert.strictEqual(await page.locator('#saveToast').evaluate((node) => node.hidden), true, 'toast should still be hidden during the save');
+
+  await page.waitForTimeout(1100);
+  assert.strictEqual(await page.locator('#saveToast').evaluate((node) => node.hidden), false, 'toast should appear after saving finishes');
+  assert.match(await page.locator('#saveToastTitle').innerText(), /All set/i, 'toast should use a success title');
+  assert.match(await page.locator('#saveToastMessage').innerText(), /Settings saved\./i, 'toast should show a success message');
+
+  await page.waitForTimeout(3000);
+  assert.strictEqual(await page.locator('#saveToast').evaluate((node) => node.hidden), true, 'toast should auto-dismiss after a short delay');
 
   await page.close();
 }
