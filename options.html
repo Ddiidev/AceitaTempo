@@ -7,6 +7,28 @@
     <link rel="stylesheet" href="options.css" />
   </head>
   <body>
+    <div class="form-dock" aria-label="Ações da tela de configuração">
+      <div class="form-dock-content">
+        <p id="status" class="status sr-only" role="status" aria-live="polite"></p>
+
+        <div id="saveToast" class="save-feedback" hidden role="status" aria-live="polite" aria-atomic="true">
+          <span class="save-feedback__icon" aria-hidden="true"></span>
+          <div class="save-feedback__copy">
+            <strong id="saveToastTitle" class="save-feedback__title"></strong>
+            <span id="saveToastMessage" class="save-feedback__message"></span>
+          </div>
+        </div>
+
+        <div class="actions actions--dock">
+          <button type="submit" id="saveButton" form="settingsForm" class="primary action-button">
+            <span id="saveButtonLabel" class="action-button__label" data-i18n="saveButton"></span>
+          </button>
+          <button type="button" id="resetButton" class="secondary action-button">
+            <span id="resetButtonLabel" class="action-button__label" data-i18n="resetButton"></span>
+          </button>
+        </div>
+      </div>
+    </div>
     <main class="shell">
       <section class="hero card">
         <div class="eyebrow" data-i18n="optionsEyebrow"></div>
@@ -16,111 +38,172 @@
 
       <section class="card">
         <form id="settingsForm" class="form">
-          <div class="grid">
-            <label class="field field-wide toggle-field">
-              <span class="toggle-copy">
-                <span class="toggle-title" data-i18n="wageModeLabel"></span>
-              </span>
-              <span class="wage-mode-switch">
-                <span data-i18n="wageModeFixed"></span>
-                <span class="switch">
-                  <input id="wageMode" name="wageMode" type="checkbox" />
-                  <span class="switch-track" aria-hidden="true"></span>
-                </span>
-                <span data-i18n="wageModeHourly"></span>
-              </span>
-            </label>
-
-            <label class="field">
-              <span data-i18n="salaryLabel"></span>
-              <input id="salaryAmount" name="salaryAmount" type="number" min="0" step="0.01" inputmode="decimal" />
-            </label>
-
-            <label class="field">
-              <span data-i18n="salaryPeriodLabel"></span>
-              <select id="salaryPeriod" name="salaryPeriod">
-                <option value="monthly" data-i18n="salaryPeriodMonthly"></option>
-                <option value="biweekly" data-i18n="salaryPeriodBiweekly"></option>
-                <option value="weekly" data-i18n="salaryPeriodWeekly"></option>
-                <option value="daily" data-i18n="salaryPeriodDaily"></option>
-              </select>
-            </label>
-
-            <label class="field">
-              <span data-i18n="salaryCurrencyLabel"></span>
-              <select id="salaryCurrency" name="salaryCurrency">
-                <option value="BRL">BRL</option>
-                <option value="USD">USD</option>
-              </select>
-            </label>
-
-            <label class="field">
-              <span data-i18n="periodHoursLabel"></span>
-              <input id="monthlyHours" name="monthlyHours" type="number" min="1" step="1" inputmode="numeric" />
-            </label>
-
-            <label class="field">
-              <span data-i18n="timeDisplayModeLabel"></span>
-              <select id="timeDisplayMode" name="timeDisplayMode">
-                <option value="hours" data-i18n="timeDisplayModeHours"></option>
-                <option value="period" data-i18n="timeDisplayModePeriod"></option>
-              </select>
-            </label>
-
-            <div id="hourlyRateGroup" class="field" style="display: none;">
-              <span data-i18n="hourlyRateLabel"></span>
-              <div class="input-with-affixes">
-                <span id="hourlyRateCurrencyPrefix" class="input-prefix">R$</span>
-                <input id="hourlyRate" name="hourlyRate" type="number" min="0" step="0.01" inputmode="decimal" />
-                <span class="input-suffix" data-i18n="perHourSuffix"></span>
+          <div class="form-sections">
+            <section class="settings-section" aria-labelledby="coreSectionTitle">
+              <div class="settings-section__header">
+                <h2 id="coreSectionTitle" data-i18n="optionsCoreSectionTitle"></h2>
+                <p data-i18n="optionsCoreSectionHint"></p>
               </div>
-            </div>
 
-            <label class="field field-wide toggle-field">
-              <span class="toggle-copy">
-                <span class="toggle-title" data-i18n="extendedTimeDisplayLabel"></span>
-                <span class="toggle-desc" data-i18n="extendedTimeDisplayHint"></span>
-              </span>
-              <span class="switch">
-                <input id="extendedTimeDisplay" name="extendedTimeDisplay" type="checkbox" />
-                <span class="switch-track" aria-hidden="true"></span>
-              </span>
-            </label>
+              <div class="grid settings-section__grid">
+                <label class="field field-wide toggle-field">
+                  <span class="toggle-copy">
+                    <span class="toggle-title" data-i18n="wageModeLabel"></span>
+                  </span>
+                  <span class="wage-mode-switch">
+                    <span data-i18n="wageModeFixed"></span>
+                    <span class="switch">
+                      <input id="wageMode" name="wageMode" type="checkbox" />
+                      <span class="switch-track" aria-hidden="true"></span>
+                    </span>
+                    <span data-i18n="wageModeHourly"></span>
+                  </span>
+                </label>
 
-            <label id="extendedTimeDayModeGroup" class="field field-wide">
-              <span data-i18n="extendedTimeDayModeLabel"></span>
-              <select id="extendedTimeDayMode" name="extendedTimeDayMode">
-                <option value="calendar" data-i18n="extendedTimeDayModeCalendar"></option>
-                <option value="working" data-i18n="extendedTimeDayModeWorking"></option>
-              </select>
-            </label>
+                <label class="field">
+                  <span data-i18n="salaryLabel"></span>
+                  <input id="salaryAmount" name="salaryAmount" type="number" min="0" step="0.01" inputmode="decimal" />
+                </label>
 
-            <label class="field field-wide toggle-field">
-              <span class="toggle-copy">
-                <span class="toggle-title" data-i18n="replacePricesWithHoursLabel"></span>
-                <span class="toggle-desc" data-i18n="replacePricesWithHoursHint"></span>
-              </span>
-              <span class="switch">
-                <input id="replacePricesWithHours" name="replacePricesWithHours" type="checkbox" />
-                <span class="switch-track" aria-hidden="true"></span>
-              </span>
-            </label>
+                <label class="field">
+                  <span data-i18n="salaryPeriodLabel"></span>
+                  <select id="salaryPeriod" name="salaryPeriod">
+                    <option value="monthly" data-i18n="salaryPeriodMonthly"></option>
+                    <option value="biweekly" data-i18n="salaryPeriodBiweekly"></option>
+                    <option value="weekly" data-i18n="salaryPeriodWeekly"></option>
+                    <option value="daily" data-i18n="salaryPeriodDaily"></option>
+                  </select>
+                </label>
 
-            <label class="field field-wide toggle-field">
-              <span class="toggle-copy">
-                <span class="toggle-title">
-                  <span data-i18n="enableExternalSitesLabel"></span>
-                  <span class="wip-badge" data-i18n="enableExternalSitesWip"></span>
-                </span>
-                <span class="toggle-desc" data-i18n="enableExternalSitesHint"></span>
-              </span>
-              <span class="switch">
-                <input id="enableExternalSites" name="enableExternalSites" type="checkbox" disabled />
-                <span class="switch-track" aria-hidden="true"></span>
-              </span>
-            </label>
+                <label class="field">
+                  <span data-i18n="salaryCurrencyLabel"></span>
+                  <select id="salaryCurrency" name="salaryCurrency">
+                    <option value="BRL">BRL</option>
+                    <option value="USD">USD</option>
+                  </select>
+                </label>
 
-            <section class="settings-section field-wide" aria-labelledby="socialAwarenessSectionTitle">
+                <label class="field">
+                  <span data-i18n="periodHoursLabel"></span>
+                  <input id="monthlyHours" name="monthlyHours" type="number" min="1" step="1" inputmode="numeric" />
+                </label>
+
+                <div id="hourlyRateGroup" class="field" style="display: none;">
+                  <span data-i18n="hourlyRateLabel"></span>
+                  <div class="input-with-affixes">
+                    <span id="hourlyRateCurrencyPrefix" class="input-prefix">R$</span>
+                    <input id="hourlyRate" name="hourlyRate" type="number" min="0" step="0.01" inputmode="decimal" />
+                    <span class="input-suffix" data-i18n="perHourSuffix"></span>
+                  </div>
+                </div>
+
+                <label class="field">
+                  <span data-i18n="exchangeModeLabel"></span>
+                  <select id="exchangeRateMode" name="exchangeRateMode">
+                    <option value="auto" data-i18n="exchangeModeAuto"></option>
+                    <option value="manual" data-i18n="exchangeModeManual"></option>
+                  </select>
+                </label>
+
+                <label class="field field-wide">
+                  <span data-i18n="manualRateLabel"></span>
+                  <input
+                    id="manualUsdToBrlRate"
+                    name="manualUsdToBrlRate"
+                    type="number"
+                    min="0"
+                    step="0.0001"
+                    inputmode="decimal"
+                  />
+                </label>
+              </div>
+
+              <p class="hint" data-i18n="manualRateHint"></p>
+              <p id="rateSnapshot" class="hint hint-strong"></p>
+            </section>
+
+            <section class="settings-section" aria-labelledby="displaySectionTitle">
+              <div class="settings-section__header">
+                <h2 id="displaySectionTitle" data-i18n="optionsDisplaySectionTitle"></h2>
+                <p data-i18n="optionsDisplaySectionHint"></p>
+              </div>
+
+              <div class="grid settings-section__grid">
+                <label class="field">
+                  <span data-i18n="timeDisplayModeLabel"></span>
+                  <select id="timeDisplayMode" name="timeDisplayMode">
+                    <option value="hours" data-i18n="timeDisplayModeHours"></option>
+                    <option value="period" data-i18n="timeDisplayModePeriod"></option>
+                  </select>
+                </label>
+
+                <label class="field field-wide toggle-field">
+                  <span class="toggle-copy">
+                    <span class="toggle-title" data-i18n="extendedTimeDisplayLabel"></span>
+                    <span class="toggle-desc" data-i18n="extendedTimeDisplayHint"></span>
+                  </span>
+                  <span class="switch">
+                    <input id="extendedTimeDisplay" name="extendedTimeDisplay" type="checkbox" />
+                    <span class="switch-track" aria-hidden="true"></span>
+                  </span>
+                </label>
+
+                <label id="extendedTimeDayModeGroup" class="field field-wide">
+                  <span data-i18n="extendedTimeDayModeLabel"></span>
+                  <select id="extendedTimeDayMode" name="extendedTimeDayMode">
+                    <option value="calendar" data-i18n="extendedTimeDayModeCalendar"></option>
+                    <option value="working" data-i18n="extendedTimeDayModeWorking"></option>
+                  </select>
+                </label>
+
+                <label class="field field-wide toggle-field">
+                  <span class="toggle-copy">
+                    <span class="toggle-title" data-i18n="replacePricesWithHoursLabel"></span>
+                    <span class="toggle-desc" data-i18n="replacePricesWithHoursHint"></span>
+                  </span>
+                  <span class="switch">
+                    <input id="replacePricesWithHours" name="replacePricesWithHours" type="checkbox" />
+                    <span class="switch-track" aria-hidden="true"></span>
+                  </span>
+                </label>
+              </div>
+            </section>
+
+            <section class="settings-section" aria-labelledby="sitesSectionTitle">
+              <div class="settings-section__header">
+                <h2 id="sitesSectionTitle" data-i18n="optionsSitesSectionTitle"></h2>
+                <p data-i18n="optionsSitesSectionHint"></p>
+              </div>
+
+              <div class="grid settings-section__grid">
+                <label class="field field-wide toggle-field">
+                  <span class="toggle-copy">
+                    <span class="toggle-title">
+                      <span data-i18n="enableExternalSitesLabel"></span>
+                      <span class="wip-badge" data-i18n="enableExternalSitesWip"></span>
+                    </span>
+                    <span class="toggle-desc" data-i18n="enableExternalSitesHint"></span>
+                  </span>
+                  <span class="switch">
+                    <input id="enableExternalSites" name="enableExternalSites" type="checkbox" disabled />
+                    <span class="switch-track" aria-hidden="true"></span>
+                  </span>
+                </label>
+              </div>
+
+              <section class="site-block" aria-labelledby="siteBlockTitle">
+                <div class="site-block__header">
+                  <h2 id="siteBlockTitle" data-i18n="siteBlockTitle"></h2>
+                  <p data-i18n="siteBlockHint"></p>
+                </div>
+                <div id="siteBlockBody" class="site-block__body is-collapsed">
+                  <div id="siteToggles" class="site-grid"></div>
+                </div>
+                <button type="button" id="siteBlockToggle" class="site-block__toggle" data-i18n="siteBlockShowMore"></button>
+              </section>
+            </section>
+
+            <section class="settings-section" aria-labelledby="socialAwarenessSectionTitle">
               <div class="settings-section__header">
                 <h2 id="socialAwarenessSectionTitle" data-i18n="socialAwarenessSectionTitle"></h2>
                 <p data-i18n="socialAwarenessSectionHint"></p>
@@ -189,50 +272,20 @@
                 </label>
               </div>
             </section>
-
-            <label class="field">
-              <span data-i18n="exchangeModeLabel"></span>
-              <select id="exchangeRateMode" name="exchangeRateMode">
-                <option value="auto" data-i18n="exchangeModeAuto"></option>
-                <option value="manual" data-i18n="exchangeModeManual"></option>
-              </select>
-            </label>
-
-            <label class="field field-wide">
-              <span data-i18n="manualRateLabel"></span>
-              <input
-                id="manualUsdToBrlRate"
-                name="manualUsdToBrlRate"
-                type="number"
-                min="0"
-                step="0.0001"
-                inputmode="decimal"
-              />
-            </label>
           </div>
-
-          <p class="hint" data-i18n="manualRateHint"></p>
-          <p id="rateSnapshot" class="hint hint-strong"></p>
-
-          <section class="site-block">
-            <div class="site-block__header">
-              <h2 data-i18n="siteBlockTitle"></h2>
-              <p data-i18n="siteBlockHint"></p>
-            </div>
-            <div id="siteBlockBody" class="site-block__body is-collapsed">
-              <div id="siteToggles" class="site-grid"></div>
-            </div>
-            <button type="button" id="siteBlockToggle" class="site-block__toggle" data-i18n="siteBlockShowMore"></button>
-          </section>
-
-          <div class="actions">
-            <button type="submit" class="primary" data-i18n="saveButton"></button>
-            <button type="button" id="resetButton" class="secondary" data-i18n="resetButton"></button>
-          </div>
-
-          <p id="status" class="status" role="status" aria-live="polite"></p>
         </form>
       </section>
+
+      <dialog id="resetConfirmModal" class="confirm-modal">
+        <div class="confirm-modal__content">
+          <h2 data-i18n="resetConfirmTitle"></h2>
+          <p data-i18n="resetConfirmMessage"></p>
+          <div class="actions">
+            <button type="button" id="cancelResetButton" class="secondary action-button" data-i18n="cancelButton"></button>
+            <button type="button" id="confirmResetButton" class="primary action-button action-button--danger" data-i18n="confirmResetButton"></button>
+          </div>
+        </div>
+      </dialog>
     </main>
 
     <script src="src/site-config.js"></script>

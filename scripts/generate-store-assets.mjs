@@ -917,6 +917,28 @@ function optionsMockHtml() {
         </style>
       </head>
       <body>
+        <div class="form-dock" aria-label="Ações da tela de configuração">
+          <div class="form-dock-content">
+            <p id="status" class="status sr-only" role="status" aria-live="polite"></p>
+
+            <div id="saveToast" class="save-feedback" hidden role="status" aria-live="polite" aria-atomic="true">
+              <span class="save-feedback__icon" aria-hidden="true"></span>
+              <div class="save-feedback__copy">
+                <strong id="saveToastTitle" class="save-feedback__title"></strong>
+                <span id="saveToastMessage" class="save-feedback__message"></span>
+              </div>
+            </div>
+
+            <div class="actions actions--dock">
+              <button type="submit" id="saveButton" form="settingsForm" class="primary action-button">
+                <span id="saveButtonLabel" class="action-button__label">Salvar</span>
+              </button>
+              <button type="button" id="resetButton" class="secondary action-button">
+                <span id="resetButtonLabel" class="action-button__label">Restaurar padrão</span>
+              </button>
+            </div>
+          </div>
+        </div>
         <main class="shell">
           <section class="hero card">
             <div class="eyebrow">Extensão Chrome</div>
