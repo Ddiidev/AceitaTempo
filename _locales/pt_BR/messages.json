@@ -14,6 +14,24 @@
   "optionsSubtitle": {
     "message": "Defina seu salário, período de referência e a regra de câmbio usada para transformar preços em tempo."
   },
+  "optionsCoreSectionTitle": {
+    "message": "Base de cálculo"
+  },
+  "optionsCoreSectionHint": {
+    "message": "Defina salário, período de referência e a taxa usada para converter preços em tempo."
+  },
+  "optionsDisplaySectionTitle": {
+    "message": "Exibição do tempo"
+  },
+  "optionsDisplaySectionHint": {
+    "message": "Ajuste como o tempo aparece no badge e quanto detalhe ele mostra."
+  },
+  "optionsSitesSectionTitle": {
+    "message": "Sites e exceções"
+  },
+  "optionsSitesSectionHint": {
+    "message": "Escolha onde a extensão aparece e quais lojas ficam desativadas manualmente."
+  },
   "popupEyebrow": {
     "message": "Resumo rápido"
   },
@@ -110,20 +128,65 @@
   "saveButton": {
     "message": "Salvar"
   },
+  "saveButtonSaving": {
+    "message": "Salvando..."
+  },
   "resetButton": {
     "message": "Restaurar padrão"
+  },
+  "resetButtonSaving": {
+    "message": "Restaurando..."
+  },
+  "resetConfirmTitle": {
+    "message": "Restaurar padrões?"
+  },
+  "resetConfirmMessage": {
+    "message": "Tem certeza de que deseja restaurar as configurações originais? Todas as suas preferências serão perdidas."
+  },
+  "cancelButton": {
+    "message": "Cancelar"
+  },
+  "confirmResetButton": {
+    "message": "Restaurar"
+  },
+  "savingToastTitle": {
+    "message": "Salvando..."
+  },
+  "savingToastMessage": {
+    "message": "Aguarde um instante."
+  },
+  "restoringToastTitle": {
+    "message": "Restaurando..."
+  },
+  "restoringToastMessage": {
+    "message": "Voltando às configurações originais."
   },
   "openOptionsButton": {
     "message": "Abrir opções"
   },
+  "savedToastTitle": {
+    "message": "Tudo certo"
+  },
   "savedMessage": {
     "message": "Configurações salvas."
+  },
+  "savedWithExchangeWarningTitle": {
+    "message": "Salvo com aviso"
   },
   "savedWithExchangeWarning": {
     "message": "Configurações salvas, mas a atualização automática do câmbio falhou."
   },
+  "resetToastTitle": {
+    "message": "Padrão restaurado"
+  },
   "resetMessage": {
     "message": "Configurações restauradas."
+  },
+  "saveErrorToastTitle": {
+    "message": "Não foi possível salvar"
+  },
+  "saveErrorToastMessage": {
+    "message": "Tente novamente em alguns instantes."
   },
   "manualRateRequired": {
     "message": "Informe uma taxa manual maior que zero."
