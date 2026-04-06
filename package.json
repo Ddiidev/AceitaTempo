@@ -13,6 +13,7 @@
     "smoke:sites": "node tests/run-sites-smoke.js",
     "smoke:cart": "node tests/run-cart-smoke.js",
     "smoke:social": "node tests/run-social-smoke.js",
+    "smoke:period": "node tests/run-period-display-smoke.js",
     "smoke:temu": "node tests/run-temu-fixture.js",
     "smoke:alibaba": "node tests/run-alibaba-fixture.js"
   },

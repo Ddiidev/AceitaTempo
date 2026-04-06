@@ -3,7 +3,7 @@
     "message": "AceitaTempo"
   },
   "extensionDescription": {
-    "message": "Converts store prices into work time based on your salary and monthly hours."
+    "message": "Converts store prices into work time based on your salary and work routine."
   },
   "optionsEyebrow": {
     "message": "Settings"
@@ -12,7 +12,25 @@
     "message": "What does it cost in your time"
   },
   "optionsSubtitle": {
-    "message": "Set your salary, monthly workload, and the exchange rule used to turn prices into time."
+    "message": "Set your salary, reference period, and the exchange rule used to turn prices into time."
+  },
+  "optionsCoreSectionTitle": {
+    "message": "Calculation basics"
+  },
+  "optionsCoreSectionHint": {
+    "message": "Set your salary, reference period, and the rate used to convert prices into time."
+  },
+  "optionsDisplaySectionTitle": {
+    "message": "Time display"
+  },
+  "optionsDisplaySectionHint": {
+    "message": "Adjust how time appears in the badge and how much detail it shows."
+  },
+  "optionsSitesSectionTitle": {
+    "message": "Sites and exceptions"
+  },
+  "optionsSitesSectionHint": {
+    "message": "Choose where the extension appears and which stores are manually disabled."
   },
   "popupEyebrow": {
     "message": "Quick summary"
@@ -33,13 +51,37 @@
     "message": "Social network"
   },
   "salaryLabel": {
-      "message": "Monthly salary"
+      "message": "Salary amount"
     },
+  "salaryPeriodLabel": {
+    "message": "Reference period"
+  },
+  "salaryPeriodMonthly": {
+    "message": "Monthly"
+  },
+  "salaryPeriodBiweekly": {
+    "message": "Biweekly"
+  },
+  "salaryPeriodWeekly": {
+    "message": "Weekly"
+  },
+  "salaryPeriodDaily": {
+    "message": "Daily"
+  },
   "salaryCurrencyLabel": {
     "message": "Salary currency"
   },
-  "monthlyHoursLabel": {
-    "message": "Hours worked per month"
+  "periodHoursLabel": {
+    "message": "Hours worked per period"
+  },
+  "timeDisplayModeLabel": {
+    "message": "Time display mode"
+  },
+  "timeDisplayModeHours": {
+    "message": "Hours"
+  },
+  "timeDisplayModePeriod": {
+    "message": "Real period"
   },
   "exchangeModeLabel": {
     "message": "Exchange mode"
@@ -86,20 +128,65 @@
   "saveButton": {
     "message": "Save"
   },
+  "saveButtonSaving": {
+    "message": "Saving..."
+  },
   "resetButton": {
     "message": "Reset to defaults"
+  },
+  "resetButtonSaving": {
+    "message": "Restoring..."
+  },
+  "resetConfirmTitle": {
+    "message": "Reset to defaults?"
+  },
+  "resetConfirmMessage": {
+    "message": "Are you sure you want to restore the original settings? All your preferences will be lost."
+  },
+  "cancelButton": {
+    "message": "Cancel"
+  },
+  "confirmResetButton": {
+    "message": "Restore"
+  },
+  "savingToastTitle": {
+    "message": "Saving..."
+  },
+  "savingToastMessage": {
+    "message": "Please wait a moment."
+  },
+  "restoringToastTitle": {
+    "message": "Restoring..."
+  },
+  "restoringToastMessage": {
+    "message": "Reverting to original settings."
   },
   "openOptionsButton": {
     "message": "Open options"
   },
+  "savedToastTitle": {
+    "message": "All set"
+  },
   "savedMessage": {
     "message": "Settings saved."
+  },
+  "savedWithExchangeWarningTitle": {
+    "message": "Saved with a warning"
   },
   "savedWithExchangeWarning": {
     "message": "Settings saved, but the automatic exchange-rate refresh failed."
   },
+  "resetToastTitle": {
+    "message": "Defaults restored"
+  },
   "resetMessage": {
     "message": "Settings restored."
+  },
+  "saveErrorToastTitle": {
+    "message": "Could not save"
+  },
+  "saveErrorToastMessage": {
+    "message": "Please try again in a moment."
   },
   "manualRateRequired": {
     "message": "Enter a manual rate greater than zero."
@@ -125,8 +212,8 @@
   "wageModeLabel": {
     "message": "Wage type"
   },
-  "wageModeMonthly": {
-    "message": "Monthly"
+  "wageModeFixed": {
+    "message": "Fixed salary"
   },
   "wageModeHourly": {
     "message": "Hourly"

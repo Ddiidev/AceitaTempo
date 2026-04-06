@@ -46,7 +46,7 @@ O pacote final sai em `dist/aceita-tempo.zip`.
 
 ## O que faz
 
-- Permite configurar salario mensal e horas trabalhadas por mes, ou informar diretamente o valor por hora.
+- Permite configurar salario fixo por periodo, com referencia mensal, quinzenal, semanal ou diaria, ou informar diretamente o valor por hora.
 - Suporta salario em `BRL` ou `USD`.
 - Converte precos em `BRL` e `USD` para tempo de trabalho equivalente.
 - Atualiza a taxa `USD -> BRL` automaticamente e aceita taxa manual.
@@ -103,15 +103,17 @@ Tambem existe um detector generico para cobrir outros sites com estruturas parec
 
 1. Abra as opcoes da extensao.
 2. Configure:
-   - tipo de salario: mensal ou por hora
-   - salario mensal e horas por mes (modo mensal), ou valor por hora (modo por hora)
+   - tipo de salario: fixo ou por hora
+   - periodo de referencia do salario: mensal, quinzenal, semanal ou diario
+   - horas trabalhadas por periodo (modo fixo), ou valor por hora (modo por hora)
+   - modo de exibicao do tempo: horas ou periodo real
    - moeda do salario
    - modo de cambio automatico ou manual
    - opcionalmente, ative a substituicao do preco pelas horas de trabalho
    - opcionalmente, ative a secao de redes sociais para acompanhar tempo ativo em Instagram, YouTube e TikTok
 3. Visite paginas de produto ou listagem em sites suportados.
 4. A extensao adiciona um badge ao lado do preco com o tempo de trabalho estimado, ou substitui o preco pelas horas quando a opcao estiver ativa.
-5. Ao passar o mouse no badge, a extensao mostra detalhes de preco, cambio e valor/hora.
+5. Ao passar o mouse no badge, a extensao mostra detalhes de preco, cambio e a referencia configurada, seja por hora ou por periodo.
 6. Em carrinho/checkout, ela tenta destacar o total da compra.
 7. Se a opcao social estiver ligada, a extensao usa toasts discretos para checar alinhamento e registrar apenas o tempo ativo, sem custo financeiro por padrao.
 
@@ -123,7 +125,8 @@ Para rodar a validacao com Playwright:
 2. Rode `npm run smoke:sites`.
 3. Rode `npm run smoke:cart` para validar o modo de carrinho.
 4. Rode `npm run smoke:aliexpress` e `npm run smoke:games` para cobrir fixtures especificas.
-5. Rode `npm run smoke:social` para validar o fluxo opcional de redes sociais e a tela de opcoes.
+5. Rode `npm run smoke:period` para validar a nova exibicao por periodo real.
+6. Rode `npm run smoke:social` para validar o fluxo opcional de redes sociais e a tela de opcoes.
 
 As evidencias sao salvas em `playwright-artifacts/`.
 
@@ -139,7 +142,7 @@ Antes de publicar:
 
 ## Observacoes
 
-- O calculo usa `salario / horas-mes` para encontrar o valor da hora.
+- O calculo usa `salario / horas-do-periodo` para encontrar o valor da hora no modo fixo.
 - Em modo automatico, a taxa de cambio fica em cache e e atualizada periodicamente.
 - O modo de redes sociais mede o tempo enquanto a aba monitorada estiver visivel; ao trocar de aba ou sair da pagina a contagem pausa.
 - Sessoes sociais e anotacoes opcionais ficam em `chrome.storage.local`, sao usadas so no navegador e sao limpas de forma temporaria.
