@@ -10,8 +10,10 @@ const DEFAULT_SETTINGS = {
   salaryAmount: 5000,
   salaryCurrency: "BRL",
   monthlyHours: 160,
+  salaryPeriod: "monthly",
   wageMode: "monthly",
   hourlyRate: 0,
+  timeDisplayMode: "hours",
   extendedTimeDisplay: true,
   extendedTimeDayMode: "calendar",
   replacePricesWithHours: false,
@@ -34,8 +36,14 @@ const SITE_CONFIGS = globalThis.AceitaTempoSiteConfig?.siteConfigs
   || globalThis.AceitaTempoSiteConfig?.getSiteConfigs?.()
   || [];
 const COMMERCE_SITE_CONFIGS = SITE_CONFIGS.filter((site) => site.kind !== "social");
+const FEEDBACK_HIDE_DELAY_MS = 2800;
+const ACTION_LABEL_KEYS = {
+  save: { idle: "saveButton", busy: "saveButtonSaving" },
+  reset: { idle: "resetButton", busy: "resetButtonSaving" },
+};
 
 const $ = (id) => document.getElementById(id);
+let feedbackHideTimer = null;
 
 function getStorageArea() {
   return chrome.storage?.sync ?? chrome.storage?.local;
@@ -74,8 +82,12 @@ function normalizeSettings(raw) {
     salaryAmount: Math.max(0, Number(raw.salaryAmount) || 0),
     salaryCurrency: raw.salaryCurrency === "USD" ? "USD" : "BRL",
     monthlyHours: Math.max(1, Math.round(Number(raw.monthlyHours) || DEFAULT_SETTINGS.monthlyHours)),
+    salaryPeriod: ["monthly", "biweekly", "weekly", "daily"].includes(String(raw.salaryPeriod || "").toLowerCase())
+      ? String(raw.salaryPeriod).toLowerCase()
+      : DEFAULT_SETTINGS.salaryPeriod,
     wageMode: raw.wageMode === "hourly" ? "hourly" : "monthly",
     hourlyRate: Math.max(0, Number(raw.hourlyRate) || 0),
+    timeDisplayMode: String(raw.timeDisplayMode || "").toLowerCase() === "period" ? "period" : "hours",
     extendedTimeDisplay: isTruthySetting(raw.extendedTimeDisplay ?? true),
     extendedTimeDayMode: raw.extendedTimeDayMode === "working" ? "working" : "calendar",
     replacePricesWithHours: isTruthySetting(raw.replacePricesWithHours),
@@ -103,6 +115,7 @@ function updateWageModeUI(mode) {
   $("wageMode").checked = isHourly;
 
   $("salaryAmount").closest(".field").style.display = isHourly ? "none" : "";
+  $("salaryPeriod").closest(".field").style.display = isHourly ? "none" : "";
   $("monthlyHours").closest(".field").style.display = isHourly ? "none" : "";
   $("hourlyRateGroup").style.display = isHourly ? "" : "none";
 }
@@ -127,7 +140,9 @@ function fillForm(settings) {
   $("salaryAmount").value = settings.salaryAmount;
   $("salaryCurrency").value = settings.salaryCurrency;
   $("monthlyHours").value = settings.monthlyHours;
+  $("salaryPeriod").value = settings.salaryPeriod;
   $("hourlyRate").value = settings.hourlyRate;
+  $("timeDisplayMode").value = settings.timeDisplayMode;
   $("replacePricesWithHours").checked = isTruthySetting(settings.replacePricesWithHours);
   $("enableExternalSites").checked = isTruthySetting(settings.enableExternalSites);
   $("exchangeRateMode").value = settings.exchangeRateMode;
@@ -215,10 +230,105 @@ function updateSiteBlockToggle() {
   button.setAttribute("aria-expanded", String(expanded));
 }
 
+function getMessage(key, substitutions = []) {
+  return chrome.i18n.getMessage(key, substitutions) || "";
+}
+
+function clearFeedbackTimer() {
+  if (feedbackHideTimer) {
+    window.clearTimeout(feedbackHideTimer);
+    feedbackHideTimer = null;
+  }
+}
+
+function hideFeedback() {
+  clearFeedbackTimer();
+
+  const toast = $("saveToast");
+  if (!toast) return;
+
+  toast.hidden = true;
+  toast.removeAttribute("data-tone");
+  $("saveToastTitle").textContent = "";
+  $("saveToastMessage").textContent = "";
+  const status = $("status");
+  if (status) {
+    status.textContent = "";
+  }
+}
+
+function announceStatus(message) {
+  const status = $("status");
+  if (status) {
+    status.textContent = message;
+  }
+}
+
+function setActionButtonState(action, busy) {
+  const config = ACTION_LABEL_KEYS[action];
+  const button = $(`${action}Button`);
+  const label = $(`${action}ButtonLabel`);
+  if (!config || !button || !label) return;
+
+  button.disabled = busy;
+  button.classList.toggle("is-loading", busy);
+  label.textContent = getMessage(busy ? config.busy : config.idle);
+}
+
+function setActionsBusy(action = null) {
+  setActionButtonState("save", action === "save");
+  setActionButtonState("reset", action === "reset");
+
+  if (!action) {
+    $("saveButton").disabled = false;
+    $("resetButton").disabled = false;
+    $("saveButton").classList.remove("is-loading");
+    $("resetButton").classList.remove("is-loading");
+    $("saveButtonLabel").textContent = getMessage(ACTION_LABEL_KEYS.save.idle);
+    $("resetButtonLabel").textContent = getMessage(ACTION_LABEL_KEYS.reset.idle);
+    return;
+  }
+
+  if (action === "save") {
+    $("resetButton").disabled = true;
+    $("resetButton").classList.remove("is-loading");
+    $("resetButtonLabel").textContent = getMessage(ACTION_LABEL_KEYS.reset.idle);
+  }
+
+  if (action === "reset") {
+    $("saveButton").disabled = true;
+    $("saveButton").classList.remove("is-loading");
+    $("saveButtonLabel").textContent = getMessage(ACTION_LABEL_KEYS.save.idle);
+  }
+}
+
+function showFeedback({ tone, titleKey, message, duration = FEEDBACK_HIDE_DELAY_MS }) {
+  const toast = $("saveToast");
+  const title = $("saveToastTitle");
+  const messageNode = $("saveToastMessage");
+  if (!toast || !title || !messageNode) return;
+
+  clearFeedbackTimer();
+  toast.hidden = false;
+  toast.dataset.tone = tone;
+  title.textContent = getMessage(titleKey);
+  messageNode.textContent = message;
+  announceStatus(`${title.textContent}. ${messageNode.textContent}`.trim());
+  feedbackHideTimer = window.setTimeout(() => {
+    hideFeedback();
+  }, duration);
+}
+
 function setStatus(message, isError = false) {
   const status = $("status");
-  status.textContent = message;
-  status.style.color = isError ? "#b91c1c" : "#0f766e";
+  if (status) {
+    status.textContent = message;
+  }
+  showFeedback({
+    tone: isError ? "error" : "success",
+    titleKey: isError ? "saveErrorToastTitle" : "savedToastTitle",
+    message,
+  });
 }
 
 function updateRateSnapshot(settings) {
@@ -260,6 +370,8 @@ function localize() {
 
 async function init() {
   localize();
+  hideFeedback();
+  setActionsBusy(null);
   const settings = await readSettings();
   fillForm(settings);
   updateHourlyRateCurrencyPrefix();
@@ -312,13 +424,16 @@ async function init() {
   $("settingsForm").addEventListener("submit", async (event) => {
     event.preventDefault();
     ensureAllSocialSitesSelectedIfNeeded();
+    hideFeedback();
 
     const payload = normalizeSettings({
       salaryAmount: $("salaryAmount").value,
       salaryCurrency: $("salaryCurrency").value,
       monthlyHours: $("monthlyHours").value,
+      salaryPeriod: $("salaryPeriod").value,
       wageMode: $("wageMode").checked ? "hourly" : "monthly",
       hourlyRate: $("hourlyRate").value,
+      timeDisplayMode: $("timeDisplayMode").value,
       extendedTimeDisplay: $("extendedTimeDisplay").checked,
       extendedTimeDayMode: $("extendedTimeDayMode").value,
       replacePricesWithHours: $("replacePricesWithHours").checked,
@@ -351,34 +466,90 @@ async function init() {
       return;
     }
 
-    await saveSettings(payload);
+    setActionsBusy("save");
 
-    let hadExchangeWarning = false;
-    if (payload.exchangeRateMode === "auto") {
-      const response = await refreshExchangeRate();
-      if (!response?.ok) {
-        setStatus(chrome.i18n.getMessage("savedWithExchangeWarning"), true);
-        hadExchangeWarning = true;
+    showFeedback({
+      titleKey: "savingToastTitle",
+      message: chrome.i18n.getMessage("savingToastMessage"),
+    });
+
+    try {
+      await saveSettings(payload);
+
+      let feedback = {
+        tone: "success",
+        titleKey: "savedToastTitle",
+        message: chrome.i18n.getMessage("savedMessage"),
+      };
+
+      if (payload.exchangeRateMode === "auto") {
+        const response = await refreshExchangeRate();
+        if (!response?.ok) {
+          feedback = {
+            tone: "warning",
+            titleKey: "savedWithExchangeWarningTitle",
+            message: chrome.i18n.getMessage("savedWithExchangeWarning"),
+          };
+        }
       }
-    }
 
-    const nextSettings = await readSettings();
-    fillForm(nextSettings);
-    updateHourlyRateCurrencyPrefix();
-    updateRateSnapshot(nextSettings);
-    updateSiteBlockToggle();
-    if (!hadExchangeWarning) {
-      setStatus(chrome.i18n.getMessage("savedMessage"));
+      const nextSettings = await readSettings();
+      fillForm(nextSettings);
+      updateHourlyRateCurrencyPrefix();
+      updateRateSnapshot(nextSettings);
+      updateSiteBlockToggle();
+      showFeedback(feedback);
+    } catch (error) {
+      console.error("Failed to save AceitaTempo settings:", error);
+      showFeedback({
+        tone: "error",
+        titleKey: "saveErrorToastTitle",
+        message: chrome.i18n.getMessage("saveErrorToastMessage"),
+      });
+    } finally {
+      setActionsBusy(null);
     }
   });
 
-  $("resetButton").addEventListener("click", async () => {
-    await saveSettings(DEFAULT_SETTINGS);
-    fillForm(DEFAULT_SETTINGS);
-    updateHourlyRateCurrencyPrefix();
-    updateRateSnapshot(DEFAULT_SETTINGS);
-    updateSiteBlockToggle();
-    setStatus(chrome.i18n.getMessage("resetMessage"));
+  $("resetButton").addEventListener("click", () => {
+    $("resetConfirmModal").showModal();
+  });
+
+  $("cancelResetButton").addEventListener("click", () => {
+    $("resetConfirmModal").close();
+  });
+
+  $("confirmResetButton").addEventListener("click", async () => {
+    $("resetConfirmModal").close();
+    hideFeedback();
+    
+    showFeedback({
+      titleKey: "restoringToastTitle",
+      message: chrome.i18n.getMessage("restoringToastMessage"),
+    });
+    setActionsBusy("reset");
+
+    try {
+      await saveSettings(DEFAULT_SETTINGS);
+      fillForm(DEFAULT_SETTINGS);
+      updateHourlyRateCurrencyPrefix();
+      updateRateSnapshot(DEFAULT_SETTINGS);
+      updateSiteBlockToggle();
+      showFeedback({
+        tone: "success",
+        titleKey: "resetToastTitle",
+        message: chrome.i18n.getMessage("resetMessage"),
+      });
+    } catch (error) {
+      console.error("Failed to restore AceitaTempo defaults:", error);
+      showFeedback({
+        tone: "error",
+        titleKey: "saveErrorToastTitle",
+        message: chrome.i18n.getMessage("saveErrorToastMessage"),
+      });
+    } finally {
+      setActionsBusy(null);
+    }
   });
 }
 
