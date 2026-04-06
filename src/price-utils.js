@@ -670,6 +670,33 @@
     const referenceText = formatReferenceText(duration, settings, locale);
     const sameCurrency = price.currency === duration.salaryCurrency;
 
+    let balanceText = '';
+    const wageMode = String(settings?.wageMode ?? 'monthly').toLowerCase();
+    if (wageMode !== 'hourly' && isFiniteNumber(duration.hoursPerPeriod) && duration.hoursPerPeriod > 0) {
+      const remainingHours = duration.hoursPerPeriod - duration.hours;
+      if (remainingHours >= 0) {
+        const remainingMinutes = remainingHours * 60;
+        const formattedRemaining = formatWorkDurationLong(
+          { ...duration, hours: remainingHours, minutes: remainingMinutes },
+          settings,
+          locale
+        );
+        balanceText = isPt
+          ? `Saldo restante: ${formattedRemaining}`
+          : `Remaining balance: ${formattedRemaining}`;
+      } else {
+        const exceededHours = Math.abs(remainingHours);
+        const formattedExceeded = formatWorkDurationLong(
+          { ...duration, hours: exceededHours, minutes: exceededHours * 60 },
+          settings,
+          locale
+        );
+        balanceText = isPt
+          ? `Ultrapassa o período em ${formattedExceeded}`
+          : `Exceeds period by ${formattedExceeded}`;
+      }
+    }
+
     return {
       eyebrow: isPt ? 'Detalhes do preço' : 'Price details',
       title: originalPrice,
@@ -680,6 +707,7 @@
       conversion: sameCurrency
         ? ''
         : (isPt ? `Equivalente: ${convertedPrice}` : `Equivalent: ${convertedPrice}`),
+      balance: balanceText,
     };
   }
 

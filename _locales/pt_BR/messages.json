@@ -237,7 +237,7 @@
     "message": "Modo de cálculo de dias"
   },
   "extendedTimeDayModeCalendar": {
-    "message": "Calendário (dias de 24h)"
+    "message": "Tempo corrido (dias de 24h)"
   },
   "extendedTimeDayModeWorking": {
     "message": "Dias úteis"
