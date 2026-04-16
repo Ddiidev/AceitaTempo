@@ -349,5 +349,14 @@
   },
   "socialSummaryClose": {
     "message": "Entendi"
+  },
+  "calculatorEyebrow": {
+    "message": "Calculadora"
+  },
+  "calculatorPlaceholder": {
+    "message": "Digite um valor"
+  },
+  "calculatorWorkSuffix": {
+    "message": "de trabalho"
   }
 }
