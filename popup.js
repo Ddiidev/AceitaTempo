@@ -6,6 +6,8 @@ const DEFAULT_SETTINGS = {
   hourlyRate: 0,
   extendedTimeDisplay: true,
   extendedTimeDayMode: "calendar",
+  timeDisplayMode: "hours",
+  salaryPeriod: "monthly",
   exchangeRateMode: "auto",
   manualUsdToBrlRate: 5.5,
   exchangeRateUsdToBrl: 5.5,
@@ -168,6 +170,13 @@ function localize() {
       node.textContent = message;
     }
   });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((node) => {
+    const key = node.getAttribute("data-i18n-placeholder");
+    const message = chrome.i18n.getMessage(key);
+    if (message) {
+      node.placeholder = message;
+    }
+  });
 }
 
 async function init() {
@@ -219,6 +228,40 @@ async function init() {
   document.getElementById("openOptions").addEventListener("click", async () => {
     await chrome.runtime.openOptionsPage();
     window.close();
+  });
+
+  const currencySymbols = { BRL: "R$", USD: "$" };
+  const calcCurrency = document.getElementById("calcCurrency");
+  const calcInput = document.getElementById("calcInput");
+  const calcResult = document.getElementById("calcResult");
+  const calcTime = document.getElementById("calcTime");
+  const priceUtils = globalThis.AceitaTempoPriceUtils;
+
+  calcCurrency.textContent = currencySymbols[settings.salaryCurrency] || settings.salaryCurrency;
+
+  calcInput.addEventListener("input", () => {
+    const raw = calcInput.value.trim();
+    if (!raw || !priceUtils) {
+      calcResult.hidden = true;
+      return;
+    }
+
+    const amount = priceUtils.parseLocalizedAmount(raw, settings.salaryCurrency);
+    if (amount === null || amount <= 0) {
+      calcResult.hidden = true;
+      return;
+    }
+
+    const duration = priceUtils.calculateWorkDuration(amount, settings.salaryCurrency, settings);
+    if (!duration) {
+      calcResult.hidden = true;
+      return;
+    }
+
+    const locale = chrome.i18n.getUILanguage();
+    const timeText = priceUtils.formatWorkDurationShort(duration, settings, locale);
+    calcTime.textContent = timeText;
+    calcResult.hidden = false;
   });
 }
 
