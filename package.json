@@ -6,7 +6,7 @@
     "build:store-assets": "node scripts/generate-store-assets.mjs",
     "normalize:store-screenshots": "node scripts/normalize-store-screenshots.mjs",
     "build:assets": "npm run build:branding && npm run build:store-assets",
-    "package:zip": "node scripts/package-extension.mjs",
+    "package:zip": "npm run package:chrome:zip",
     "smoke:aliexpress": "node tests/run-aliexpress-fixture.js",
     "smoke:amazon": "node tests/run-amazon-fixture.js",
     "smoke:games": "node tests/run-game-stores-fixture.js",
@@ -15,7 +15,10 @@
     "smoke:social": "node tests/run-social-smoke.js",
     "smoke:period": "node tests/run-period-display-smoke.js",
     "smoke:temu": "node tests/run-temu-fixture.js",
-    "smoke:alibaba": "node tests/run-alibaba-fixture.js"
+    "smoke:alibaba": "node tests/run-alibaba-fixture.js",
+    "build:all": "npm run build:assets && npm run normalize:store-screenshots && npm run package:chrome:zip && npm run package:firefox:zip",
+    "package:chrome:zip": "node scripts/package-extension.mjs chrome",
+    "package:firefox:zip": "node scripts/package-extension.mjs firefox"
   },
   "devDependencies": {
     "playwright": "1.58.2"

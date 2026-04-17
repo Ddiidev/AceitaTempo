@@ -4,11 +4,32 @@ import { spawnSync } from 'child_process';
 
 const ROOT = process.cwd();
 const DIST_DIR = path.join(ROOT, 'dist');
-const STAGING_DIR = path.join(DIST_DIR, 'aceita-tempo');
-const ZIP_PATH = path.join(DIST_DIR, 'aceita-tempo.zip');
+
+const target = (process.argv[2] || 'chrome').toLowerCase();
+const PACKAGE_TARGETS = {
+  chrome: {
+    manifest: 'manifest.json',
+    staging: path.join(DIST_DIR, 'aceita-tempo-chrome'),
+    zip: path.join(DIST_DIR, 'aceita-tempo-chrome.zip'),
+  },
+  firefox: {
+    manifest: 'manifest.firefox.json',
+    staging: path.join(DIST_DIR, 'aceita-tempo-firefox'),
+    zip: path.join(DIST_DIR, 'aceita-tempo-firefox.zip'),
+  },
+};
+
+const packageTarget = PACKAGE_TARGETS[target];
+
+if (!packageTarget) {
+  throw new Error(`Unknown package target: ${target}`);
+}
+
+const STAGING_DIR = packageTarget.staging;
+const ZIP_PATH = packageTarget.zip;
 
 const INCLUDE = [
-  'manifest.json',
+  packageTarget.manifest,
   'background.js',
   'options.html',
   'options.css',
@@ -35,7 +56,7 @@ async function cleanDir(target) {
 
 async function copyTrackedFile(relative) {
   const source = path.join(ROOT, relative);
-  const destination = path.join(STAGING_DIR, relative);
+  const destination = path.join(STAGING_DIR, relative === packageTarget.manifest ? 'manifest.json' : relative);
   await fsp.mkdir(path.dirname(destination), { recursive: true });
   await fsp.copyFile(source, destination);
 }

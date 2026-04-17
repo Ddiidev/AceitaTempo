@@ -10,10 +10,27 @@
     "48": "icons/icon-48.png",
     "128": "icons/icon-128.png"
   },
-  "permissions": ["storage", "alarms", "tabs"],
-  "host_permissions": ["https://open.er-api.com/*"],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "aceitatempo@aceitatempo.com",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  },
+  "permissions": [
+    "storage",
+    "alarms",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://open.er-api.com/*"
+  ],
   "background": {
-    "service_worker": "background.js"
+    "scripts": [
+      "background.js"
+    ],
+    "type": "module"
   },
   "action": {
     "default_title": "__MSG_extensionName__",
@@ -102,14 +119,24 @@
         "https://www.tiktok.com/*",
         "https://m.tiktok.com/*"
       ],
-      "js": ["src/price-utils.js", "src/site-config.js", "src/social-awareness.js", "src/content.js"],
+      "js": [
+        "src/price-utils.js",
+        "src/site-config.js",
+        "src/social-awareness.js",
+        "src/content.js"
+      ],
       "run_at": "document_idle"
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["src/assets/*", "icons/*"],
-      "matches": ["<all_urls>"]
+      "resources": [
+        "src/assets/*",
+        "icons/*"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ]
 }
