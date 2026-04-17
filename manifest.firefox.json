@@ -12,10 +12,7 @@
   },
   "browser_specific_settings": {
     "gecko": {
-      "id": "aceitatempo@aceitatempo.com",
-      "data_collection_permissions": {
-        "required": false
-      }
+      "id": "aceitatempo@aceitatempo.com"
     }
   },
   "permissions": [
