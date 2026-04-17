@@ -30,6 +30,7 @@ const DEFAULT_SETTINGS = {
   socialTrackingEnabled: true,
   socialReflectionEnabled: true,
   socialMonetaryOptIn: false,
+  easterEggJuliusEnabled: true,
 };
 
 const STORAGE_KEYS = Object.keys(DEFAULT_SETTINGS);
@@ -105,6 +106,7 @@ function normalizeSettings(raw) {
     socialTrackingEnabled: isTruthySetting(raw.socialTrackingEnabled ?? true),
     socialReflectionEnabled: isTruthySetting(raw.socialReflectionEnabled ?? true),
     socialMonetaryOptIn: isTruthySetting(raw.socialMonetaryOptIn),
+    easterEggJuliusEnabled: isTruthySetting(raw.easterEggJuliusEnabled ?? true),
   };
 }
 
@@ -156,6 +158,7 @@ function fillForm(settings) {
   $("socialTrackingEnabled").checked = settings.socialTrackingEnabled;
   $("socialReflectionEnabled").checked = settings.socialReflectionEnabled;
   $("socialMonetaryOptIn").checked = settings.socialMonetaryOptIn;
+  if ($("easterEggJuliusEnabled")) $("easterEggJuliusEnabled").checked = settings.easterEggJuliusEnabled;
 
   updateExtendedTimeUI(settings.extendedTimeDisplay);
   updateWageModeUI(settings.wageMode);
@@ -453,6 +456,7 @@ async function init() {
       socialTrackingEnabled: $("socialTrackingEnabled").checked,
       socialReflectionEnabled: $("socialReflectionEnabled").checked,
       socialMonetaryOptIn: $("socialMonetaryOptIn").checked,
+      easterEggJuliusEnabled: $("easterEggJuliusEnabled") ? $("easterEggJuliusEnabled").checked : true,
     });
 
     if (payload.exchangeRateMode === "manual" && payload.manualUsdToBrlRate <= 0) {
