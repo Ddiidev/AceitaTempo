@@ -43,12 +43,25 @@
         </div>
       </section>
 
+      <section class="card calculator-card">
+        <div class="eyebrow" data-i18n="calculatorEyebrow"></div>
+        <div class="calculator-input-row">
+          <span class="calculator-currency" id="calcCurrency">R$</span>
+          <input type="text" id="calcInput" data-i18n-placeholder="calculatorPlaceholder" />
+        </div>
+        <div class="calculator-result" id="calcResult" hidden>
+          <div class="calculator-result-time" id="calcTime"></div>
+          <div class="calculator-result-suffix" data-i18n="calculatorWorkSuffix"></div>
+        </div>
+      </section>
+
       <section class="card action-card">
         <button id="openOptions" class="primary" type="button" data-i18n="openOptionsButton"></button>
       </section>
     </main>
 
     <script src="src/site-config.js"></script>
+    <script src="src/price-utils.js"></script>
     <script src="popup.js"></script>
   </body>
 </html>
