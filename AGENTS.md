@@ -15,6 +15,16 @@
   - `npm run smoke:aliexpress`
   - `npm run smoke:games`
 
+## Features implementadas
+
+- **Conversão preço → tempo** (core): badge com tempo de trabalho ao lado de cada preço.
+- **Saldo restante do período** (Issue #15): tooltip mostra quanto do período ainda sobra após a compra.
+- **Percentual do salário** (Issue #12): tooltip mostra quanto o produto representa do salário do período (ex.: "10% do seu salário"). Aparece **somente no tooltip**, nunca no badge. Controlado pelo toggle `showSalaryPercent` nas configurações (ligado por padrão). Não aparece no modo `wageMode = hourly`.
+  - Função: `PriceUtils.calculateSalaryPercentage(convertedPrice, settings)` em `src/price-utils.js`.
+  - Campo `salaryPercent` no objeto retornado por `buildTooltipCard`.
+  - Linha CSS: `.aceita-tempo-tooltip__salary-percent`.
+
+
 ## Regras globais
 
 - **Nunca** adicionar Codex como co-author em commits.
