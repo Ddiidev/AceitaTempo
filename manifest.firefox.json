@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "__MSG_extensionDescription__",
   "default_locale": "pt_BR",
   "icons": {
@@ -12,7 +12,10 @@
   },
   "browser_specific_settings": {
     "gecko": {
-      "id": "aceitatempo@aceitatempo.com"
+      "id": "aceitatempo@aceitatempo.com",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
     }
   },
   "permissions": [
