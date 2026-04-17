@@ -349,5 +349,14 @@
   },
   "socialSummaryClose": {
     "message": "Got it"
+  },
+  "calculatorEyebrow": {
+    "message": "Calculator"
+  },
+  "calculatorPlaceholder": {
+    "message": "Enter a value"
+  },
+  "calculatorWorkSuffix": {
+    "message": "of work"
   }
 }
