@@ -17,6 +17,7 @@ const DEFAULT_SETTINGS = {
   extendedTimeDisplay: true,
   extendedTimeDayMode: "calendar",
   replacePricesWithHours: false,
+  showSalaryPercent: true,
   enableExternalSites: false,
   disabledSiteNames: [],
   exchangeRateMode: "auto",
@@ -91,6 +92,7 @@ function normalizeSettings(raw) {
     extendedTimeDisplay: isTruthySetting(raw.extendedTimeDisplay ?? true),
     extendedTimeDayMode: raw.extendedTimeDayMode === "working" ? "working" : "calendar",
     replacePricesWithHours: isTruthySetting(raw.replacePricesWithHours),
+    showSalaryPercent: raw.showSalaryPercent === undefined ? true : isTruthySetting(raw.showSalaryPercent),
     enableExternalSites: isTruthySetting(raw.enableExternalSites ?? raw.enableExternal ?? raw.allowExternalSites),
     disabledSiteNames: Array.isArray(raw.disabledSiteNames) ? raw.disabledSiteNames : [],
     exchangeRateMode: raw.exchangeRateMode === "manual" ? "manual" : "auto",
@@ -144,6 +146,7 @@ function fillForm(settings) {
   $("hourlyRate").value = settings.hourlyRate;
   $("timeDisplayMode").value = settings.timeDisplayMode;
   $("replacePricesWithHours").checked = isTruthySetting(settings.replacePricesWithHours);
+  $("showSalaryPercent").checked = settings.showSalaryPercent !== false;
   $("enableExternalSites").checked = isTruthySetting(settings.enableExternalSites);
   $("exchangeRateMode").value = settings.exchangeRateMode;
   $("manualUsdToBrlRate").value = settings.manualUsdToBrlRate;
@@ -437,6 +440,7 @@ async function init() {
       extendedTimeDisplay: $("extendedTimeDisplay").checked,
       extendedTimeDayMode: $("extendedTimeDayMode").value,
       replacePricesWithHours: $("replacePricesWithHours").checked,
+      showSalaryPercent: $("showSalaryPercent").checked,
       enableExternalSites: $("enableExternalSites").checked,
       disabledSiteNames: Array.from(document.querySelectorAll("[data-site-name]"))
         .filter((input) => !input.checked)

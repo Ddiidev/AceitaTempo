@@ -358,5 +358,11 @@
   },
   "calculatorWorkSuffix": {
     "message": "of work"
+  },
+  "showSalaryPercentLabel": {
+    "message": "Show salary percentage"
+  },
+  "showSalaryPercentHint": {
+    "message": "Displays how much of your period salary the product costs (e.g. 10% of salary)."
   }
 }
