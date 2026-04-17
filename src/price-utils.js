@@ -608,6 +608,32 @@
     };
   }
 
+  function calculateSalaryPercentage(convertedPrice, settings) {
+    const wageMode = String(settings?.wageMode ?? 'monthly').toLowerCase();
+    if (wageMode === 'hourly') {
+      return null;
+    }
+
+    const hourlyReference = resolveHourlyReference(settings);
+    if (!hourlyReference || !isFiniteNumber(hourlyReference.salaryAmount) || hourlyReference.salaryAmount <= 0) {
+      return null;
+    }
+
+    if (!isFiniteNumber(convertedPrice) || convertedPrice <= 0) {
+      return null;
+    }
+
+    const percentage = (convertedPrice / hourlyReference.salaryAmount) * 100;
+    if (!isFiniteNumber(percentage) || percentage <= 0) {
+      return null;
+    }
+
+    const rounded = Math.round(percentage * 10) / 10;
+    const formatted = rounded % 1 === 0 ? `${Math.round(rounded)}%` : `${rounded.toFixed(1).replace('.', ',')}%`;
+
+    return { percentage: rounded, formatted };
+  }
+
   function calculateApproximateValueForMinutes(minutes, settings, allowZero = false) {
     const hourlyReference = resolveHourlyReference(settings);
     const numericMinutes = Number(minutes);
@@ -671,6 +697,7 @@
     const sameCurrency = price.currency === duration.salaryCurrency;
 
     let balanceText = '';
+    let salaryPercentText = '';
     const wageMode = String(settings?.wageMode ?? 'monthly').toLowerCase();
     if (wageMode !== 'hourly' && isFiniteNumber(duration.hoursPerPeriod) && duration.hoursPerPeriod > 0) {
       const remainingHours = duration.hoursPerPeriod - duration.hours;
@@ -697,6 +724,16 @@
       }
     }
 
+    const showPercent = settings?.showSalaryPercent !== false;
+    if (showPercent) {
+      const pct = calculateSalaryPercentage(duration.convertedPrice, settings);
+      if (pct) {
+        salaryPercentText = isPt
+          ? `${pct.formatted} do seu salário`
+          : `${pct.formatted} of your salary`;
+      }
+    }
+
     return {
       eyebrow: isPt ? 'Detalhes do preço' : 'Price details',
       title: originalPrice,
@@ -708,6 +745,7 @@
         ? ''
         : (isPt ? `Equivalente: ${convertedPrice}` : `Equivalent: ${convertedPrice}`),
       balance: balanceText,
+      salaryPercent: salaryPercentText,
     };
   }
 
@@ -761,6 +799,7 @@
     extractAllPriceMatches,
     extractPriceFromText,
     calculateWorkDuration,
+    calculateSalaryPercentage,
     formatDurationLong,
     formatDurationShort,
     formatWorkDurationShort,
