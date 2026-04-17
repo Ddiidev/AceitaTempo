@@ -394,6 +394,15 @@
         font-weight: 600;
         line-height: 1.35;
       }
+      #${TOOLTIP_ID} .aceita-tempo-tooltip__balance {
+        margin: 8px 0 0;
+        padding-top: 8px;
+        border-top: 1px dashed rgba(30, 26, 23, 0.12);
+        color: #431407;
+        font-size: 12px;
+        line-height: 1.35;
+      }
+
     `;
 
     (document.head || document.documentElement).appendChild(style);
@@ -1328,6 +1337,7 @@
     appendTextBlock('aceita-tempo-tooltip__body', model?.body || '');
     appendTextBlock('aceita-tempo-tooltip__meta', model?.meta || '');
     appendTextBlock('aceita-tempo-tooltip__conversion', model?.conversion || '');
+    appendTextBlock('aceita-tempo-tooltip__balance', model?.balance || '');
   }
 
   function hideTooltip() {

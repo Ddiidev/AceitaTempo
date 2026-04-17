@@ -237,7 +237,7 @@
     "message": "Day calculation mode"
   },
   "extendedTimeDayModeCalendar": {
-    "message": "Calendar (24h days)"
+    "message": "Continuous time (24h days)"
   },
   "extendedTimeDayModeWorking": {
     "message": "Working days"
