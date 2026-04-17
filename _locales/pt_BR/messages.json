@@ -80,6 +80,9 @@
   "timeDisplayModeHours": {
     "message": "Horas"
   },
+  "easterEggJuliusLabel": {
+    "message": "Julius (Easter Egg)"
+  },
   "timeDisplayModePeriod": {
     "message": "Período real"
   },
