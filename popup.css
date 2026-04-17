@@ -141,3 +141,63 @@ button {
   background: linear-gradient(135deg, var(--accent), var(--accent-strong));
   color: #fff;
 }
+
+.calculator-card {
+  padding: 14px 16px;
+  display: grid;
+  gap: 10px;
+}
+
+.calculator-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.calculator-currency {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  flex: none;
+}
+
+#calcInput {
+  flex: 1;
+  min-width: 0;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+}
+
+#calcInput::placeholder {
+  color: var(--muted);
+}
+
+#calcInput:focus {
+  border-color: var(--accent);
+}
+
+.calculator-result {
+  background: linear-gradient(135deg, rgba(15, 118, 110, 0.08), rgba(15, 118, 110, 0.04));
+  border-radius: 14px;
+  padding: 12px 14px;
+  text-align: center;
+}
+
+.calculator-result-time {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--accent-strong);
+  line-height: 1.2;
+}
+
+.calculator-result-suffix {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
