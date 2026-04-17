@@ -358,5 +358,11 @@
   },
   "calculatorWorkSuffix": {
     "message": "de trabalho"
+  },
+  "showSalaryPercentLabel": {
+    "message": "Mostrar percentual do salário"
+  },
+  "showSalaryPercentHint": {
+    "message": "Exibe quanto o produto representa do seu salário (ex.: 10% do salário)."
   }
 }

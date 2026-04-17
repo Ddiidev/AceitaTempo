@@ -26,6 +26,7 @@
     'extendedTimeDisplay',
     'extendedTimeDayMode',
     'replacePricesWithHours',
+    'showSalaryPercent',
     'exchangeRateMode',
     'exchangeRateUsdToBrl',
     'manualUsdToBrlRate',
@@ -118,6 +119,7 @@
       extendedTimeDisplay: isTruthySetting(raw.extendedTimeDisplay ?? true),
       extendedTimeDayMode: String(raw.extendedTimeDayMode ?? 'calendar').toLowerCase() === 'working' ? 'working' : 'calendar',
       replacePricesWithHours: isTruthySetting(raw.replacePricesWithHours ?? raw.replacePrices ?? raw.substituteValuesWithHours),
+      showSalaryPercent: raw.showSalaryPercent === undefined ? true : isTruthySetting(raw.showSalaryPercent),
       exchangeRateMode: String(raw.exchangeRateMode ?? raw.exchangeMode ?? 'auto').toLowerCase() === 'manual' ? 'manual' : 'auto',
       exchangeRateUsdToBrl: Number(raw.exchangeRateUsdToBrl ?? raw.exchangeRate ?? raw.exchange_rate) || 0,
       manualUsdToBrlRate: Number(raw.manualUsdToBrlRate ?? raw.manualExchangeRate) || 0,
@@ -400,6 +402,14 @@
         border-top: 1px dashed rgba(30, 26, 23, 0.12);
         color: #431407;
         font-size: 12px;
+        line-height: 1.35;
+      }
+
+      #${TOOLTIP_ID} .aceita-tempo-tooltip__salary-percent {
+        margin: 6px 0 0;
+        color: #0f4c81;
+        font-size: 12px;
+        font-weight: 600;
         line-height: 1.35;
       }
 
@@ -1335,6 +1345,7 @@
     appendTextBlock('aceita-tempo-tooltip__eyebrow', model?.eyebrow || '');
     appendTextBlock('aceita-tempo-tooltip__title', model?.title || '');
     appendTextBlock('aceita-tempo-tooltip__body', model?.body || '');
+    appendTextBlock('aceita-tempo-tooltip__salary-percent', model?.salaryPercent || '');
     appendTextBlock('aceita-tempo-tooltip__meta', model?.meta || '');
     appendTextBlock('aceita-tempo-tooltip__conversion', model?.conversion || '');
     appendTextBlock('aceita-tempo-tooltip__balance', model?.balance || '');
