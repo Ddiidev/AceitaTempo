@@ -111,7 +111,7 @@
     "message": "External sites"
   },
   "enableExternalSitesHint": {
-    "message": "WIP — feature not available yet."
+    "message": "In progress: feature not available yet."
   },
   "enableExternalSitesWip": {
     "message": "WIP"
@@ -367,5 +367,83 @@
   },
   "showSalaryPercentHint": {
     "message": "Displays how much of your period salary the product costs (e.g. 10% of salary)."
+  },
+  "onboardingEyebrow": {
+    "message": "Welcome"
+  },
+  "onboardingTitle": {
+   "message": "AceitaTempo: what it costs in your time"
+  },
+  "onboardingSubtitle": {
+   "message": "Thanks for installing. Here's how the project stays alive, transparently and at no cost to you."
+  },
+  "onboardingWhatTitle": {
+    "message": "What the extension does"
+  },
+  "onboardingWhatBody": {
+    "message": "It turns prices into work time based on your salary and routine. You see the cost in hours next to each price on partner stores."
+  },
+  "onboardingAffiliateTitle": {
+    "message": "Transparent affiliate program"
+  },
+  "onboardingAffiliateBody": {
+   "message": "To keep the project free, we earn a small commission if you buy on partner stores using the AceitaTempo link. No extra cost to you: we only redirect the same page with our affiliate tag when you choose to support us."
+  },
+  "onboardingAffiliateDisclosure": {
+    "message": "You can turn this off anytime in the settings, per store or all at once."
+  },
+  "onboardingDonateTitle": {
+    "message": "Support with Pix (optional)"
+  },
+  "onboardingDonateBody": {
+    "message": "If you'd like to support directly, scan the QR Code below with any amount."
+  },
+  "onboardingDonateEmail": {
+    "message": "Couldn't scan? Send a Pix to contato@devtu.qzz.io"
+  },
+  "onboardingOpenSettings": {
+    "message": "Open settings"
+  },
+  "onboardingDismiss": {
+    "message": "Got it"
+  },
+  "affiliateSectionTitle": {
+    "message": "Support the project"
+  },
+  "affiliateSectionHint": {
+   "message": "Control how AceitaTempo offers the affiliate link. We value transparency: uncheck the switch to stop receiving the suggestion."
+  },
+  "affiliateEnabledLabel": {
+    "message": "All"
+  },
+  "affiliateEnabledHint": {
+    "message": "On: AceitaTempo may suggest the affiliate link on partner stores. Turn off to disable everything at once."
+  },
+  "affiliatePixEmail": {
+    "message": "Pix: contato@devtu.qzz.io"
+  },
+  "affiliateDisclaimer": {
+    "message": "We value transparency. If you don't want this suggestion anymore, uncheck the switch beside it. This applies only to the corresponding store. Use the QR Code icon beside it to support with a Pix of any amount."
+  },
+  "affiliateToastTitle": {
+    "message": "Support AceitaTempo"
+  },
+  "affiliateToastConversion": {
+    "message": "No extra cost • we just reopen the page with our tag"
+  },
+  "affiliateToastBody": {
+    "message": "If you were already going to buy, opening through our link doesn't change the price at all. But it means a lot to us — it's what helps keep the AceitaTempo project alive!"
+  },
+  "affiliateToastSupport": {
+    "message": "Support AceitaTempo"
+  },
+  "affiliateToastDismiss": {
+    "message": "Not now"
+  },
+  "affiliateToastDisclaimer": {
+    "message": "Transparent revenue via affiliate. Don't want to see this anymore?"
+  },
+  "affiliateToastSettings": {
+    "message": "Turn off in settings"
   }
 }

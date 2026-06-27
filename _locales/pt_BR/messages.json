@@ -111,7 +111,7 @@
     "message": "Sites externos"
   },
   "enableExternalSitesHint": {
-    "message": "WIP — recurso ainda não disponível."
+    "message": "Em desenvolvimento: recurso ainda não disponível."
   },
   "enableExternalSitesWip": {
     "message": "WIP"
@@ -367,5 +367,83 @@
   },
   "showSalaryPercentHint": {
     "message": "Exibe quanto o produto representa do seu salário (ex.: 10% do salário)."
+  },
+  "onboardingEyebrow": {
+    "message": "Bem-vindo"
+  },
+  "onboardingTitle": {
+   "message": "AceitaTempo: quanto do seu tempo custa isso"
+  },
+  "onboardingSubtitle": {
+    "message": "Obrigado por instalar. Veja como o projeto se mantém, de forma transparente e sem custo para você."
+  },
+  "onboardingWhatTitle": {
+    "message": "O que a extensão faz"
+  },
+  "onboardingWhatBody": {
+    "message": "Converte preços em tempo de trabalho com base no seu salário e na sua rotina. Você vê o custo em horas ao lado de cada preço nas lojas parceiras."
+  },
+  "onboardingAffiliateTitle": {
+    "message": "Afiliação transparente"
+  },
+  "onboardingAffiliateBody": {
+   "message": "Para manter o projeto gratuito, recebemos uma pequena comissão se você comprar em lojas parceiras usando o link do AceitaTempo. Sem custo extra para você: só redirecionamos a mesma página com a nossa tag de afiliado quando você escolhe apoiar."
+  },
+  "onboardingAffiliateDisclosure": {
+    "message": "Você pode desativar isso a qualquer momento nas configurações, por loja ou de uma vez."
+  },
+  "onboardingDonateTitle": {
+    "message": "Apoie com Pix (opcional)"
+  },
+  "onboardingDonateBody": {
+    "message": "Se quiser apoiar diretamente, escaneie o QR Code abaixo com qualquer valor."
+  },
+  "onboardingDonateEmail": {
+    "message": "Não conseguiu escanear? Envie um Pix para contato@devtu.qzz.io"
+  },
+  "onboardingOpenSettings": {
+    "message": "Abrir configurações"
+  },
+  "onboardingDismiss": {
+    "message": "Entendi"
+  },
+  "affiliateSectionTitle": {
+    "message": "Apoiar o projeto"
+  },
+  "affiliateSectionHint": {
+   "message": "Controle como o AceitaTempo oferece o link de afiliado. Prezamos pela transparência: desmarque o switch para não receber mais a sugestão."
+  },
+  "affiliateEnabledLabel": {
+    "message": "Tudo"
+  },
+  "affiliateEnabledHint": {
+    "message": "Ativo: o AceitaTempo pode sugerir o link de afiliado nas lojas parceiras. Desligue para desativar tudo de uma vez."
+  },
+  "affiliatePixEmail": {
+    "message": "Pix: contato@devtu.qzz.io"
+  },
+  "affiliateDisclaimer": {
+    "message": "Prezamos pela transparência. Se não quiser mais receber essa sugestão, desmarque o switch ao lado. Isso vale apenas para a loja correspondente. Use o ícone do QR Code ao lado para apoiar com Pix de qualquer valor."
+  },
+  "affiliateToastTitle": {
+    "message": "Apoie o AceitaTempo"
+  },
+  "affiliateToastConversion": {
+    "message": "Sem custo extra • só reabrimos a página com nossa tag"
+  },
+  "affiliateToastBody": {
+    "message": "Se você já ia comprar, abrir pelo nosso link não muda nada no preço. Mas pra gente faz toda a diferença — é o que nos ajuda a manter o projeto AceitaTempo vivo!"
+  },
+  "affiliateToastSupport": {
+    "message": "Apoiar AceitaTempo"
+  },
+  "affiliateToastDismiss": {
+    "message": "Agora não"
+  },
+  "affiliateToastDisclaimer": {
+    "message": "Receita transparente via afiliado. Não quer mais ver isso?"
+  },
+  "affiliateToastSettings": {
+    "message": "Desativar nas configurações"
   }
 }
