@@ -16,6 +16,8 @@ const DEFAULT_SETTINGS = {
   socialTrackingEnabled: true,
   socialReflectionEnabled: true,
   socialMonetaryOptIn: false,
+  affiliateEnabled: true,
+  affiliateDisabledStores: [],
 };
 
 const STORAGE_KEYS = Object.keys(DEFAULT_SETTINGS);
@@ -41,6 +43,23 @@ async function ensureDefaults() {
   }
 
   await chrome.storage.sync.set(Object.fromEntries(missingEntries));
+}
+
+async function maybeOpenOnboarding() {
+  const area = chrome.storage?.sync ?? chrome.storage?.local;
+  if (!area) {
+    return;
+  }
+  const items = await new Promise((resolve) => area.get(["onboardingSeen"], resolve));
+  if (items?.onboardingSeen) {
+    return;
+  }
+  await new Promise((resolve) => area.set({ onboardingSeen: true }, resolve));
+  try {
+    await chrome.tabs.create({ url: chrome.runtime.getURL("onboarding.html") });
+  } catch (error) {
+    console.warn("[AceitaTempo] Failed to open onboarding", error);
+  }
 }
 
 async function fetchUsdToBrlRate() {
@@ -119,6 +138,8 @@ chrome.runtime.onInstalled.addListener(async () => {
   } catch (error) {
     console.warn("[AceitaTempo] Failed to refresh exchange rate on install", error);
   }
+
+  await maybeOpenOnboarding();
 });
 
 chrome.runtime.onStartup.addListener(async () => {

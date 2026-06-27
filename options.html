@@ -284,8 +284,41 @@
               </div>
             </section>
 
+            <section id="affiliate-section" class="settings-section" aria-labelledby="affiliateSectionTitle">
+              <div class="settings-section__header">
+                <h2 id="affiliateSectionTitle" data-i18n="affiliateSectionTitle"></h2>
+                <p data-i18n="affiliateSectionHint"></p>
+              </div>
+
+              <div class="affiliate-master">
+                <label class="field field-wide toggle-field" for="affiliateEnabled">
+                  <span class="toggle-copy">
+                    <span class="toggle-title" data-i18n="affiliateEnabledLabel"></span>
+                    <span class="toggle-desc" data-i18n="affiliateEnabledHint"></span>
+                  </span>
+                  <span class="affiliate-master__control">
+                    <span class="affiliate-qr" id="affiliateQr" tabindex="0" aria-label="Pix">
+                      <img src="pix-qrcode.png" alt="QR Code Pix" class="affiliate-qr__img" />
+                      <span class="affiliate-qr-tooltip" id="affiliateQrTooltip" role="tooltip">
+                        <img src="pix-qrcode.png" alt="QR Code Pix" class="affiliate-qr-tooltip__img" />
+                        <span class="affiliate-qr-tooltip__email" data-i18n="affiliatePixEmail"></span>
+                      </span>
+                    </span>
+                    <span class="switch">
+                      <input id="affiliateEnabled" name="affiliateEnabled" type="checkbox" />
+                      <span class="switch-track" aria-hidden="true"></span>
+                    </span>
+                  </span>
+                </label>
+              </div>
+
+              <div id="affiliateToggles" class="site-grid site-grid--compact"></div>
+
+              <p class="hint affiliate-disclaimer" data-i18n="affiliateDisclaimer"></p>
+            </section>
+
             <section class="settings-section" aria-labelledby="advancedSectionTitle" style="margin-top: 32px; border-top: 1px dashed rgba(30, 26, 23, 0.1); padding-top: 24px;">
-              <label class="field field-wide toggle-field" style="opacity: 0.5; transition: opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.5'">
+              <label id="easterEggLabel" class="field field-wide toggle-field" style="opacity: 0.5; transition: opacity 0.2s;">
                 <span class="toggle-copy">
                   <span class="toggle-title" data-i18n="easterEggJuliusLabel" style="font-size: 11px; font-weight: normal;"></span>
                 </span>
@@ -312,6 +345,7 @@
     </main>
 
     <script src="src/site-config.js"></script>
+    <script src="src/affiliate.js"></script>
     <script src="options.js"></script>
   </body>
 </html>
