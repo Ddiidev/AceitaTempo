@@ -12,6 +12,8 @@ const DEFAULT_SETTINGS = {
   manualUsdToBrlRate: 5.5,
   exchangeRateUsdToBrl: 5.5,
   exchangeRateFetchedAt: null,
+  affiliateEnabled: true,
+  affiliateDisabledStores: [],
 };
 const SOCIAL_STATUS_REQUEST = "aceitaTempo:getPopupStatus";
 const LOCAL_SOCIAL_SESSION_KEY = "aceitaTempoSocialSession";

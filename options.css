@@ -634,6 +634,27 @@ button {
     min-width: 0;
   }
 }
+/* affiliate section */
+.affiliate-master { margin-bottom: 16px; }
+.affiliate-master__control { display: flex; align-items: center; gap: 12px; }
+.affiliate-qr {
+  position: relative; display: inline-flex; width: 28px; height: 28px;
+  border-radius: 6px; cursor: pointer; background: #fff;
+  border: 1px solid var(--border);
+}
+ .affiliate-qr__img { width: 100%; height: 100%; object-fit: cover; border-radius: 5px; }
+.affiliate-qr-tooltip {
+  position: absolute; bottom: calc(100% + 8px); right: 0; display: none;
+  flex-direction: column; align-items: center; gap: 6px; padding: 12px;
+  background: var(--panel-strong); border: 1px solid var(--border); border-radius: 12px;
+  box-shadow: var(--shadow); z-index: 50; width: 200px;
+}
+.affiliate-qr:hover .affiliate-qr-tooltip,
+.affiliate-qr:focus .affiliate-qr-tooltip,
+.affiliate-qr:focus-within .affiliate-qr-tooltip { display: flex; }
+.affiliate-qr-tooltip__img { width: 170px; height: 170px; object-fit: cover; border-radius: 8px; }
+.affiliate-qr-tooltip__email { font-size: 12px; color: var(--muted); text-align: center; word-break: break-all; }
+.affiliate-disclaimer { font-style: italic; font-size: 12px; opacity: 0.7; margin-top: 12px; }
 
 .wage-mode-switch {
   display: flex;
