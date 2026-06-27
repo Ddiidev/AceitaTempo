@@ -123,6 +123,7 @@
         "src/price-utils.js",
         "src/site-config.js",
         "src/social-awareness.js",
+        "src/affiliate.js",
         "src/content.js"
       ],
       "run_at": "document_idle"
@@ -132,7 +133,10 @@
     {
       "resources": [
         "src/assets/*",
-        "icons/*"
+       "icons/*",
+       "options.html",
+       "onboarding.html",
+       "pix-qrcode.png"
       ],
       "matches": [
         "<all_urls>"
