@@ -71,6 +71,9 @@
     targetToBadge: new WeakMap(),
     easterEggCounter: 0,
     easterEggTriggered: false,
+    badgeHovered: false,
+    affiliateToastShownFor: null,
+    affiliateToastTimer: null,
   };
   let popupMessageListenerBound = false;
 
@@ -140,6 +143,8 @@
       socialReflectionEnabled: isTruthySetting(raw.socialReflectionEnabled ?? true),
       socialMonetaryOptIn: isTruthySetting(raw.socialMonetaryOptIn),
       easterEggJuliusEnabled: isTruthySetting(raw.easterEggJuliusEnabled ?? true),
+      affiliateEnabled: isTruthySetting(raw.affiliateEnabled ?? true),
+      affiliateDisabledStores: Array.isArray(raw.affiliateDisabledStores) ? raw.affiliateDisabledStores.map((v) => String(v)) : [],
     };
   }
 
@@ -1415,8 +1420,14 @@
       return;
     }
 
+    state.badgeHovered = true;
+
     const tooltip = getTooltipElement();
+    if (typeof maybeShowAffiliateToast === 'function') {
+      maybeShowAffiliateToast();
+    }
     const isAlreadyShowingThisAnchor = state.tooltipAnchor === anchor && tooltip.getAttribute('data-visible') === '1';
+
 
     if (state.tooltipRafId) {
       cancelAnimationFrame(state.tooltipRafId);
@@ -1970,6 +1981,8 @@
     ensureStyle();
     scan();
     observe();
+
+    window.setTimeout(() => maybeShowAffiliateToast(), 100);
   }
 
   function onStorageChange(changes, areaName) {
@@ -1980,6 +1993,257 @@
     if (Object.keys(changes || {}).some((key) => STORAGE_KEYS.includes(key))) {
       refreshSettingsAndScan();
     }
+  }
+
+  const Affiliate = globalObj.AceitaTempoAffiliate;
+  const AFFILIATE_TOAST_ID = 'aceita-tempo-affiliate-toast';
+  const AFFILIATE_TOAST_STYLE_ID = 'aceita-tempo-affiliate-toast-style';
+  const AFFILIATE_TRIGGER_DELAY_MS = 4000;
+
+  function getAffiliateProductId() {
+    const path = String(location.pathname || '');
+    const segments = path.split('/').filter(Boolean);
+    return segments.slice(-2).join('/') || path || 'product';
+  }
+
+  function affiliateToastAlreadyShown() {
+    try {
+      const siteId = state.siteConfig?.siteId || 'unknown';
+      const productId = getAffiliateProductId();
+      const key = `aceitaTempo_affiliate_toast_${siteId}_${productId}`;
+      return sessionStorage.getItem(key) === '1';
+    } catch {
+      return false;
+    }
+  }
+
+  function markAffiliateToastShown() {
+    try {
+      const siteId = state.siteConfig?.siteId || 'unknown';
+      const productId = getAffiliateProductId();
+      const key = `aceitaTempo_affiliate_toast_${siteId}_${productId}`;
+      sessionStorage.setItem(key, '1');
+    } catch {
+      // ignore
+    }
+  }
+
+  function isAffiliateEligibleForCurrentPage() {
+    if (!state.siteConfig || state.siteConfig.kind !== 'commerce') {
+      return false;
+    }
+    if (isCartOrCheckoutPage()) {
+      return false;
+    }
+    const siteId = state.siteConfig.siteId;
+    if (!Affiliate?.hasAffiliate?.(siteId)) {
+      return false;
+    }
+    if (!state.settings?.affiliateEnabled) {
+      return false;
+    }
+    const disabled = new Set((state.settings.affiliateDisabledStores || []).map((v) => String(v)));
+   if (disabled.has(String(siteId))) {
+     return false;
+   }
+   return !urlAlreadyHasAffiliateTag();
+  }
+
+ function urlAlreadyHasAffiliateTag() {
+   const siteId = state.siteConfig?.siteId;
+   const store = Affiliate?.getAffiliateStore?.(siteId);
+   if (!store) return false;
+   try {
+     const url = new URL(location.href);
+     return Object.keys(store.params).every((key) => url.searchParams.has(key));
+   } catch {
+     return false;
+   }
+ }
+  function ensureAffiliateToastStyle() {
+    if (document.getElementById(AFFILIATE_TOAST_STYLE_ID)) {
+      return;
+    }
+    const style = document.createElement('style');
+    style.id = AFFILIATE_TOAST_STYLE_ID;
+    style.textContent = `
+      #${AFFILIATE_TOAST_ID} {
+       all: initial;
+       position: fixed; right: 16px; bottom: 16px; z-index: 2147483000;
+       display: block; max-width: min(360px, calc(100vw - 24px));
+       padding: 20px 22px; border-radius: 24px;
+       border: 1px solid rgba(30, 26, 23, 0.12);
+       background: rgba(255, 255, 255, 0.82);
+       color: #1e1a17;
+       box-shadow: 0 18px 50px rgba(53, 38, 25, 0.12);
+       backdrop-filter: blur(18px);
+       -webkit-backdrop-filter: blur(18px);
+       font: 600 13px/1.45 Aptos, "Segoe UI Variable Display", "Trebuchet MS", sans-serif;
+       letter-spacing: 0; pointer-events: auto; box-sizing: border-box;
+       opacity: 0; visibility: hidden;
+       transform: translate3d(0, 8px, 0) scale(0.985);
+       transform-origin: center bottom;
+       transition: opacity 160ms ease, transform 160ms ease, visibility 160ms ease;
+       contain: layout style paint;
+      }
+     #${AFFILIATE_TOAST_ID}[data-visible="1"] {
+       opacity: 1; visibility: visible; transform: translate3d(0, 0, 0) scale(1);
+     }
+     #${AFFILIATE_TOAST_ID},
+     #${AFFILIATE_TOAST_ID} * { box-sizing: border-box; }
+     #${AFFILIATE_TOAST_ID} .aceita-tempo-toast__title {
+       margin: 0; font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+       font-size: 16px; line-height: 1.08; letter-spacing: -0.03em; color: #1e1a17;
+     }
+     #${AFFILIATE_TOAST_ID} .aceita-tempo-toast__body {
+       margin: 8px 0 0; color: #1e1a17; font-size: 13px; line-height: 1.45;
+     }
+     #${AFFILIATE_TOAST_ID} .aceita-tempo-toast__conversion {
+       margin: 6px 0 0; color: #115e59; font-size: 12px; font-weight: 600; line-height: 1.35;
+     }
+     #${AFFILIATE_TOAST_ID}__actions {
+       display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 14px;
+     }
+     #${AFFILIATE_TOAST_ID} .aceita-tempo-toast__btn {
+       font: inherit; border: none; border-radius: 999px; padding: 8px 16px;
+       font-weight: 600; font-size: 12px; cursor: pointer;
+       transition: background 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
+     }
+     #${AFFILIATE_TOAST_ID} .aceita-tempo-toast__btn:hover { transform: translateY(-1px); }
+     #${AFFILIATE_TOAST_ID} .aceita-tempo-toast__btn--primary { background: #0f766e; color: #ffffff; }
+     #${AFFILIATE_TOAST_ID} .aceita-tempo-toast__btn--primary:hover { background: #115e59; }
+     #${AFFILIATE_TOAST_ID} .aceita-tempo-toast__btn--ghost {
+       background: transparent; color: #6b625a;
+       border: 1px solid rgba(30, 26, 23, 0.12);
+     }
+     #${AFFILIATE_TOAST_ID} .aceita-tempo-toast__btn--ghost:hover { background: rgba(30, 26, 23, 0.04); color: #1e1a17; }
+     #${AFFILIATE_TOAST_ID}__disclaimer {
+       margin: 12px 0 0; padding-top: 10px;
+       border-top: 1px dashed rgba(30, 26, 23, 0.12);
+       font-style: italic; font-size: 11px; line-height: 1.4; color: #6b625a;
+      }
+     #${AFFILIATE_TOAST_ID}__disclaimer a {
+       color: #115e59; text-decoration: underline; font-style: normal; font-weight: 600;
+     }
+    `;
+    document.documentElement.appendChild(style);
+  }
+
+  function getAffiliateToastMessage(key) {
+    const msg = chrome.i18n?.getMessage?.(key);
+    return msg || key;
+  }
+
+  function buildAffiliateToastElement() {
+    const el = document.createElement('div');
+    el.id = AFFILIATE_TOAST_ID;
+    el.setAttribute('role', 'dialog');
+    el.setAttribute('aria-live', 'polite');
+
+   const title = document.createElement('div');
+   title.className = 'aceita-tempo-toast__title';
+   title.textContent = getAffiliateToastMessage('affiliateToastTitle');
+
+   const body = document.createElement('div');
+   body.className = 'aceita-tempo-toast__body';
+   body.textContent = getAffiliateToastMessage('affiliateToastBody');
+
+   const conversion = document.createElement('div');
+   conversion.className = 'aceita-tempo-toast__conversion';
+   conversion.textContent = getAffiliateToastMessage('affiliateToastConversion');
+
+    const actions = document.createElement('div');
+    actions.id = `${AFFILIATE_TOAST_ID}__actions`;
+
+    const supportBtn = document.createElement('button');
+   supportBtn.className = 'aceita-tempo-toast__btn aceita-tempo-toast__btn--primary';
+    supportBtn.type = 'button';
+    supportBtn.textContent = getAffiliateToastMessage('affiliateToastSupport');
+    supportBtn.addEventListener('click', () => {
+      const siteId = state.siteConfig?.siteId;
+      const url = Affiliate?.buildAffiliateUrl?.(location.href, siteId);
+      if (url && url !== location.href) {
+        markAffiliateToastShown();
+        window.location.assign(url);
+      }
+    });
+
+    const dismissBtn = document.createElement('button');
+   dismissBtn.className = 'aceita-tempo-toast__btn aceita-tempo-toast__btn--ghost';
+    dismissBtn.type = 'button';
+    dismissBtn.textContent = getAffiliateToastMessage('affiliateToastDismiss');
+    dismissBtn.addEventListener('click', () => {
+      markAffiliateToastShown();
+      removeAffiliateToast();
+    });
+
+    actions.appendChild(supportBtn);
+    actions.appendChild(dismissBtn);
+
+    const disclaimer = document.createElement('div');
+    disclaimer.id = `${AFFILIATE_TOAST_ID}__disclaimer`;
+    const disclaimerText = getAffiliateToastMessage('affiliateToastDisclaimer');
+    const settingsLink = document.createElement('a');
+    settingsLink.href = '#';
+    settingsLink.textContent = getAffiliateToastMessage('affiliateToastSettings');
+    settingsLink.addEventListener('click', (event) => {
+      event.preventDefault();
+      markAffiliateToastShown();
+     try {
+      const optionsUrl = chrome.runtime?.getURL?.('options.html#affiliate-section');
+       if (optionsUrl) window.open(optionsUrl, '_blank', 'noopener');
+     } catch { /* ignore */ }
+      removeAffiliateToast();
+    });
+    disclaimer.textContent = disclaimerText + ' ';
+    disclaimer.appendChild(settingsLink);
+
+   el.appendChild(title);
+   el.appendChild(body);
+   el.appendChild(conversion);
+    el.appendChild(actions);
+    el.appendChild(disclaimer);
+    return el;
+  }
+
+  function removeAffiliateToast() {
+    const existing = document.getElementById(AFFILIATE_TOAST_ID);
+    if (existing) {
+      existing.remove();
+    }
+  }
+
+  function showAffiliateToast() {
+    ensureAffiliateToastStyle();
+    removeAffiliateToast();
+    const el = buildAffiliateToastElement();
+    document.documentElement.appendChild(el);
+    requestAnimationFrame(() => el.setAttribute('data-visible', '1'));
+  }
+
+  function maybeShowAffiliateToast() {
+    if (!isAffiliateEligibleForCurrentPage() || affiliateToastAlreadyShown()) {
+      if (state.affiliateToastTimer) {
+        window.clearTimeout(state.affiliateToastTimer);
+        state.affiliateToastTimer = null;
+      }
+      return;
+    }
+    if (!state.badgeHovered) {
+      return;
+    }
+
+    if (state.affiliateToastTimer) {
+      return;
+    }
+
+    state.affiliateToastTimer = window.setTimeout(() => {
+      state.affiliateToastTimer = null;
+      if (!isAffiliateEligibleForCurrentPage() || affiliateToastAlreadyShown()) {
+        return;
+      }
+      showAffiliateToast();
+    }, AFFILIATE_TRIGGER_DELAY_MS);
   }
 
   function boot() {
