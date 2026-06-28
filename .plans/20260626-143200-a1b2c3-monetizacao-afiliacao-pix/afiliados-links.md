@@ -1,27 +1,33 @@
 # Referência — Programas de Afiliados (AceitaTempo)
 
-> Documento de planejamento. Cadastre-se em cada programa para obter suas tags/IDs próprios.
-> Pular lojas sem programa público: Steam, GOG, Epic Games.
+> Tags ativas no código (`src/affiliate.js`). Cadastre-se em cada programa para obter suas tags/IDs.
+> Lojas sem programa público (Steam, GOG, Epic) não recebem toast de afiliado.
 
-## Programas com link de cadastro
+## Lojas ativas no código
 
-| Loja | Programa | Cadastro | Formato esperado da tag |
-|---|---|---|---|
-| Amazon | Amazon Associates | https://affiliate-program.amazon.com/ (BR: https://associados.amazon.com.br/) | `?tag=SEUTAG-20` |
-| AliExpress | AliExpress Affiliate Portals | https://portals.aliexpress.com/ | `?aff_fbid=...` ou shortlink |
-| Shopee | Shopee Affiliate | https://affiliate.shopee.com.br/ | `?af_siteid=...` / shortlink |
-| Mercado Livre | Mercado Livre Afiliados | https://www.mercadolivre.com.br/afiliados | `?af_id=...` |
-| eBay | eBay Partner Network | https://partnernetwork.ebay.com/ | `?mkcid=...&mkevt=...` |
-| Magazine Luiza | Magalu Parceiros | https://magalu.parceiromagalu.com.br/ | `?partner_id=...` |
-| Temu | Temu Affiliate | https://affiliate.temu.com/ | `?aff_fbid=...` |
-| SHEIN | SHEIN Affiliate (Axon) | https://shein affiliate.axon.com/ | shortlink |
-| Americanas / Casas Bahia | via Awin ou Lomadee | https://www.awin.com/ · https://www.lomadee.com/ | deep link |
+| Loja          | Programa                 | Tag/ID no código        | Status                  |
+| ------------- | ----------------------- | ----------------------- | ----------------------- |
+| Amazon        | Amazon Associates       | `tag=aceitatempo-20`    | ✅ Ativa                |
+| AliExpress    | AliExpress Affiliate    | `aff_fbid=aceitatempo`  | ⏳ Aguardando tag real  |
+| Shopee        | Shopee Affiliate        | `af_siteid=aceitatempo` | ⏳ Aguardando tag real  |
+| Mercado Livre | Mercado Livre Afiliados | `af_id=aceitatempo`     | ✅ Ativa                |
 
-## Lojas sem afiliado (não injetar)
+## Lojas pendentes (TODO)
+
+| Loja                    | Programa           | Cadastro                                   | Notas                                                                                  |
+| ----------------------- | ------------------ | ------------------------------------------ | -------------------------------------------------------------------------------------- |
+| Casas Bahia / Americanas | Lomadee           | <https://www.lomadee.com/>                 | Conta criada. Requer integração com API da Lomadee para gerar deep links dinamicamente. |
+| Magazine Luiza          | Magalu Parceiros  | <https://magalu.parceiromagalu.com.br/>    | Removida do código por enquanto (sem tag real). Reativar quando houver ID.              |
+| Temu                    | Temu Affiliate     | <https://affiliate.temu.com/>             | Removida do código por enquanto (sem tag real). Reativar quando houver ID.             |
+| SHEIN                   | SHEIN Affiliate    | <https://sheinaffiliate.axon.com/>         | Removida do código por enquanto (sem tag real). Reativar quando houver ID.             |
+| eBay                    | eBay Partner Network | <https://partnernetwork.ebay.com/>        | Removida do código (sem cadastro concluído).                                           |
+
+## Lojas sem afiliado (não injetam toast)
 
 - Steam, GOG, Epic Games — sem programa público.
 
 ## Notas TOS
 
-- Amazon Associates exige clique real do usuário (não auto-redirecionamento sem clique) → toast com botão de redirecionamento resolve.
+- Amazon Associates exige clique real do usuário (não auto-redirecionamento sem clique) → toast com botão resolve.
 - Disclosure obrigatória na onboarding page + toggle opt-out por loja.
+- Lomadee (Casas Bahia / Americanas): o fluxo exige chamada de API para gerar o deep link antes de redirecionar. Implementar quando houver advertiserId e sourceId.

@@ -402,6 +402,12 @@
       selectors: ['[class*="SalesPrice" i]', '[class*="BestPrice" i]', '[class*="Price" i]'],
       scopeSelectors: ['[class*="Product" i]', '[class*="product" i]', '[class*="card" i]', ...PRODUCT_SCOPE_SELECTORS],
     },
+   {
+     name: 'Casas Bahia',
+     hostPatterns: rx(['(^|\\.)casasbahia\\.com\\.br$']),
+     selectors: ['[class*="price" i]', '[class*="Price" i]', '[data-price]'],
+     scopeSelectors: ['[class*="product" i]', '[class*="Product" i]', '[class*="card" i]', ...PRODUCT_SCOPE_SELECTORS],
+   },
     {
       name: 'Pichau',
       hostPatterns: rx(['(^|\\.)pichau\\.com\\.br$']),

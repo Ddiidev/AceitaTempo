@@ -25,32 +25,14 @@
       name: 'Mercado Livre',
       params: { af_id: 'aceitatempo' },
     },
-    {
-      siteId: 'ebay',
-      name: 'eBay',
-      params: { mkcid: '1', mkevt: '1', mkrid: '711-53200-19255-0' },
-    },
-    {
-      siteId: 'magazine-luiza',
-      name: 'Magazine Luiza',
-      params: { partner_id: 'aceitatempo' },
-    },
-    {
-      siteId: 'temu',
-      name: 'Temu',
-      params: { aff_fbid: 'aceitatempo' },
-    },
-    {
-      siteId: 'shein',
-      name: 'SHEIN',
-      params: { aff_short: 'aceitatempo' },
-    },
-    {
-      siteId: 'americanas',
-      name: 'Americanas',
-      params: { aff_id: 'aceitatempo' },
-    },
   ];
+ 
+ // TODO: Lomadee integration for Casas Bahia and Americanas.
+ // These stores require API calls to generate deep links.
+ // When Lomadee sourceId/advertiserId are available, add:
+ //   { siteId: 'casas-bahia', name: 'Casas Bahia', params: { ... } }
+ //   { siteId: 'americanas', name: 'Americanas', params: { ... } }
+ // And update buildAffiliateUrl to handle the Lomadee redirect flow.
 
   const AFFILIATE_STORE_IDS = AFFILIATE_STORES.map((store) => store.siteId);
 
