@@ -42,7 +42,7 @@ const SITE_CONFIGS = globalThis.AceitaTempoSiteConfig?.siteConfigs
 const COMMERCE_SITE_CONFIGS = SITE_CONFIGS.filter((site) => site.kind !== "social");
 const AFFILIATE_SITE_CONFIGS = (() => {
   const affiliateApi = globalThis.AceitaTempoAffiliate;
-  const ids = affiliateApi?.AFFILIATE_STORE_IDS || [];
+ const ids = affiliateApi?.ACTIVE_AFFILIATE_STORE_IDS || [];
   const idSet = new Set(ids);
   return COMMERCE_SITE_CONFIGS.filter((site) => idSet.has(site.siteId));
 })();

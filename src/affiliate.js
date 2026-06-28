@@ -14,11 +14,13 @@
       siteId: 'aliexpress',
       name: 'AliExpress',
       params: { aff_fbid: 'aceitatempo' },
+     active: false,
     },
     {
       siteId: 'shopee',
       name: 'Shopee',
       params: { af_siteid: 'aceitatempo' },
+     active: false,
     },
     {
       siteId: 'mercado-livre',
@@ -35,13 +37,15 @@
  // And update buildAffiliateUrl to handle the Lomadee redirect flow.
 
   const AFFILIATE_STORE_IDS = AFFILIATE_STORES.map((store) => store.siteId);
+ const ACTIVE_AFFILIATE_STORE_IDS = AFFILIATE_STORES.filter((s) => s.active !== false).map((s) => s.siteId);
 
   function getAffiliateStore(siteId) {
     return AFFILIATE_STORES.find((store) => store.siteId === siteId) || null;
   }
 
   function hasAffiliate(siteId) {
-    return Boolean(getAffiliateStore(siteId));
+   const store = getAffiliateStore(siteId);
+   return Boolean(store) && store.active !== false;
   }
 
   function buildAffiliateUrl(href, siteId) {
@@ -66,6 +70,7 @@
   globalObj.AceitaTempoAffiliate = {
     AFFILIATE_STORES,
     AFFILIATE_STORE_IDS,
+   ACTIVE_AFFILIATE_STORE_IDS,
     getAffiliateStore,
     hasAffiliate,
     buildAffiliateUrl,
