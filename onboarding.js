@@ -5,8 +5,8 @@
   const DEFAULT_SETTINGS = { affiliateEnabled: true, affiliateDisabledStores: [] };
   const STORAGE_KEYS = Object.keys(DEFAULT_SETTINGS);
   const COMMERCE_SITE_CONFIGS = SiteConfig?.siteConfigs?.filter((s) => s.kind !== 'social') || [];
-  const AFFILIATE_STORE_IDS = new Set(Affiliate?.AFFILIATE_STORE_IDS || []);
-  const AFFILIATE_SITE_CONFIGS = COMMERCE_SITE_CONFIGS.filter((s) => AFFILIATE_STORE_IDS.has(s.siteId));
+ const ACTIVE_AFFILIATE_STORE_IDS = new Set(Affiliate?.ACTIVE_AFFILIATE_STORE_IDS || []);
+ const AFFILIATE_SITE_CONFIGS = COMMERCE_SITE_CONFIGS.filter((s) => ACTIVE_AFFILIATE_STORE_IDS.has(s.siteId));
 
   function getStorageArea() {
     return chrome.storage?.sync ?? chrome.storage?.local;
