@@ -208,3 +208,100 @@ button.secondary {
 .site-toggle__name { font-weight: 600; }
 .field { display: flex; flex-direction: column; gap: 4px; }
 .field-wide { grid-column: 1 / -1; }
+/* toast preview */
+.toast-preview__wrapper {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.toast-preview__card {
+  all: initial;
+  display: block;
+  max-width: min(360px, 100%);
+  padding: 20px 22px;
+  border-radius: 24px;
+  border: 1px solid rgba(30, 26, 23, 0.12);
+  background: rgba(255, 255, 255, 0.82);
+  color: #1e1a17;
+  box-shadow: 0 18px 50px rgba(53, 38, 25, 0.12);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  font: 600 13px/1.45 Aptos, "Segoe UI Variable Display", "Trebuchet MS", sans-serif;
+  box-sizing: border-box;
+  contain: layout style paint;
+}
+.toast-preview__card *,
+.toast-preview__card *::before,
+.toast-preview__card *::after { box-sizing: border-box; }
+.toast-preview__title {
+  margin: 0;
+  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: 16px;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  color: #1e1a17;
+}
+.toast-preview__body {
+  margin: 8px 0 0;
+  color: #1e1a17;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.toast-preview__conversion {
+  margin: 6px 0 0;
+  color: #115e59;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.toast-preview__actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 14px;
+}
+.toast-preview__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font: inherit;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1;
+}
+.toast-preview__btn--primary {
+  background: #0f766e;
+  color: #ffffff;
+}
+.toast-preview__btn--ghost {
+  background: transparent;
+  color: #6b625a;
+  border: 1px solid rgba(30, 26, 23, 0.12);
+}
+.toast-preview__disclaimer {
+  margin: 12px 0 0;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(30, 26, 23, 0.12);
+  font-style: italic;
+  font-size: 11px;
+  line-height: 1.4;
+  color: #6b625a;
+}
+.toast-preview__disclaimer span:last-child {
+  color: #115e59;
+  text-decoration: underline;
+  font-style: normal;
+  font-weight: 600;
+  margin-left: 4px;
+}
+.toast-preview__caption {
+  text-align: center;
+  font-size: 12px;
+  margin: 0;
+}
