@@ -378,19 +378,19 @@
     "message": "Thanks for installing. Here's how the project stays alive, transparently and at no cost to you."
   },
   "onboardingWhatTitle": {
-    "message": "What the extension does"
+    "message": "How the extension works"
   },
   "onboardingWhatBody": {
-    "message": "It turns prices into work time based on your salary and routine. You see the cost in hours next to each price on partner stores."
+    "message": "AceitaTempo turns prices into work time based on your salary and routine. Next to each price, you see how many hours, days, or months you would need to work to pay for that item."
   },
   "onboardingAffiliateTitle": {
     "message": "Transparent affiliate program"
   },
   "onboardingAffiliateBody": {
-    "message": "To keep AceitaTempo free, we earn a small commission when you buy on partner stores through our link. It doesn't change the price for you: it's the same page, just with our affiliate tag. Only works if you choose to support us."
+    "message": "If you want to help keep the project going, you can use our affiliate links on partner stores. It is optional, does not change the price for you, and only works when you choose to support us."
   },
   "onboardingAffiliateDisclosure": {
-    "message": "You can turn this off anytime in the settings, per store or all at once."
+    "message": "You can turn off this suggestion anytime in the settings, per store or all at once."
   },
   "onboardingDonateTitle": {
     "message": "Support with Pix (optional)"
@@ -447,10 +447,10 @@
     "message": "Turn off in settings"
   },
   "onboardingToastPreviewTitle": {
-    "message": "How the suggestion looks to you"
+    "message": "How the support suggestion looks"
   },
   "onboardingToastPreviewBody": {
-    "message": "When you hover over a product's work-time badge, we show a discreet invite to reopen that page with our affiliate tag. The choice is always yours."
+    "message": "When you hover over a product work-time badge, we may show a discreet invite to reopen that page with our affiliate tag. It only shows if you leave it enabled."
   },
   "onboardingToastPreviewPerProduct": {
     "message": "Per product. Each item gets its own invite, so you only see it when it actually matters."
@@ -460,5 +460,14 @@
   },
   "onboardingToastPreviewCaption": {
     "message": "Example of the invite shown on product pages"
+  },
+  "onboardingHowItWorksTitle": {
+    "message": "How you will see it in stores"
+  },
+  "onboardingHowItWorksBody": {
+    "message": "On product pages, a badge appears next to the price showing the work time. Hover over it to see details like the percentage of your salary and how much of the period remains after the purchase."
+  },
+  "onboardingHowItWorksFree": {
+    "message": "The tool is 100% free. You use it normally, with no obligation to support us."
   }
 }
