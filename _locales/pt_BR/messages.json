@@ -378,19 +378,19 @@
     "message": "Obrigado por instalar. Veja como o projeto se mantém, de forma transparente e sem custo para você."
   },
   "onboardingWhatTitle": {
-    "message": "O que a extensão faz"
+    "message": "Como a extensão funciona"
   },
   "onboardingWhatBody": {
-    "message": "Converte preços em tempo de trabalho com base no seu salário e na sua rotina. Você vê o custo em horas ao lado de cada preço nas lojas parceiras."
+    "message": "O AceitaTempo transforma preços em tempo de trabalho com base no seu salário e na sua rotina. Você vê, ao lado de cada preço, quantas horas, dias ou meses precisa trabalhar para pagar aquele item."
   },
   "onboardingAffiliateTitle": {
     "message": "Afiliação transparente"
   },
   "onboardingAffiliateBody": {
-    "message": "Para manter o AceitaTempo gratuito, a gente recebe uma pequena comissão quando você compra em lojas parceiras pelo nosso link. Não muda nada no preço para você: a página é a mesma, só com a nossa tag de afiliado. Só funciona se você escolher apoiar."
+    "message": "Se quiser ajudar a manter o projeto, pode usar nossos links de afiliado nas lojas parceiras. É opcional, não muda o preço para você e só funciona quando você escolhe apoiar."
   },
   "onboardingAffiliateDisclosure": {
-    "message": "Você pode desativar isso a qualquer momento nas configurações, por loja ou de uma vez."
+    "message": "Você pode desativar essa sugestão a qualquer momento nas configurações, por loja ou de uma vez."
   },
   "onboardingDonateTitle": {
     "message": "Apoie com Pix (opcional)"
@@ -447,10 +447,10 @@
     "message": "Desativar nas configurações"
   },
   "onboardingToastPreviewTitle": {
-    "message": "Como a sugestão aparece para você"
+    "message": "Como a sugestão de apoio aparece"
   },
   "onboardingToastPreviewBody": {
-    "message": "Quando você passa o mouse sobre o tempo de trabalho de um produto, a gente mostra um convite discreto para reabrir aquela página com a nossa tag de afiliado. Você decide se quer apoiar."
+    "message": "Quando você passa o mouse sobre o tempo de trabalho de um produto, a gente pode mostrar um convite discreto para reabrir aquela página com a nossa tag de afiliado. Só aparece se você deixar ativado."
   },
   "onboardingToastPreviewPerProduct": {
     "message": "Aparece por produto. Cada item tem seu próprio convite, então você só vê quando faz sentido."
@@ -460,5 +460,14 @@
   },
   "onboardingToastPreviewCaption": {
     "message": "Exemplo do convite que aparece nas páginas de produto"
+  },
+  "onboardingHowItWorksTitle": {
+    "message": "Como você vai ver na loja"
+  },
+  "onboardingHowItWorksBody": {
+    "message": "Em páginas de produto, aparece um badge com o tempo de trabalho ao lado do preço. Passe o mouse por cima para ver detalhes, como o percentual do seu salário e quanto ainda sobra do período depois da compra."
+  },
+  "onboardingHowItWorksFree": {
+    "message": "A ferramenta é 100% gratuita. Você usa normalmente, sem nenhuma obrigação de apoiar."
   }
 }
