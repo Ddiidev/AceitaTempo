@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AceitaTempo: Bem-vindo</title>
+    <link rel="stylesheet" href="onboarding.css" />
+  </head>
+  <body>
+    <main class="onboarding shell">
+      <div class="lang-picker" id="langPicker">
+        <button type="button" class="lang-btn" data-lang="pt-BR">PT</button>
+        <button type="button" class="lang-btn" data-lang="en">EN</button>
+      </div>
+
+      <section class="hero">
+        <div class="eyebrow" data-i18n="onboardingEyebrow"></div>
+        <h1 data-i18n="onboardingTitle"></h1>
+        <p data-i18n="onboardingSubtitle"></p>
+      </section>
+
+      <section class="card">
+        <h2 data-i18n="onboardingWhatTitle"></h2>
+        <p data-i18n="onboardingWhatBody"></p>
+      </section>
+
+      <section class="card how-it-works">
+        <h2 data-i18n="onboardingHowItWorksTitle"></h2>
+        <p data-i18n="onboardingHowItWorksBody"></p>
+        <div class="demo" aria-hidden="true">
+          <img class="demo-image" src="assets/onboarding-demo-product.png" alt="Produto com badge de tempo de trabalho ao lado do preço" />
+          <img class="demo-image" src="assets/onboarding-demo-tooltip.png" alt="Tooltip com detalhes do tempo de trabalho" />
+        </div>
+        <p class="how-it-works__free" data-i18n="onboardingHowItWorksFree"></p>
+      </section>
+
+      <section class="card">
+        <h2 data-i18n="onboardingAffiliateTitle"></h2>
+        <p data-i18n="onboardingAffiliateBody"></p>
+        <p class="muted" data-i18n="onboardingAffiliateDisclosure"></p>
+        <div class="affiliate-master">
+          <label class="field field-wide toggle-field">
+            <span class="toggle-copy">
+              <span class="toggle-title" data-i18n="affiliateEnabledLabel"></span>
+              <span class="toggle-desc" data-i18n="affiliateEnabledHint"></span>
+            </span>
+            <span class="affiliate-master__control">
+              <span class="switch">
+                <input id="affiliateEnabled" name="affiliateEnabled" type="checkbox" />
+                <span class="switch-track" aria-hidden="true"></span>
+              </span>
+            </span>
+          </label>
+        </div>
+        <div id="affiliateToggles" class="site-grid site-grid--compact"></div>
+      </section>
+
+      <section class="card toast-preview">
+        <h2 data-i18n="onboardingToastPreviewTitle"></h2>
+        <p data-i18n="onboardingToastPreviewBody"></p>
+        <p data-i18n="onboardingToastPreviewPerProduct"></p>
+        <p data-i18n="onboardingToastPreviewFrequency" class="muted"></p>
+        <div class="toast-preview__wrapper">
+          <div class="toast-preview__card" aria-hidden="true">
+            <div class="toast-preview__title" data-i18n="affiliateToastTitle"></div>
+            <div class="toast-preview__body" data-i18n="affiliateToastBody"></div>
+            <div class="toast-preview__conversion" data-i18n="affiliateToastConversion"></div>
+            <div class="toast-preview__actions">
+              <span class="toast-preview__btn toast-preview__btn--primary" data-i18n="affiliateToastSupport"></span>
+              <span class="toast-preview__btn toast-preview__btn--ghost" data-i18n="affiliateToastDismiss"></span>
+            </div>
+            <div class="toast-preview__disclaimer">
+              <span data-i18n="affiliateToastDisclaimer"></span>
+              <span data-i18n="affiliateToastSettings"></span>
+            </div>
+          </div>
+          <p class="toast-preview__caption muted" data-i18n="onboardingToastPreviewCaption"></p>
+        </div>
+      </section>
+
+      <section class="card donate">
+        <h2 data-i18n="onboardingDonateTitle"></h2>
+        <p data-i18n="onboardingDonateBody"></p>
+        <div class="donate__qr">
+          <img src="pix-qrcode.png" alt="QR Code Pix" />
+        </div>
+        <p class="muted" data-i18n="onboardingDonateEmail"></p>
+      </section>
+
+      <section class="actions">
+        <button id="openSettings" class="primary" type="button" data-i18n="onboardingOpenSettings"></button>
+        <button id="dismiss" class="secondary" type="button" data-i18n="onboardingDismiss"></button>
+      </section>
+    </main>
+
+   <script src="src/site-config.js"></script>
+   <script src="src/affiliate.js"></script>
+   <script src="onboarding.js"></script>
+  </body>
+</html>

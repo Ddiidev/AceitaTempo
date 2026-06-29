@@ -31,6 +31,8 @@ const DEFAULT_SETTINGS = {
   socialReflectionEnabled: true,
   socialMonetaryOptIn: false,
   easterEggJuliusEnabled: true,
+  affiliateEnabled: true,
+  affiliateDisabledStores: [],
 };
 
 const STORAGE_KEYS = Object.keys(DEFAULT_SETTINGS);
@@ -38,6 +40,12 @@ const SITE_CONFIGS = globalThis.AceitaTempoSiteConfig?.siteConfigs
   || globalThis.AceitaTempoSiteConfig?.getSiteConfigs?.()
   || [];
 const COMMERCE_SITE_CONFIGS = SITE_CONFIGS.filter((site) => site.kind !== "social");
+const AFFILIATE_SITE_CONFIGS = (() => {
+  const affiliateApi = globalThis.AceitaTempoAffiliate;
+ const ids = affiliateApi?.ACTIVE_AFFILIATE_STORE_IDS || [];
+  const idSet = new Set(ids);
+  return COMMERCE_SITE_CONFIGS.filter((site) => idSet.has(site.siteId));
+})();
 const FEEDBACK_HIDE_DELAY_MS = 2800;
 const ACTION_LABEL_KEYS = {
   save: { idle: "saveButton", busy: "saveButtonSaving" },
@@ -107,6 +115,8 @@ function normalizeSettings(raw) {
     socialReflectionEnabled: isTruthySetting(raw.socialReflectionEnabled ?? true),
     socialMonetaryOptIn: isTruthySetting(raw.socialMonetaryOptIn),
     easterEggJuliusEnabled: isTruthySetting(raw.easterEggJuliusEnabled ?? true),
+    affiliateEnabled: isTruthySetting(raw.affiliateEnabled ?? true),
+    affiliateDisabledStores: Array.isArray(raw.affiliateDisabledStores) ? raw.affiliateDisabledStores : [],
   };
 }
 
@@ -140,6 +150,18 @@ function updateSocialAwarenessUI(enabled) {
   });
 }
 
+function updateAffiliateUI(enabled) {
+  const container = $("affiliateToggles");
+  if (!container) return;
+  if ($("affiliateEnabled")) $("affiliateEnabled").checked = enabled;
+  container.querySelectorAll("input[data-affiliate-site-id]").forEach((input) => {
+    input.disabled = !enabled;
+    if (enabled) {
+      input.checked = true;
+    }
+  });
+}
+
 function fillForm(settings) {
   $("salaryAmount").value = settings.salaryAmount;
   $("salaryCurrency").value = settings.salaryCurrency;
@@ -165,6 +187,9 @@ function fillForm(settings) {
   renderSiteToggles(settings.disabledSiteNames);
   renderSocialSiteToggles(settings.socialAwarenessSites);
   updateSocialAwarenessUI(settings.socialAwarenessEnabled);
+  if ($("affiliateEnabled")) $("affiliateEnabled").checked = settings.affiliateEnabled;
+  renderAffiliateToggles(settings.affiliateEnabled, settings.affiliateDisabledStores);
+  updateAffiliateUI(settings.affiliateEnabled);
 }
 
 function renderSiteToggles(disabledSiteNames = []) {
@@ -201,6 +226,51 @@ function renderSiteToggles(disabledSiteNames = []) {
     input.type = "checkbox";
     input.setAttribute("data-site-name", site.name);
     input.checked = checked;
+
+    const trackSpan = document.createElement("span");
+    trackSpan.className = "switch-track";
+    trackSpan.setAttribute("aria-hidden", "true");
+
+    switchSpan.appendChild(input);
+    switchSpan.appendChild(trackSpan);
+
+    label.appendChild(textSpan);
+    label.appendChild(switchSpan);
+
+    container.appendChild(label);
+  });
+}
+
+function renderAffiliateToggles(affiliateEnabled, affiliateDisabledStores = []) {
+  const container = $("affiliateToggles");
+  if (!container) return;
+
+  const disabled = new Set((affiliateDisabledStores || []).map((value) => String(value)));
+  container.textContent = "";
+
+  AFFILIATE_SITE_CONFIGS.forEach((site) => {
+    const checked = affiliateEnabled && !disabled.has(site.siteId);
+
+    const label = document.createElement("label");
+    label.className = "site-toggle";
+
+    const textSpan = document.createElement("span");
+    textSpan.className = "site-toggle__text";
+
+    const nameSpan = document.createElement("span");
+    nameSpan.className = "site-toggle__name";
+    nameSpan.textContent = site.name;
+
+    textSpan.appendChild(nameSpan);
+
+    const switchSpan = document.createElement("span");
+    switchSpan.className = "switch";
+
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.setAttribute("data-affiliate-site-id", site.siteId);
+    input.checked = checked;
+    input.disabled = !affiliateEnabled;
 
     const trackSpan = document.createElement("span");
     trackSpan.className = "switch-track";
@@ -450,7 +520,27 @@ async function init() {
     ensureAllSocialSitesSelectedIfNeeded();
   });
 
+  if ($("affiliateEnabled")) {
+    $("affiliateEnabled").addEventListener("change", () => {
+      updateAffiliateUI($("affiliateEnabled").checked);
+    });
+  }
+
+  const affiliateQrEl = $("affiliateQr");
+  if (affiliateQrEl) {
+    affiliateQrEl.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+  }
+
+  const easterEggLabel = $("easterEggLabel");
+  if (easterEggLabel) {
+    easterEggLabel.addEventListener("mouseover", () => { easterEggLabel.style.opacity = "1"; });
+    easterEggLabel.addEventListener("mouseout", () => { easterEggLabel.style.opacity = "0.5"; });
+  }
   $("exchangeRateMode").addEventListener("change", () => {
+    $("manualUsdToBrlRate").disabled = $("exchangeRateMode").value !== "manual";
     $("manualUsdToBrlRate").disabled = $("exchangeRateMode").value !== "manual";
   });
 
@@ -501,6 +591,10 @@ async function init() {
       socialReflectionEnabled: $("socialReflectionEnabled").checked,
       socialMonetaryOptIn: $("socialMonetaryOptIn").checked,
       easterEggJuliusEnabled: $("easterEggJuliusEnabled") ? $("easterEggJuliusEnabled").checked : true,
+      affiliateEnabled: $("affiliateEnabled") ? $("affiliateEnabled").checked : true,
+      affiliateDisabledStores: Array.from(document.querySelectorAll("[data-affiliate-site-id]"))
+        .filter((input) => !input.checked)
+        .map((input) => input.getAttribute("data-affiliate-site-id")),
     });
 
     if (payload.exchangeRateMode === "manual" && payload.manualUsdToBrlRate <= 0) {
@@ -605,4 +699,14 @@ async function init() {
   });
 }
 
+function scrollToHashOnLoad() {
+   const hash = String(location.hash || "").replace(/^#/, "");
+   if (!hash) return;
+   const target = document.getElementById(hash);
+   if (target) {
+     target.scrollIntoView({ behavior: "smooth", block: "start" });
+   }
+ }
+
 init();
+scrollToHashOnLoad();

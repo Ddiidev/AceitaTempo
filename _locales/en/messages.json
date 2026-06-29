@@ -51,8 +51,8 @@
     "message": "Social network"
   },
   "salaryLabel": {
-      "message": "Salary amount"
-    },
+    "message": "Salary amount"
+  },
   "salaryPeriodLabel": {
     "message": "Reference period"
   },
@@ -111,7 +111,7 @@
     "message": "External sites"
   },
   "enableExternalSitesHint": {
-    "message": "WIP — feature not available yet."
+    "message": "In progress: feature not available yet."
   },
   "enableExternalSitesWip": {
     "message": "WIP"
@@ -279,8 +279,8 @@
     "message": "Show discreet check-ins"
   },
   "socialPromptEnabledHint": {
-      "message": "Shows the first check-in between 1 and 3 minutes and, after your first response, schedules new check-ins randomly between 3 and 7 minutes of visible use."
-    },
+    "message": "Shows the first check-in between 1 and 3 minutes and, after your first response, schedules new check-ins randomly between 3 and 7 minutes of visible use."
+  },
   "socialTrackingEnabledLabel": {
     "message": "Track active time"
   },
@@ -339,14 +339,14 @@
     "message": "Session summary"
   },
   "socialSummaryBody": {
-      "message": "Active time in this session: $1 on $2."
-    },
+    "message": "Active time in this session: $1 on $2."
+  },
   "socialSummaryResponse": {
-      "message": "In the final check-in, you chose: $1."
-    },
+    "message": "In the final check-in, you chose: $1."
+  },
   "socialSummaryGoal": {
-      "message": "Initial note: $1"
-    },
+    "message": "Initial note: $1"
+  },
   "socialSummaryMoney": {
     "message": "Approximate value at your current hourly reference: $1."
   },
@@ -367,5 +367,107 @@
   },
   "showSalaryPercentHint": {
     "message": "Displays how much of your period salary the product costs (e.g. 10% of salary)."
+  },
+  "onboardingEyebrow": {
+    "message": "Welcome"
+  },
+  "onboardingTitle": {
+    "message": "AceitaTempo: what it costs in your time"
+  },
+  "onboardingSubtitle": {
+    "message": "Thanks for installing. Here's how the project stays alive, transparently and at no cost to you."
+  },
+  "onboardingWhatTitle": {
+    "message": "How the extension works"
+  },
+  "onboardingWhatBody": {
+    "message": "AceitaTempo turns prices into work time based on your salary and routine. Next to each price, you see how many hours, days, or months you would need to work to pay for that item."
+  },
+  "onboardingAffiliateTitle": {
+    "message": "Transparent affiliate program"
+  },
+  "onboardingAffiliateBody": {
+    "message": "If you want to help keep the project going, you can use our affiliate links on partner stores. It is optional, does not change the price for you, and only works when you choose to support us."
+  },
+  "onboardingAffiliateDisclosure": {
+    "message": "You can turn off this suggestion anytime in the settings, per store or all at once."
+  },
+  "onboardingDonateTitle": {
+    "message": "Support with Pix (optional)"
+  },
+  "onboardingDonateBody": {
+    "message": "If you'd like to support directly, scan the QR Code below with any amount."
+  },
+  "onboardingDonateEmail": {
+    "message": "Couldn't scan? Send a Pix to contato@devtu.qzz.io"
+  },
+  "onboardingOpenSettings": {
+    "message": "Open settings"
+  },
+  "onboardingDismiss": {
+    "message": "Got it"
+  },
+  "affiliateSectionTitle": {
+    "message": "Support the project"
+  },
+  "affiliateSectionHint": {
+    "message": "Control how AceitaTempo offers the affiliate link. We value transparency: uncheck the switch to stop receiving the suggestion."
+  },
+  "affiliateEnabledLabel": {
+    "message": "All"
+  },
+  "affiliateEnabledHint": {
+    "message": "On: AceitaTempo may suggest the affiliate link on partner stores. Turn off to disable everything at once."
+  },
+  "affiliatePixEmail": {
+    "message": "Pix: contato@devtu.qzz.io"
+  },
+  "affiliateDisclaimer": {
+    "message": "We value transparency. If you do not want this suggestion anymore, uncheck the switch beside it. This applies only to this store. Use the QR Code icon beside it to support with a Pix of any amount."
+  },
+  "affiliateToastTitle": {
+    "message": "Support AceitaTempo"
+  },
+  "affiliateToastConversion": {
+    "message": "No extra cost: we just reopen the page with our tag"
+  },
+  "affiliateToastBody": {
+    "message": "If you were already going to buy, opening through our link doesn't change the price at all. But it means a lot to us. It's what helps keep the AceitaTempo project alive."
+  },
+  "affiliateToastSupport": {
+    "message": "Support AceitaTempo"
+  },
+  "affiliateToastDismiss": {
+    "message": "Not now"
+  },
+  "affiliateToastDisclaimer": {
+    "message": "Transparent revenue via affiliate. Don't want to see this anymore?"
+  },
+  "affiliateToastSettings": {
+    "message": "Turn off in settings"
+  },
+  "onboardingToastPreviewTitle": {
+    "message": "How the support suggestion looks"
+  },
+  "onboardingToastPreviewBody": {
+    "message": "When you hover over a product work-time badge, we may show a discreet invite to reopen that page with our affiliate tag. It only shows if you leave it enabled."
+  },
+  "onboardingToastPreviewPerProduct": {
+    "message": "Per product. Each item gets its own invite, so you only see it when it actually matters."
+  },
+  "onboardingToastPreviewFrequency": {
+    "message": "It is not a recurring notification. The invite shows once per product in the same tab. If you reload the page, it will not show again automatically."
+  },
+  "onboardingToastPreviewCaption": {
+    "message": "Example of the invite shown on product pages"
+  },
+  "onboardingHowItWorksTitle": {
+    "message": "How you will see it in stores"
+  },
+  "onboardingHowItWorksBody": {
+    "message": "On product pages, a badge appears next to the price showing the work time. Hover over it to see details like the percentage of your salary and how much of the period remains after the purchase."
+  },
+  "onboardingHowItWorksFree": {
+    "message": "The tool is 100% free. You use it normally, with no obligation to support us."
   }
 }

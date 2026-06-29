@@ -51,8 +51,8 @@
     "message": "Rede social"
   },
   "salaryLabel": {
-      "message": "Valor do salário"
-    },
+    "message": "Valor do salário"
+  },
   "salaryPeriodLabel": {
     "message": "Período de referência"
   },
@@ -111,7 +111,7 @@
     "message": "Sites externos"
   },
   "enableExternalSitesHint": {
-    "message": "WIP — recurso ainda não disponível."
+    "message": "Em desenvolvimento: recurso ainda não disponível."
   },
   "enableExternalSitesWip": {
     "message": "WIP"
@@ -279,8 +279,8 @@
     "message": "Mostrar check-ins discretos"
   },
   "socialPromptEnabledHint": {
-      "message": "Mostra o primeiro check-in entre 1 e 3 minutos e, depois da primeira resposta, sorteia novos check-ins entre 3 e 7 minutos de uso visível."
-    },
+    "message": "Mostra o primeiro check-in entre 1 e 3 minutos e, depois da primeira resposta, sorteia novos check-ins entre 3 e 7 minutos de uso visível."
+  },
   "socialTrackingEnabledLabel": {
     "message": "Registrar tempo ativo"
   },
@@ -339,14 +339,14 @@
     "message": "Resumo da sessão"
   },
   "socialSummaryBody": {
-      "message": "Tempo ativo nesta sessão: $1 no $2."
-    },
+    "message": "Tempo ativo nesta sessão: $1 no $2."
+  },
   "socialSummaryResponse": {
-      "message": "Na revisão final, você marcou: $1."
-    },
+    "message": "Na revisão final, você marcou: $1."
+  },
   "socialSummaryGoal": {
-      "message": "Anotação inicial: $1"
-    },
+    "message": "Anotação inicial: $1"
+  },
   "socialSummaryMoney": {
     "message": "Conversão aproximada pela sua referência atual: $1."
   },
@@ -367,5 +367,107 @@
   },
   "showSalaryPercentHint": {
     "message": "Exibe quanto o produto representa do seu salário (ex.: 10% do salário)."
+  },
+  "onboardingEyebrow": {
+    "message": "Bem-vindo"
+  },
+  "onboardingTitle": {
+    "message": "AceitaTempo: quanto do seu tempo custa isso"
+  },
+  "onboardingSubtitle": {
+    "message": "Obrigado por instalar. Veja como o projeto se mantém, de forma transparente e sem custo para você."
+  },
+  "onboardingWhatTitle": {
+    "message": "Como a extensão funciona"
+  },
+  "onboardingWhatBody": {
+    "message": "O AceitaTempo transforma preços em tempo de trabalho com base no seu salário e na sua rotina. Você vê, ao lado de cada preço, quantas horas, dias ou meses precisa trabalhar para pagar aquele item."
+  },
+  "onboardingAffiliateTitle": {
+    "message": "Afiliação transparente"
+  },
+  "onboardingAffiliateBody": {
+    "message": "Se quiser ajudar a manter o projeto, pode usar nossos links de afiliado nas lojas parceiras. É opcional, não muda o preço para você e só funciona quando você escolhe apoiar."
+  },
+  "onboardingAffiliateDisclosure": {
+    "message": "Você pode desativar essa sugestão a qualquer momento nas configurações, por loja ou de uma vez."
+  },
+  "onboardingDonateTitle": {
+    "message": "Apoie com Pix (opcional)"
+  },
+  "onboardingDonateBody": {
+    "message": "Se quiser apoiar diretamente, escaneie o QR Code abaixo com qualquer valor."
+  },
+  "onboardingDonateEmail": {
+    "message": "Não conseguiu escanear? Envie um Pix para contato@devtu.qzz.io"
+  },
+  "onboardingOpenSettings": {
+    "message": "Abrir configurações"
+  },
+  "onboardingDismiss": {
+    "message": "Entendi"
+  },
+  "affiliateSectionTitle": {
+    "message": "Apoiar o projeto"
+  },
+  "affiliateSectionHint": {
+    "message": "Controle como o AceitaTempo oferece o link de afiliado. Prezamos pela transparência: desmarque o switch para não receber mais a sugestão."
+  },
+  "affiliateEnabledLabel": {
+    "message": "Tudo"
+  },
+  "affiliateEnabledHint": {
+    "message": "Ativo: o AceitaTempo pode sugerir o link de afiliado nas lojas parceiras. Desligue para desativar tudo de uma vez."
+  },
+  "affiliatePixEmail": {
+    "message": "Pix: contato@devtu.qzz.io"
+  },
+  "affiliateDisclaimer": {
+    "message": "A gente preza pela transparência. Se não quiser mais receber essa sugestão, desmarque o switch ao lado. Essa escolha vale só para essa loja. O QR Code ao lado serve para apoiar com Pix de qualquer valor."
+  },
+  "affiliateToastTitle": {
+    "message": "Apoie o AceitaTempo"
+  },
+  "affiliateToastConversion": {
+    "message": "Sem custo extra: só reabrimos a página com nossa tag"
+  },
+  "affiliateToastBody": {
+    "message": "Se você já ia comprar, abrir pelo nosso link não muda nada no preço. Mas pra gente faz toda a diferença. É o que nos ajuda a manter o projeto AceitaTempo vivo."
+  },
+  "affiliateToastSupport": {
+    "message": "Apoiar AceitaTempo"
+  },
+  "affiliateToastDismiss": {
+    "message": "Agora não"
+  },
+  "affiliateToastDisclaimer": {
+    "message": "Receita transparente via afiliado. Não quer mais ver isso?"
+  },
+  "affiliateToastSettings": {
+    "message": "Desativar nas configurações"
+  },
+  "onboardingToastPreviewTitle": {
+    "message": "Como a sugestão de apoio aparece"
+  },
+  "onboardingToastPreviewBody": {
+    "message": "Quando você passa o mouse sobre o tempo de trabalho de um produto, a gente pode mostrar um convite discreto para reabrir aquela página com a nossa tag de afiliado. Só aparece se você deixar ativado."
+  },
+  "onboardingToastPreviewPerProduct": {
+    "message": "Aparece por produto. Cada item tem seu próprio convite, então você só vê quando faz sentido."
+  },
+  "onboardingToastPreviewFrequency": {
+    "message": "Não é notificação recorrente. O convite aparece uma única vez por produto, dentro da mesma aba. Se você recarregar a página, ele não aparece de novo automaticamente."
+  },
+  "onboardingToastPreviewCaption": {
+    "message": "Exemplo do convite que aparece nas páginas de produto"
+  },
+  "onboardingHowItWorksTitle": {
+    "message": "Como você vai ver na loja"
+  },
+  "onboardingHowItWorksBody": {
+    "message": "Em páginas de produto, aparece um badge com o tempo de trabalho ao lado do preço. Passe o mouse por cima para ver detalhes, como o percentual do seu salário e quanto ainda sobra do período depois da compra."
+  },
+  "onboardingHowItWorksFree": {
+    "message": "A ferramenta é 100% gratuita. Você usa normalmente, sem nenhuma obrigação de apoiar."
   }
 }
