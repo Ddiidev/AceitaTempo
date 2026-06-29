@@ -51,8 +51,8 @@
     "message": "Rede social"
   },
   "salaryLabel": {
-      "message": "Valor do salário"
-    },
+    "message": "Valor do salário"
+  },
   "salaryPeriodLabel": {
     "message": "Período de referência"
   },
@@ -279,8 +279,8 @@
     "message": "Mostrar check-ins discretos"
   },
   "socialPromptEnabledHint": {
-      "message": "Mostra o primeiro check-in entre 1 e 3 minutos e, depois da primeira resposta, sorteia novos check-ins entre 3 e 7 minutos de uso visível."
-    },
+    "message": "Mostra o primeiro check-in entre 1 e 3 minutos e, depois da primeira resposta, sorteia novos check-ins entre 3 e 7 minutos de uso visível."
+  },
   "socialTrackingEnabledLabel": {
     "message": "Registrar tempo ativo"
   },
@@ -339,14 +339,14 @@
     "message": "Resumo da sessão"
   },
   "socialSummaryBody": {
-      "message": "Tempo ativo nesta sessão: $1 no $2."
-    },
+    "message": "Tempo ativo nesta sessão: $1 no $2."
+  },
   "socialSummaryResponse": {
-      "message": "Na revisão final, você marcou: $1."
-    },
+    "message": "Na revisão final, você marcou: $1."
+  },
   "socialSummaryGoal": {
-      "message": "Anotação inicial: $1"
-    },
+    "message": "Anotação inicial: $1"
+  },
   "socialSummaryMoney": {
     "message": "Conversão aproximada pela sua referência atual: $1."
   },
@@ -372,7 +372,7 @@
     "message": "Bem-vindo"
   },
   "onboardingTitle": {
-   "message": "AceitaTempo: quanto do seu tempo custa isso"
+    "message": "AceitaTempo: quanto do seu tempo custa isso"
   },
   "onboardingSubtitle": {
     "message": "Obrigado por instalar. Veja como o projeto se mantém, de forma transparente e sem custo para você."
@@ -387,7 +387,7 @@
     "message": "Afiliação transparente"
   },
   "onboardingAffiliateBody": {
-   "message": "Para manter o projeto gratuito, recebemos uma pequena comissão se você comprar em lojas parceiras usando o link do AceitaTempo. Sem custo extra para você: só redirecionamos a mesma página com a nossa tag de afiliado quando você escolhe apoiar."
+    "message": "Para manter o AceitaTempo gratuito, a gente recebe uma pequena comissão quando você compra em lojas parceiras pelo nosso link. Não muda nada no preço para você: a página é a mesma, só com a nossa tag de afiliado. Só funciona se você escolher apoiar."
   },
   "onboardingAffiliateDisclosure": {
     "message": "Você pode desativar isso a qualquer momento nas configurações, por loja ou de uma vez."
@@ -411,7 +411,7 @@
     "message": "Apoiar o projeto"
   },
   "affiliateSectionHint": {
-   "message": "Controle como o AceitaTempo oferece o link de afiliado. Prezamos pela transparência: desmarque o switch para não receber mais a sugestão."
+    "message": "Controle como o AceitaTempo oferece o link de afiliado. Prezamos pela transparência: desmarque o switch para não receber mais a sugestão."
   },
   "affiliateEnabledLabel": {
     "message": "Tudo"
@@ -423,16 +423,16 @@
     "message": "Pix: contato@devtu.qzz.io"
   },
   "affiliateDisclaimer": {
-    "message": "Prezamos pela transparência. Se não quiser mais receber essa sugestão, desmarque o switch ao lado. Isso vale apenas para a loja correspondente. Use o ícone do QR Code ao lado para apoiar com Pix de qualquer valor."
+    "message": "A gente preza pela transparência. Se não quiser mais receber essa sugestão, desmarque o switch ao lado. Essa escolha vale só para essa loja. O QR Code ao lado serve para apoiar com Pix de qualquer valor."
   },
   "affiliateToastTitle": {
     "message": "Apoie o AceitaTempo"
   },
   "affiliateToastConversion": {
-    "message": "Sem custo extra • só reabrimos a página com nossa tag"
+    "message": "Sem custo extra: só reabrimos a página com nossa tag"
   },
   "affiliateToastBody": {
-    "message": "Se você já ia comprar, abrir pelo nosso link não muda nada no preço. Mas pra gente faz toda a diferença — é o que nos ajuda a manter o projeto AceitaTempo vivo!"
+    "message": "Se você já ia comprar, abrir pelo nosso link não muda nada no preço. Mas pra gente faz toda a diferença. É o que nos ajuda a manter o projeto AceitaTempo vivo."
   },
   "affiliateToastSupport": {
     "message": "Apoiar AceitaTempo"
@@ -445,5 +445,20 @@
   },
   "affiliateToastSettings": {
     "message": "Desativar nas configurações"
+  },
+  "onboardingToastPreviewTitle": {
+    "message": "Como a sugestão aparece para você"
+  },
+  "onboardingToastPreviewBody": {
+    "message": "Quando você passa o mouse sobre o tempo de trabalho de um produto, a gente mostra um convite discreto para reabrir aquela página com a nossa tag de afiliado. Você decide se quer apoiar."
+  },
+  "onboardingToastPreviewPerProduct": {
+    "message": "Aparece por produto. Cada item tem seu próprio convite, então você só vê quando faz sentido."
+  },
+  "onboardingToastPreviewFrequency": {
+    "message": "Não é notificação recorrente. O convite aparece uma única vez por produto, dentro da mesma aba. Se você recarregar a página, ele não aparece de novo automaticamente."
+  },
+  "onboardingToastPreviewCaption": {
+    "message": "Exemplo do convite que aparece nas páginas de produto"
   }
 }
