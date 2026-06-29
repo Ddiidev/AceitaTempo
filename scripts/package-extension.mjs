@@ -46,6 +46,8 @@ const INCLUDE = [
   'onboarding.css',
   'onboarding.js',
   'pix-qrcode.png',
+  'assets/onboarding-demo-product.png',
+  'assets/onboarding-demo-tooltip.png',
   'icons/icon-16.png',
   'icons/icon-32.png',
   'icons/icon-48.png',
