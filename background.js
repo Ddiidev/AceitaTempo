@@ -24,39 +24,100 @@ const STORAGE_KEYS = Object.keys(DEFAULT_SETTINGS);
 const EXCHANGE_ALARM = "aceita-tempo-refresh-exchange-rate";
 const EXCHANGE_CACHE_TTL_MS = 12 * 60 * 60 * 1000;
 const EXCHANGE_ENDPOINT = "https://open.er-api.com/v6/latest/USD";
+const EXTENSION_API = typeof browser !== "undefined" ? browser : chrome;
+const USES_BROWSER_PROMISE_API = typeof browser !== "undefined";
+
+function getLastRuntimeError() {
+  const chromeRuntime = typeof chrome !== "undefined" ? chrome.runtime : null;
+  return chromeRuntime?.lastError || EXTENSION_API?.runtime?.lastError || null;
+}
+
+function callCallbackApi(method, context, ...args) {
+  return new Promise((resolve, reject) => {
+    method.call(context, ...args, (result) => {
+      const error = getLastRuntimeError();
+      if (error) {
+        reject(new Error(error.message || String(error)));
+        return;
+      }
+      resolve(result);
+    });
+  });
+}
+
+function getStorageArea() {
+  return EXTENSION_API.storage?.sync ?? EXTENSION_API.storage?.local;
+}
+
+function storageGet(area, keys) {
+  if (USES_BROWSER_PROMISE_API) {
+    return area.get(keys);
+  }
+  return callCallbackApi(area.get, area, keys);
+}
+
+function storageSet(area, values) {
+  if (USES_BROWSER_PROMISE_API) {
+    return area.set(values);
+  }
+  return callCallbackApi(area.set, area, values);
+}
+
+function createTab(createProperties) {
+  if (USES_BROWSER_PROMISE_API) {
+    return EXTENSION_API.tabs.create(createProperties);
+  }
+  return callCallbackApi(EXTENSION_API.tabs.create, EXTENSION_API.tabs, createProperties);
+}
+
+async function createAlarm(name, alarmInfo) {
+  const result = EXTENSION_API.alarms.create(name, alarmInfo);
+  if (result && typeof result.then === "function") {
+    await result;
+  }
+}
 
 async function getSettings() {
-  const stored = await chrome.storage.sync.get(STORAGE_KEYS);
+  const area = getStorageArea();
+  const stored = area ? await storageGet(area, STORAGE_KEYS) : {};
   return { ...DEFAULT_SETTINGS, ...stored };
 }
 
 async function savePartialSettings(nextValues) {
-  await chrome.storage.sync.set(nextValues);
+  const area = getStorageArea();
+  if (!area) {
+    return;
+  }
+  await storageSet(area, nextValues);
 }
 
 async function ensureDefaults() {
-  const current = await chrome.storage.sync.get(STORAGE_KEYS);
+  const area = getStorageArea();
+  if (!area) {
+    return;
+  }
+  const current = await storageGet(area, STORAGE_KEYS);
   const missingEntries = Object.entries(DEFAULT_SETTINGS).filter(([key]) => current[key] === undefined);
 
   if (!missingEntries.length) {
     return;
   }
 
-  await chrome.storage.sync.set(Object.fromEntries(missingEntries));
+  await storageSet(area, Object.fromEntries(missingEntries));
 }
 
 async function maybeOpenOnboarding() {
-  const area = chrome.storage?.sync ?? chrome.storage?.local;
+  const area = getStorageArea();
   if (!area) {
     return;
   }
-  const items = await new Promise((resolve) => area.get(["onboardingSeen"], resolve));
+  const items = await storageGet(area, ["onboardingSeen"]);
   if (items?.onboardingSeen) {
     return;
   }
-  await new Promise((resolve) => area.set({ onboardingSeen: true }, resolve));
+  await storageSet(area, { onboardingSeen: true });
   try {
-    await chrome.tabs.create({ url: chrome.runtime.getURL("onboarding.html") });
+    await createTab({ url: EXTENSION_API.runtime.getURL("onboarding.html") });
   } catch (error) {
     console.warn("[AceitaTempo] Failed to open onboarding", error);
   }
@@ -127,9 +188,9 @@ async function refreshExchangeRate({ force = false } = {}) {
   };
 }
 
-chrome.runtime.onInstalled.addListener(async () => {
+EXTENSION_API.runtime.onInstalled.addListener(async () => {
   await ensureDefaults();
-  await chrome.alarms.create(EXCHANGE_ALARM, {
+  await createAlarm(EXCHANGE_ALARM, {
     periodInMinutes: 60,
   });
 
@@ -142,7 +203,7 @@ chrome.runtime.onInstalled.addListener(async () => {
   await maybeOpenOnboarding();
 });
 
-chrome.runtime.onStartup.addListener(async () => {
+EXTENSION_API.runtime.onStartup.addListener(async () => {
   await ensureDefaults();
 
   try {
@@ -152,7 +213,7 @@ chrome.runtime.onStartup.addListener(async () => {
   }
 });
 
-chrome.alarms.onAlarm.addListener(async (alarm) => {
+EXTENSION_API.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name !== EXCHANGE_ALARM) {
     return;
   }
@@ -164,24 +225,34 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
   }
 });
 
-chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+EXTENSION_API.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (!message || typeof message !== "object") {
     return undefined;
   }
 
   if (message.type === "aceitaTempo:getSettings") {
-    getSettings()
-      .then((settings) => sendResponse({ ok: true, settings }))
-      .catch((error) => sendResponse({ ok: false, error: error.message }));
+    const response = getSettings()
+      .then((settings) => ({ ok: true, settings }))
+      .catch((error) => ({ ok: false, error: error.message }));
 
+    if (USES_BROWSER_PROMISE_API) {
+      return response;
+    }
+
+    response.then(sendResponse);
     return true;
   }
 
   if (message.type === "aceitaTempo:refreshExchangeRate") {
-    refreshExchangeRate({ force: true })
-      .then((result) => sendResponse(result))
-      .catch((error) => sendResponse({ ok: false, error: error.message }));
+    const response = refreshExchangeRate({ force: true })
+      .then((result) => result)
+      .catch((error) => ({ ok: false, error: error.message }));
 
+    if (USES_BROWSER_PROMISE_API) {
+      return response;
+    }
+
+    response.then(sendResponse);
     return true;
   }
 

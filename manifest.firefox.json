@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "__MSG_extensionDescription__",
   "default_locale": "pt_BR",
   "icons": {
@@ -79,10 +79,10 @@
         "https://*.ebay.com.au/*",
         "https://*.aliexpress.com/*",
         "https://*.aliexpress.us/*",
-        "https://*.stripe.com/*",
         "https://store.epicgames.com/*",
         "https://store.steampowered.com/*",
         "https://*.gog.com/*",
+        "https://*.instant-gaming.com/*",
         "https://*.shopee.com/*",
         "https://*.shopee.com.br/*",
         "https://*.shopee.co.id/*",

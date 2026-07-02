@@ -372,6 +372,25 @@
       ],
     },
     {
+      name: 'Instant Gaming',
+      hostPatterns: rx(['(^|\\.)instant-gaming\\.com$']),
+      selectors: [
+        '[itemprop="price"]',
+        '[data-price]',
+        '[class*="price" i]',
+        '[class*="amount" i]',
+      ],
+      preferTextWalker: true,
+      scopeSelectors: [
+        '[class*="product" i]',
+        '[class*="item" i]',
+        '[class*="game" i]',
+        '[class*="card" i]',
+        'a[href*="/"]',
+        ...PRODUCT_SCOPE_SELECTORS,
+      ],
+    },
+    {
       name: 'Shopee',
       hostPatterns: rx(['(^|\\.)shopee\\.(com|com\\.br|co\\.id|sg|vn|th|ph|my|tw)$']),
       selectors: [

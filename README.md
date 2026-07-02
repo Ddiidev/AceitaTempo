@@ -71,6 +71,7 @@ A extensao foi desenhada para funcionar explicitamente em marketplaces grandes, 
 - Steam
 - GOG
 - Epic Games
+- Instant Gaming
 - Shopee
 - SHEIN
 - Armazem Paraiba

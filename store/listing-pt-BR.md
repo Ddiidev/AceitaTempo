@@ -11,6 +11,8 @@ AceitaTempo mostra quanto do seu tempo custa um preço no navegador. A extensão
 
 Ela foi pensada para grandes lojas e marketplaces, mas também inclui fallback genérico para outras páginas compatíveis. Você pode manter a extensão ativa em sites suportados, desligá-la em sites externos e desativar lojas específicas manualmente nas opções.
 
+Também há recursos opcionais para consciência de uso em redes sociais: check-ins discretos em Instagram, YouTube e TikTok ajudam você a perceber se o tempo gasto continua alinhado ao que queria fazer.
+
 ## Principais recursos
 - Badge curto com o tempo estimado ao lado do preço.
 - Hover com detalhes de cálculo, moeda e câmbio.
@@ -18,14 +20,25 @@ Ela foi pensada para grandes lojas e marketplaces, mas também inclui fallback g
 - Conversão em carrinho e checkout para o total do pedido.
 - Cálculo com salário em BRL ou USD.
 - Câmbio automático ou manual.
- - Modo mensal ou por hora: escolha como informar seu salário.
- - Exibição estendida: dias, meses e anos para itens que custam mais de 24h.
+- Modo mensal ou por hora: escolha como informar seu salário.
+- Exibição estendida: dias, meses e anos para itens que custam mais de 24h.
 - Controles por site para evitar páginas indesejadas.
+- Check-ins sociais opcionais, desligados por padrão.
+- Apoio transparente ao projeto via Pix ou links afiliados em lojas parceiras.
+
+## Apoio e afiliados
+- Em lojas parceiras, o AceitaTempo pode sugerir um link afiliado somente depois de interação real com o badge/tooltip.
+- O clique no link de apoio é sempre uma ação sua; a extensão não redireciona automaticamente.
+- Amazon, Mercado Livre e Instant Gaming estão ativos como parceiros afiliados nesta versão.
+- AliExpress e Shopee permanecem desativados até existir integração oficial adequada.
+- O apoio direto via Pix é opcional e exibido com transparência no onboarding e nas configurações.
 
 ## Privacidade
 - As configurações ficam no Chrome Storage.
 - O conteúdo da página é processado localmente no navegador.
 - A única requisição externa do produto é a taxa USD/BRL em `open.er-api.com` quando o modo automático está ativo.
+- Sessões sociais opcionais guardam apenas tempo ativo, site monitorado e anotação opcional localmente.
+- Links afiliados são montados localmente e abertos apenas quando você clica no botão de apoio.
 - Não há servidor próprio nem coleta comercial de dados.
 
 ## URLs para preencher na loja

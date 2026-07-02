@@ -1,37 +1,70 @@
 (function onboardingInit() {
   const globalObj = typeof globalThis !== 'undefined' ? globalThis : window;
+  const ExtensionApi = typeof browser !== 'undefined' ? browser : chrome;
+  const usesBrowserPromiseApi = typeof browser !== 'undefined';
   const SiteConfig = globalObj.AceitaTempoSiteConfig;
   const Affiliate = globalObj.AceitaTempoAffiliate;
   const DEFAULT_SETTINGS = { affiliateEnabled: true, affiliateDisabledStores: [] };
   const STORAGE_KEYS = Object.keys(DEFAULT_SETTINGS);
   const COMMERCE_SITE_CONFIGS = SiteConfig?.siteConfigs?.filter((s) => s.kind !== 'social') || [];
- const ACTIVE_AFFILIATE_STORE_IDS = new Set(Affiliate?.ACTIVE_AFFILIATE_STORE_IDS || []);
- const AFFILIATE_SITE_CONFIGS = COMMERCE_SITE_CONFIGS.filter((s) => ACTIVE_AFFILIATE_STORE_IDS.has(s.siteId));
+  const ACTIVE_AFFILIATE_STORE_IDS = new Set(Affiliate?.ACTIVE_AFFILIATE_STORE_IDS || []);
+  const AFFILIATE_SITE_CONFIGS = COMMERCE_SITE_CONFIGS.filter((s) => ACTIVE_AFFILIATE_STORE_IDS.has(s.siteId));
 
   function getStorageArea() {
-    return chrome.storage?.sync ?? chrome.storage?.local;
+    return ExtensionApi.storage?.sync ?? ExtensionApi.storage?.local;
+  }
+
+  function storageGet(area, keys) {
+    if (usesBrowserPromiseApi) {
+      return area.get(keys);
+    }
+    return new Promise((resolve) => {
+      area.get(keys, (items) => resolve(items || {}));
+    });
+  }
+
+  function storageSet(area, values) {
+    if (usesBrowserPromiseApi) {
+      return area.set(values);
+    }
+    return new Promise((resolve) => {
+      area.set(values, () => resolve());
+    });
+  }
+
+  function openOptionsPage() {
+    const opener = ExtensionApi.runtime?.openOptionsPage;
+    if (!opener) {
+      return Promise.resolve();
+    }
+    const result = opener.call(ExtensionApi.runtime);
+    return result && typeof result.then === 'function' ? result : Promise.resolve(result);
   }
 
   function readSettings() {
-    return new Promise((resolve) => {
-      getStorageArea().get(STORAGE_KEYS, (items) => resolve({ ...DEFAULT_SETTINGS, ...items }));
-    });
+    const area = getStorageArea();
+    if (!area) {
+      return Promise.resolve({ ...DEFAULT_SETTINGS });
+    }
+    return storageGet(area, STORAGE_KEYS).then((items) => ({ ...DEFAULT_SETTINGS, ...items }));
   }
 
   function savePartialSettings(nextValues) {
-    return new Promise((resolve) => {
-      getStorageArea().set(nextValues, () => resolve());
-    });
+    const area = getStorageArea();
+    if (!area) {
+      return Promise.resolve();
+    }
+    return storageSet(area, nextValues);
   }
 
-  let currentLang = chrome.i18n.getUILanguage().startsWith('pt') ? 'pt-BR' : 'en';
+  let currentLang = ExtensionApi.i18n?.getUILanguage?.().startsWith('pt') ? 'pt-BR' : 'en';
   const messageCache = { 'pt-BR': null, en: null };
 
   async function loadMessages(lang) {
     const localeDir = lang === 'pt-BR' ? 'pt_BR' : 'en';
     if (messageCache[lang]) return messageCache[lang];
     try {
-      const url = chrome.runtime.getURL(`_locales/${localeDir}/messages.json`);
+      const url = ExtensionApi.runtime.getURL(`_locales/${localeDir}/messages.json`);
       const res = await fetch(url);
       const data = await res.json();
       const map = {};
@@ -48,7 +81,7 @@
 
   function t(key, lang = currentLang) {
     const map = messageCache[lang] || messageCache['pt-BR'] || {};
-    return map[key] || chrome.i18n?.getMessage?.(key) || key;
+    return map[key] || ExtensionApi.i18n?.getMessage?.(key) || key;
   }
 
   function localize() {
@@ -78,6 +111,18 @@
       nameSpan.className = 'site-toggle__name';
       nameSpan.textContent = site.name;
       textSpan.appendChild(nameSpan);
+      const storeUrl = Affiliate?.getAffiliateStore?.(site.siteId)?.storeUrl;
+      if (storeUrl) {
+        const link = document.createElement('a');
+        link.className = 'site-toggle__link';
+        link.href = storeUrl;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = storeUrl.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+        link.addEventListener('pointerdown', (event) => event.stopPropagation());
+        link.addEventListener('click', (event) => event.stopPropagation());
+        textSpan.appendChild(link);
+      }
       const switchSpan = document.createElement('span');
       switchSpan.className = 'switch';
       const input = document.createElement('input');
@@ -103,16 +148,16 @@
     if (masterSwitch) masterSwitch.checked = enabled;
     container.querySelectorAll('input[data-affiliate-site-id]').forEach((input) => {
       input.disabled = !enabled;
-     input.checked = enabled;
+      input.checked = enabled;
     });
   }
 
   function markOnboardingSeen() {
-    return new Promise((resolve) => {
-      const area = chrome.storage?.sync ?? chrome.storage?.local;
-      if (!area) { resolve(); return; }
-      area.set({ onboardingSeen: true }, () => resolve());
-    });
+    const area = getStorageArea();
+    if (!area) {
+      return Promise.resolve();
+    }
+    return storageSet(area, { onboardingSeen: true });
   }
 
   async function saveAffiliateSettings() {
@@ -127,7 +172,7 @@
   async function openOptions() {
     await saveAffiliateSettings();
     await markOnboardingSeen();
-    if (chrome.runtime?.openOptionsPage) chrome.runtime.openOptionsPage();
+    await openOptionsPage();
     window.close();
   }
 
@@ -142,12 +187,12 @@
     if (!picker) return;
     picker.querySelectorAll('[data-lang]').forEach((btn) => {
       btn.setAttribute('aria-pressed', btn.dataset.lang === currentLang ? 'true' : 'false');
-       btn.addEventListener('click', async () => {
+      btn.addEventListener('click', async () => {
         currentLang = btn.dataset.lang;
         picker.querySelectorAll('[data-lang]').forEach((b) => {
           b.setAttribute('aria-pressed', b.dataset.lang === currentLang ? 'true' : 'false');
         });
-         await loadMessages(currentLang);
+        await loadMessages(currentLang);
         localize();
       });
     });
@@ -167,7 +212,7 @@
   }
 
   async function init() {
-   await loadMessages(currentLang);
+    await loadMessages(currentLang);
     localize();
     bindLangPicker();
     const settings = await readSettings();

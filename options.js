@@ -42,7 +42,7 @@ const SITE_CONFIGS = globalThis.AceitaTempoSiteConfig?.siteConfigs
 const COMMERCE_SITE_CONFIGS = SITE_CONFIGS.filter((site) => site.kind !== "social");
 const AFFILIATE_SITE_CONFIGS = (() => {
   const affiliateApi = globalThis.AceitaTempoAffiliate;
- const ids = affiliateApi?.ACTIVE_AFFILIATE_STORE_IDS || [];
+  const ids = affiliateApi?.ACTIVE_AFFILIATE_STORE_IDS || [];
   const idSet = new Set(ids);
   return COMMERCE_SITE_CONFIGS.filter((site) => idSet.has(site.siteId));
 })();
@@ -262,6 +262,19 @@ function renderAffiliateToggles(affiliateEnabled, affiliateDisabledStores = []) 
     nameSpan.textContent = site.name;
 
     textSpan.appendChild(nameSpan);
+
+    const storeUrl = globalThis.AceitaTempoAffiliate?.getAffiliateStore?.(site.siteId)?.storeUrl;
+    if (storeUrl) {
+      const link = document.createElement("a");
+      link.className = "site-toggle__link";
+      link.href = storeUrl;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = storeUrl.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
+      link.addEventListener("pointerdown", (event) => event.stopPropagation());
+      link.addEventListener("click", (event) => event.stopPropagation());
+      textSpan.appendChild(link);
+    }
 
     const switchSpan = document.createElement("span");
     switchSpan.className = "switch";

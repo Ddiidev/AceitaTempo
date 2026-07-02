@@ -8,7 +8,7 @@
   - `src/content.js`: injeta badges, tooltips e lógica de página.
   - `src/site-config.js`: seletores e regras específicas por site.
   - `src/price-utils.js`: parsing de preço, câmbio e cálculo de duração.
-- O projeto prioriza cobertura em marketplaces e lojas grandes, como Amazon, Mercado Livre, Magazine Luiza, eBay, AliExpress, Steam, GOG, Epic Games, Shopee, SHEIN, Americanas, Casas Bahia, KaBuM!, Netshoes, Walmart, Target, Etsy, Temu e Best Buy.
+- O projeto prioriza cobertura em marketplaces e lojas grandes, como Amazon, Mercado Livre, Magazine Luiza, eBay, AliExpress, Steam, GOG, Epic Games, Instant Gaming, Shopee, SHEIN, Americanas, Casas Bahia, KaBuM!, Netshoes, Walmart, Target, Etsy, Temu e Best Buy.
 - Há testes de smoke com Playwright em `tests/`, principalmente:
   - `npm run smoke:sites`
   - `npm run smoke:cart`
@@ -31,7 +31,8 @@
   - Módulo `src/affiliate.js`: `AFFILIATE_STORES` (siteId + params por loja), `buildAffiliateUrl(href, siteId)`, `hasAffiliate(siteId)`. Carregado em content scripts (manifest) e em options (para filtrar COMMERCE_SITE_CONFIGS).
   - Keys de storage dedicadas (`affiliateEnabled`, `affiliateDisabledStores`) separadas de `disabledSiteNames` (core). Defaults em `background.js`, `popup.js`, `options.js` e `src/content.js` (`normalizeSettings`).
   - i18n: chaves `onboarding*`, `affiliate*`, `affiliateToast*`, `affiliatePixEmail`, `affiliateDisclaimer` em `_locales/pt_BR` e `_locales/en`.
-  - Lojas com afiliado: Amazon, AliExpress, Shopee, Mercado Livre, eBay, Magazine Luiza, Temu, SHEIN, Americanas. Tags são placeholders editáveis em `src/affiliate.js` (`aceitatempo-20` etc.), substituir pelas tags reais após cadastro em cada programa.
+  - Lojas com afiliado ativo nesta versão: Amazon (`tag=aceitatempo-20`), Mercado Livre (`af_id=aceitatempo`) e Instant Gaming (`igr=aceitatempo`). Esses códigos são reais.
+  - AliExpress e Shopee ficam cadastrados em `src/affiliate.js`, mas com `active: false` até existir API/deeplink oficial adequado para geração sob demanda.
   - Links de cadastro nos programas: `.plans/20260626-143200-a1b2c3-monetizacao-afiliacao-pix/afiliados-links.md`.
 
 ## Regras globais

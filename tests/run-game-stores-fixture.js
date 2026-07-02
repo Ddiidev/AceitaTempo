@@ -53,8 +53,16 @@ async function injectScripts(page, replacePricesWithHours) {
 }
 
 async function loadFixture(page, url, html, css, replacePricesWithHours) {
-  await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 }).catch(() => {});
-  await page.setContent(html);
+  await page.route(url, async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'text/html; charset=utf-8',
+      body: html,
+    });
+  });
+
+  await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
+  await page.unroute(url);
 
   if (css) {
     await page.addStyleTag({ content: css });
@@ -277,6 +285,48 @@ async function runEpicStyleAssertion(page) {
   assert.strictEqual(state.priceHidden, '1', 'Epic-style price should be hidden in replace mode');
 }
 
+async function runInstantGamingAssertions(page, replacePricesWithHours) {
+  const html = String.raw`<!doctype html>
+  <html lang="pt-BR">
+    <body>
+      <section id="instant-gaming-case">
+        <a class="game-card" href="https://www.instant-gaming.com/br/1234-comprar-example/">
+          <span class="game-card__title">Example Game</span>
+          <span class="game-card__price price">R$ 89,99</span>
+        </a>
+      </section>
+    </body>
+  </html>`;
+
+  const css = `
+    .game-card { display: block; color: rgb(235, 235, 235); text-decoration: none; }
+    .game-card__price { display: inline-block; color: rgb(255, 210, 74); font-size: 20px; line-height: 20px; }
+  `;
+
+  await loadFixture(page, 'https://www.instant-gaming.com/br/', html, css, replacePricesWithHours);
+
+  const state = await page.evaluate(() => {
+    const badge = document.querySelector('#instant-gaming-case [data-aceita-tempo-badge="1"]');
+    const price = document.querySelector('#instant-gaming-case .game-card__price');
+    return {
+      badgeText: badge?.textContent || '',
+      badgeColor: badge ? getComputedStyle(badge).color : '',
+      badgeFontSize: badge ? getComputedStyle(badge).fontSize : '',
+      priceHidden: price?.getAttribute('data-aceita-tempo-hidden') || null,
+    };
+  });
+
+  assert.ok(state.badgeText.startsWith('~'), 'Instant Gaming fixture should render work duration');
+
+  if (replacePricesWithHours) {
+    assert.strictEqual(state.badgeColor, 'rgb(255, 210, 74)', 'Instant Gaming badge should keep the price color');
+    assert.strictEqual(state.badgeFontSize, scaleFontSize('20px', 0.75), 'Instant Gaming badge should use 75% of the price font size');
+    assert.strictEqual(state.priceHidden, '1', 'Instant Gaming price should be hidden in replace mode');
+  } else {
+    assert.strictEqual(state.priceHidden, null, 'Instant Gaming price should stay visible when not replacing');
+  }
+}
+
 async function runSteamSearchAndCartAssertions(page) {
   const html = String.raw`<!doctype html>
   <html lang="pt-BR">
@@ -341,6 +391,8 @@ async function main() {
     await runSteamSearchAndCartAssertions(page);
     await runGogAssertions(page, false);
     await runGogAssertions(page, true);
+    await runInstantGamingAssertions(page, false);
+    await runInstantGamingAssertions(page, true);
     await runEpicStyleAssertion(page);
     console.log('Game store fixture checks passed.');
   } finally {

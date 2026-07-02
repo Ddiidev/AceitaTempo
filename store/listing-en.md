@@ -11,6 +11,8 @@ AceitaTempo shows how much of your time a price costs in the browser. The extens
 
 It is designed for large marketplaces and digital stores, but it also includes a generic fallback for compatible layouts. You can keep it enabled on supported sites, disable it on external sites, and turn off specific stores manually from the options page.
 
+Optional social-awareness check-ins are available for Instagram, YouTube, and TikTok. They use discreet prompts to help you notice whether your active time still matches what you meant to do.
+
 ## Key features
 - Short `~time` badge next to the price.
 - Hover details with price, currency, and exchange-rate breakdown.
@@ -18,14 +20,25 @@ It is designed for large marketplaces and digital stores, but it also includes a
 - Cart and checkout total conversion.
 - Salary in BRL or USD.
 - Automatic or manual exchange-rate mode.
- - Monthly or hourly mode: choose how you enter your wage.
- - Extended display: days, months and years for items that cost more than 24h.
+- Monthly or hourly mode: choose how you enter your wage.
+- Extended display: days, months and years for items that cost more than 24h.
 - Per-site controls for unwanted stores.
+- Optional social check-ins, disabled by default.
+- Transparent project support through Pix donation or affiliate links on partner stores.
+
+## Support and affiliates
+- On partner stores, AceitaTempo may suggest an affiliate link only after a real interaction with the work-time badge or tooltip.
+- Opening the support link is always your action; the extension does not redirect automatically.
+- Amazon, Mercado Livre, and Instant Gaming are active affiliate partners in this version.
+- AliExpress and Shopee remain disabled until an official integration is available.
+- Direct Pix support is optional and disclosed in onboarding and settings.
 
 ## Privacy
 - Settings are stored in Chrome Storage.
 - Page content is processed locally in the browser.
 - The only external request is the USD/BRL exchange rate from `open.er-api.com` when automatic mode is enabled.
+- Optional social sessions store only active time, monitored site, and optional local notes.
+- Affiliate links are built locally and opened only after you click the support button.
 - There is no custom backend and no commercial data collection.
 
 ## Store URLs

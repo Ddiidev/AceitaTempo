@@ -593,6 +593,19 @@ button {
   color: var(--muted);
 }
 
+.site-toggle__link {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.site-toggle__link:hover,
+.site-toggle__link:focus-visible {
+  color: var(--accent-strong);
+}
+
 .site-toggle--checkbox {
   align-items: flex-start;
 }

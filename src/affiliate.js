@@ -9,43 +9,52 @@
       siteId: 'amazon',
       name: 'Amazon',
       params: { tag: 'aceitatempo-20' },
+      active: true,
     },
     {
       siteId: 'aliexpress',
       name: 'AliExpress',
       params: { aff_fbid: 'aceitatempo' },
-     active: false,
+      active: false,
     },
     {
       siteId: 'shopee',
       name: 'Shopee',
       params: { af_siteid: 'aceitatempo' },
-     active: false,
+      active: false,
     },
     {
       siteId: 'mercado-livre',
       name: 'Mercado Livre',
       params: { af_id: 'aceitatempo' },
+      active: true,
+    },
+    {
+      siteId: 'instant-gaming',
+      name: 'Instant Gaming',
+      params: { igr: 'aceitatempo' },
+      active: true,
+      storeUrl: 'https://www.instant-gaming.com/br/',
     },
   ];
- 
- // TODO: Lomadee integration for Casas Bahia and Americanas.
- // These stores require API calls to generate deep links.
- // When Lomadee sourceId/advertiserId are available, add:
- //   { siteId: 'casas-bahia', name: 'Casas Bahia', params: { ... } }
- //   { siteId: 'americanas', name: 'Americanas', params: { ... } }
- // And update buildAffiliateUrl to handle the Lomadee redirect flow.
+
+  // TODO: Lomadee integration for Casas Bahia and Americanas.
+  // These stores require API calls to generate deep links.
+  // When Lomadee sourceId/advertiserId are available, add:
+  //   { siteId: 'casas-bahia', name: 'Casas Bahia', params: { ... } }
+  //   { siteId: 'americanas', name: 'Americanas', params: { ... } }
+  // And update buildAffiliateUrl to handle the Lomadee redirect flow.
 
   const AFFILIATE_STORE_IDS = AFFILIATE_STORES.map((store) => store.siteId);
- const ACTIVE_AFFILIATE_STORE_IDS = AFFILIATE_STORES.filter((s) => s.active !== false).map((s) => s.siteId);
+  const ACTIVE_AFFILIATE_STORE_IDS = AFFILIATE_STORES.filter((store) => store.active !== false).map((store) => store.siteId);
 
   function getAffiliateStore(siteId) {
     return AFFILIATE_STORES.find((store) => store.siteId === siteId) || null;
   }
 
   function hasAffiliate(siteId) {
-   const store = getAffiliateStore(siteId);
-   return Boolean(store) && store.active !== false;
+    const store = getAffiliateStore(siteId);
+    return Boolean(store) && store.active !== false;
   }
 
   function buildAffiliateUrl(href, siteId) {
@@ -70,7 +79,7 @@
   globalObj.AceitaTempoAffiliate = {
     AFFILIATE_STORES,
     AFFILIATE_STORE_IDS,
-   ACTIVE_AFFILIATE_STORE_IDS,
+    ACTIVE_AFFILIATE_STORE_IDS,
     getAffiliateStore,
     hasAffiliate,
     buildAffiliateUrl,

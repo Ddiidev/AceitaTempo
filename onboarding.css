@@ -206,6 +206,15 @@ button.secondary {
 }
 .site-toggle__text { display: flex; flex-direction: column; gap: 1px; }
 .site-toggle__name { font-weight: 600; }
+.site-toggle__link {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.site-toggle__link:hover,
+.site-toggle__link:focus-visible { color: var(--accent-strong); }
 .field { display: flex; flex-direction: column; gap: 4px; }
 .field-wide { grid-column: 1 / -1; }
 /* toast preview */

@@ -457,6 +457,7 @@ async function runOptionsAssertions(browser) {
   await page.addStyleTag({ content: fs.readFileSync(path.join(ROOT, 'options.css'), 'utf8') });
 
   await page.addScriptTag({ content: fs.readFileSync(path.join(ROOT, 'src', 'site-config.js'), 'utf8') });
+  await page.addScriptTag({ content: fs.readFileSync(path.join(ROOT, 'src', 'affiliate.js'), 'utf8') });
   await page.addScriptTag({ content: fs.readFileSync(path.join(ROOT, 'options.js'), 'utf8') });
   await page.waitForTimeout(300);
 
@@ -467,13 +468,24 @@ async function runOptionsAssertions(browser) {
   const sectionTitles = await page.locator('.settings-section__header h2').allInnerTexts();
   assert.deepStrictEqual(
     sectionTitles,
-    ['Calculation basics', 'Time display', 'Sites and exceptions', 'Social awareness'],
+    ['Calculation basics', 'Time display', 'Sites and exceptions', 'Social awareness', 'Support the project'],
     'settings should be grouped in the expected order'
   );
   const selectedCount = await page.locator('[data-social-site-id]:checked').count();
   assert.strictEqual(selectedCount, 4, 'all supported social sites should be selected by default');
   assert.strictEqual(await page.locator('[data-social-site-id=\"youtube-shorts\"]').count(), 1, 'options should expose a dedicated YouTube Shorts toggle');
   assert.strictEqual(await page.locator('#socialAwarenessControls').evaluate((node) => node.hidden), true, 'social suboptions should stay hidden while master toggle is off');
+  assert.strictEqual(await page.locator('[data-affiliate-site-id="instant-gaming"]').count(), 1, 'options should expose Instant Gaming as an active affiliate store');
+  assert.strictEqual(
+    await page.evaluate(() =>
+      document.querySelector('[data-affiliate-site-id="instant-gaming"]')
+        ?.closest('.site-toggle')
+        ?.querySelector('.site-toggle__link')
+        ?.getAttribute('href')
+    ),
+    'https://www.instant-gaming.com/br/',
+    'options should show the Instant Gaming store link below its name'
+  );
 
   await page.locator('#socialAwarenessEnabled').check({ force: true });
   await page.waitForTimeout(100);
@@ -485,7 +497,8 @@ async function runOptionsAssertions(browser) {
   await page.waitForTimeout(100);
   assert.strictEqual(await page.locator('#saveButton').isDisabled(), true, 'save button should disable while saving');
   assert.match(await page.locator('#saveButtonLabel').innerText(), /Saving/i, 'save button should show a loading label');
-  assert.strictEqual(await page.locator('#saveToast').evaluate((node) => node.hidden), true, 'toast should still be hidden during the save');
+  assert.strictEqual(await page.locator('#saveToast').evaluate((node) => node.hidden), false, 'toast should show saving feedback during the save');
+  assert.match(await page.locator('#saveToastTitle').innerText(), /Saving/i, 'toast should use a saving title during the save');
 
   await page.waitForTimeout(1100);
   assert.strictEqual(await page.locator('#saveToast').evaluate((node) => node.hidden), false, 'toast should appear after saving finishes');

@@ -431,7 +431,7 @@
             <a href="#lojas">Lojas</a>
             <a href="#privacidade">Privacidade</a>
             <a href="./support.html">Suporte</a>
-            <a class="nav-cta" href="https://chromewebstore.google.com/detail/aceitatempo/goekoeckmpmapdcdgldkimhjohfmpoce?hl=pt-BR" target="_blank" rel="noopener noreferrer">Instalar</a>
+            <a class="nav-cta" id="install-cta" href="https://chromewebstore.google.com/detail/aceitatempo/goekoeckmpmapdcdgldkimhjohfmpoce?hl=pt-BR" target="_blank" rel="noopener noreferrer">Instalar</a>
           </nav>
         </div>
       </div>
@@ -451,8 +451,8 @@
             <a class="button button-primary" href="https://chromewebstore.google.com/detail/aceitatempo/goekoeckmpmapdcdgldkimhjohfmpoce?hl=pt-BR" target="_blank" rel="noopener noreferrer">
               Instalar no Chrome
             </a>
-            <a class="button button-secondary" href="#firefox" id="firefox">
-              Baixar para Firefox
+            <a class="button button-secondary" href="https://addons.mozilla.org/pt-BR/firefox/addon/aceitatempo/" target="_blank" rel="noopener noreferrer">
+              Instalar no Firefox
             </a>
           </div>
           <div class="hero__browsers" aria-label="Navegadores compatíveis">
@@ -579,6 +579,7 @@
             <span class="store-chip">Steam</span>
             <span class="store-chip">GOG</span>
             <span class="store-chip">Epic Games</span>
+            <span class="store-chip">Instant Gaming</span>
             <span class="store-chip">Shopee</span>
             <span class="store-chip">SHEIN</span>
             <span class="store-chip">KaBuM!</span>
@@ -610,7 +611,7 @@
             </ul>
             <div class="hero__actions" style="margin-bottom:0">
               <a class="button button-primary" href="https://chromewebstore.google.com/detail/aceitatempo/goekoeckmpmapdcdgldkimhjohfmpoce?hl=pt-BR" target="_blank" rel="noopener noreferrer">Instalar no Chrome</a>
-              <a class="button button-ghost" href="./support.html">Abrir suporte</a>
+            <a class="button button-secondary" href="https://addons.mozilla.org/pt-BR/firefox/addon/aceitatempo/" target="_blank" rel="noopener noreferrer">Instalar no Firefox</a>
             </div>
           </div>
         </div>
@@ -641,6 +642,15 @@
           menuBtn.textContent = 'Menu';
         });
       });
+
+      // Redireciona o botão "Instalar" para a loja do navegador do visitante
+      (function () {
+        const installCta = document.getElementById('install-cta');
+        if (!installCta) return;
+        const FIREFOX_URL = 'https://addons.mozilla.org/pt-BR/firefox/addon/aceitatempo/';
+        const CHROME_URL = 'https://chromewebstore.google.com/detail/aceitatempo/goekoeckmpmapdcdgldkimhjohfmpoce?hl=pt-BR';
+        installCta.href = /Firefox/i.test(navigator.userAgent) ? FIREFOX_URL : CHROME_URL;
+      })();
     </script>
   </body>
 </html>
