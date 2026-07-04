@@ -18,6 +18,7 @@ const DEFAULT_SETTINGS = {
   socialMonetaryOptIn: false,
   affiliateEnabled: true,
   affiliateDisabledStores: [],
+  language: "auto",
 };
 
 const STORAGE_KEYS = Object.keys(DEFAULT_SETTINGS);

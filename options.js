@@ -33,6 +33,7 @@ const DEFAULT_SETTINGS = {
   easterEggJuliusEnabled: true,
   affiliateEnabled: true,
   affiliateDisabledStores: [],
+  language: "auto",
 };
 
 const STORAGE_KEYS = Object.keys(DEFAULT_SETTINGS);
@@ -117,6 +118,7 @@ function normalizeSettings(raw) {
     easterEggJuliusEnabled: isTruthySetting(raw.easterEggJuliusEnabled ?? true),
     affiliateEnabled: isTruthySetting(raw.affiliateEnabled ?? true),
     affiliateDisabledStores: Array.isArray(raw.affiliateDisabledStores) ? raw.affiliateDisabledStores : [],
+    language: ["auto", "pt-BR", "en"].includes(String(raw.language || "")) ? String(raw.language) : "auto",
   };
 }
 
@@ -181,6 +183,7 @@ function fillForm(settings) {
   $("socialReflectionEnabled").checked = settings.socialReflectionEnabled;
   $("socialMonetaryOptIn").checked = settings.socialMonetaryOptIn;
   if ($("easterEggJuliusEnabled")) $("easterEggJuliusEnabled").checked = settings.easterEggJuliusEnabled;
+  if ($("language")) $("language").value = settings.language || "auto";
 
   updateExtendedTimeUI(settings.extendedTimeDisplay);
   updateWageModeUI(settings.wageMode);
@@ -488,13 +491,15 @@ function updateRateSnapshot(settings) {
   rateNode.textContent = chrome.i18n.getMessage("autoRatePending");
 }
 
-function localize() {
-  document.documentElement.lang = chrome.i18n.getUILanguage().replace("_", "-");
+function localize(settings) {
+  const i18n = globalThis.AceitaTempoI18n;
+  const lang = i18n ? i18n.getEffectiveLanguage(settings) : chrome.i18n.getUILanguage().replace("_", "-");
+  document.documentElement.lang = lang === "pt-BR" ? "pt-BR" : "en";
   document.title = chrome.i18n.getMessage("optionsTitle");
 
   document.querySelectorAll("[data-i18n]").forEach((node) => {
     const key = node.getAttribute("data-i18n");
-    const message = chrome.i18n.getMessage(key);
+    const message = i18n ? i18n.getMessage(key, [], settings) : chrome.i18n.getMessage(key);
     if (message) {
       node.textContent = message;
     }
@@ -502,10 +507,10 @@ function localize() {
 }
 
 async function init() {
-  localize();
   hideFeedback();
   setActionsBusy(null);
   const settings = await readSettings();
+  localize(settings);
   fillForm(settings);
   updateHourlyRateCurrencyPrefix();
   updateRateSnapshot(settings);
@@ -556,6 +561,13 @@ async function init() {
     $("manualUsdToBrlRate").disabled = $("exchangeRateMode").value !== "manual";
     $("manualUsdToBrlRate").disabled = $("exchangeRateMode").value !== "manual";
   });
+
+  const langSelect = $("language");
+  if (langSelect) {
+    langSelect.addEventListener("change", () => {
+      localize({ ...settings, language: langSelect.value });
+    });
+  }
 
   function updateHourlyRateCurrencyPrefix() {
     const prefix = $("hourlyRateCurrencyPrefix");
@@ -608,6 +620,7 @@ async function init() {
       affiliateDisabledStores: Array.from(document.querySelectorAll("[data-affiliate-site-id]"))
         .filter((input) => !input.checked)
         .map((input) => input.getAttribute("data-affiliate-site-id")),
+      language: $("language") ? $("language").value : "auto",
     });
 
     if (payload.exchangeRateMode === "manual" && payload.manualUsdToBrlRate <= 0) {

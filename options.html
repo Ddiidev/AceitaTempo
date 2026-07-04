@@ -130,6 +130,15 @@
 
               <div class="grid settings-section__grid">
                 <label class="field">
+                  <span data-i18n="languageLabel"></span>
+                  <select id="language" name="language">
+                    <option value="auto" data-i18n="languageAuto"></option>
+                    <option value="pt-BR">Português (BR)</option>
+                    <option value="en">English</option>
+                  </select>
+                </label>
+
+                <label class="field">
                   <span data-i18n="timeDisplayModeLabel"></span>
                   <select id="timeDisplayMode" name="timeDisplayMode">
                     <option value="hours" data-i18n="timeDisplayModeHours"></option>
@@ -346,6 +355,7 @@
 
     <script src="src/site-config.js"></script>
     <script src="src/affiliate.js"></script>
+    <script src="src/i18n-utils.js"></script>
     <script src="options.js"></script>
   </body>
 </html>

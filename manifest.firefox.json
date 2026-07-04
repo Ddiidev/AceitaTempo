@@ -124,6 +124,7 @@
         "src/site-config.js",
         "src/social-awareness.js",
         "src/affiliate.js",
+        "src/i18n-utils.js",
         "src/content.js"
       ],
       "run_at": "document_idle"

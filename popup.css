@@ -123,10 +123,6 @@ p {
   text-align: right;
 }
 
-.action-card {
-  padding: 14px;
-}
-
 button {
   width: 100%;
   border: 0;
@@ -200,4 +196,56 @@ button {
   font-size: 12px;
   color: var(--muted);
   margin-top: 2px;
+}
+
+.dock {
+  padding: 0;
+  margin: 0 -14px -14px;
+  border: 0;
+  border-top: 1px solid var(--border);
+  border-radius: 22px 22px 0 0;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.dock button {
+  border-radius: 0;
+  padding: 14px 16px;
+}
+
+.dock__separator {
+  height: 1px;
+  background: var(--border);
+  margin: 0;
+}
+
+.lang-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  font-size: 12px;
+}
+
+.lang-selector label {
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.lang-selector select {
+  flex: 1;
+  min-width: 0;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 6px 8px;
+  font: inherit;
+  font-size: 12px;
+  color: var(--text);
+  outline: none;
+  cursor: pointer;
+}
+
+.lang-selector select:focus {
+  border-color: var(--accent);
 }

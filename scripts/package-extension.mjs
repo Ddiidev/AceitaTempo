@@ -42,6 +42,7 @@ const INCLUDE = [
   'src/social-awareness.js',
   'src/site-config.js',
   'src/affiliate.js',
+  'src/i18n-utils.js',
   'onboarding.html',
   'onboarding.css',
   'onboarding.js',

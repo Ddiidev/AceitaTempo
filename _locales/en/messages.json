@@ -469,5 +469,11 @@
   },
   "onboardingHowItWorksFree": {
     "message": "The tool is 100% free. You use it normally, with no obligation to support us."
+  },
+  "languageLabel": {
+    "message": "Language"
+  },
+  "languageAuto": {
+    "message": "Automatic (browser language)"
   }
 }

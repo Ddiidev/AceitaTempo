@@ -55,13 +55,23 @@
         </div>
       </section>
 
-      <section class="card action-card">
+      <section class="card dock">
         <button id="openOptions" class="primary" type="button" data-i18n="openOptionsButton"></button>
+        <div class="dock__separator" aria-hidden="true"></div>
+        <div class="lang-selector">
+          <label for="popupLangSelect" data-i18n="languageLabel"></label>
+          <select id="popupLangSelect">
+            <option value="auto" data-i18n="languageAuto"></option>
+            <option value="pt-BR">Português (BR)</option>
+            <option value="en">English</option>
+          </select>
+        </div>
       </section>
     </main>
 
     <script src="src/site-config.js"></script>
     <script src="src/price-utils.js"></script>
+    <script src="src/i18n-utils.js"></script>
     <script src="popup.js"></script>
   </body>
 </html>

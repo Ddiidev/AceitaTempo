@@ -102,13 +102,13 @@
         "https://www.tiktok.com/*",
         "https://m.tiktok.com/*"
       ],
-      "js": ["src/price-utils.js", "src/site-config.js", "src/social-awareness.js", "src/affiliate.js", "src/content.js"],
+      "js": ["src/price-utils.js", "src/site-config.js", "src/social-awareness.js", "src/affiliate.js", "src/i18n-utils.js", "src/content.js"],
       "run_at": "document_idle"
     }
   ],
   "web_accessible_resources": [
     {
-     "resources": ["src/assets/*", "icons/*", "options.html", "onboarding.html", "pix-qrcode.png"],
+      "resources": ["src/assets/*", "icons/*", "options.html", "onboarding.html", "pix-qrcode.png", "_locales/*"],
       "matches": ["<all_urls>"]
     }
   ]

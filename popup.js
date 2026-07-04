@@ -14,6 +14,7 @@ const DEFAULT_SETTINGS = {
   exchangeRateFetchedAt: null,
   affiliateEnabled: true,
   affiliateDisabledStores: [],
+  language: "auto",
 };
 const SOCIAL_STATUS_REQUEST = "aceitaTempo:getPopupStatus";
 const LOCAL_SOCIAL_SESSION_KEY = "aceitaTempoSocialSession";
@@ -162,19 +163,21 @@ function renderSocialCounter(popupStatus) {
   socialCounterCard.hidden = true;
 }
 
-function localize() {
-  document.documentElement.lang = chrome.i18n.getUILanguage().replace("_", "-");
+function localize(settings) {
+  const i18n = globalThis.AceitaTempoI18n;
+  const lang = i18n ? i18n.getEffectiveLanguage(settings) : chrome.i18n.getUILanguage().replace("_", "-");
+  document.documentElement.lang = lang === "pt-BR" ? "pt-BR" : "en";
   document.title = chrome.i18n.getMessage("popupTitle");
   document.querySelectorAll("[data-i18n]").forEach((node) => {
     const key = node.getAttribute("data-i18n");
-    const message = chrome.i18n.getMessage(key);
+    const message = i18n ? i18n.getMessage(key, [], settings) : chrome.i18n.getMessage(key);
     if (message) {
       node.textContent = message;
     }
   });
   document.querySelectorAll("[data-i18n-placeholder]").forEach((node) => {
     const key = node.getAttribute("data-i18n-placeholder");
-    const message = chrome.i18n.getMessage(key);
+    const message = i18n ? i18n.getMessage(key, [], settings) : chrome.i18n.getMessage(key);
     if (message) {
       node.placeholder = message;
     }
@@ -182,9 +185,11 @@ function localize() {
 }
 
 async function init() {
-  localize();
-
   const [settings, activeTab] = await Promise.all([readSettings(), queryActiveTab()]);
+  localize(settings);
+
+  const i18n = globalThis.AceitaTempoI18n;
+  const effectiveLang = i18n ? i18n.getEffectiveLanguage(settings) : chrome.i18n.getUILanguage();
   let socialCounterIntervalId = null;
   const refreshSocialCounter = async () => {
     const popupStatus = await resolvePopupStatus(activeTab);
@@ -260,11 +265,22 @@ async function init() {
       return;
     }
 
-    const locale = chrome.i18n.getUILanguage();
+    const locale = effectiveLang;
     const timeText = priceUtils.formatWorkDurationShort(duration, settings, locale);
     calcTime.textContent = timeText;
     calcResult.hidden = false;
   });
+
+  const langSelect = document.getElementById("popupLangSelect");
+  if (langSelect) {
+    langSelect.value = settings.language || "auto";
+    langSelect.addEventListener("change", async () => {
+      const area = getStorageArea();
+      if (!area) return;
+      await new Promise((resolve) => area.set({ language: langSelect.value }, resolve));
+      localize({ ...settings, language: langSelect.value });
+    });
+  }
 }
 
 init();

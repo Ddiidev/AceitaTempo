@@ -469,5 +469,11 @@
   },
   "onboardingHowItWorksFree": {
     "message": "A ferramenta é 100% gratuita. Você usa normalmente, sem nenhuma obrigação de apoiar."
+  },
+  "languageLabel": {
+    "message": "Idioma"
+  },
+  "languageAuto": {
+    "message": "Automático (idioma do navegador)"
   }
 }

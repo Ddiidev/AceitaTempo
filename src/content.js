@@ -45,6 +45,7 @@
     'socialReflectionEnabled',
     'socialMonetaryOptIn',
     'easterEggJuliusEnabled',
+    'language',
   ];
   const GENERIC_SCOPE_SELECTORS = SiteConfig.productScopeSelectors || [];
   const NOISE_TEXT_PATTERN = /(shipping|delivery|coupon|save\s+\d+%|frete|cupom|parcelad|sem juros|bought|reviews?|avalia|termina em|off\b|pix\b)/i;
@@ -145,6 +146,7 @@
       easterEggJuliusEnabled: isTruthySetting(raw.easterEggJuliusEnabled ?? true),
       affiliateEnabled: isTruthySetting(raw.affiliateEnabled ?? true),
       affiliateDisabledStores: Array.isArray(raw.affiliateDisabledStores) ? raw.affiliateDisabledStores.map((v) => String(v)) : [],
+      language: ['auto', 'pt-BR', 'en'].includes(String(raw.language || '')) ? String(raw.language) : 'auto',
     };
   }
 
@@ -226,6 +228,10 @@
   }
 
   function getLocale() {
+    const i18n = globalObj.AceitaTempoI18n;
+    if (i18n && state.settings) {
+      return i18n.getEffectiveLanguage(state.settings);
+    }
     return String((document.documentElement && document.documentElement.lang) || navigator.language || state.locale || 'en-US');
   }
 
