@@ -56,6 +56,70 @@ const ACTION_LABEL_KEYS = {
 const $ = (id) => document.getElementById(id);
 let feedbackHideTimer = null;
 
+const LANG_META = {
+  auto: { key: "languageAuto", value: "auto" },
+  "pt-BR": { key: null, value: "pt-BR", label: "Português (BR)" },
+  en: { key: null, value: "en", label: "English" },
+};
+
+function getLangDropdownValue(root) {
+  const active = root.querySelector(".lang-option.is-active");
+  return active ? active.dataset.value : "auto";
+}
+
+function getLangLabel(pref) {
+  const meta = LANG_META[pref] || LANG_META["auto"];
+  if (meta.key) {
+    return chrome.i18n?.getMessage?.(meta.key) || "Automatic";
+  }
+  return meta.label;
+}
+
+function setLangDropdownValue(root, value) {
+  const btn = root.querySelector(".lang-trigger");
+  if (btn) btn.textContent = getLangLabel(value);
+  root.querySelectorAll(".lang-option").forEach((opt) => {
+    const selected = opt.dataset.value === value;
+    opt.setAttribute("aria-selected", selected ? "true" : "false");
+    opt.classList.toggle("is-active", selected);
+  });
+}
+
+function initLangDropdown(root, onChange) {
+  setLangDropdownValue(root, getLangDropdownValue(root) || "auto");
+  const btn = root.querySelector(".lang-trigger");
+  const menu = root.querySelector(".lang-menu");
+  if (!btn || !menu) return;
+
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const open = root.classList.toggle("is-open");
+    btn.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+  menu.addEventListener("click", (e) => {
+    const opt = e.target.closest(".lang-option");
+    if (!opt) return;
+    const value = opt.dataset.value;
+    setLangDropdownValue(root, value);
+    root.classList.remove("is-open");
+    btn.setAttribute("aria-expanded", "false");
+    if (onChange) onChange(value);
+  });
+  document.addEventListener("click", (e) => {
+    if (!root.contains(e.target)) {
+      root.classList.remove("is-open");
+      btn.setAttribute("aria-expanded", "false");
+    }
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && root.classList.contains("is-open")) {
+      root.classList.remove("is-open");
+      btn.setAttribute("aria-expanded", "false");
+      btn.focus();
+    }
+  });
+}
+
 function getStorageArea() {
   return chrome.storage?.sync ?? chrome.storage?.local;
 }
@@ -183,7 +247,7 @@ function fillForm(settings) {
   $("socialReflectionEnabled").checked = settings.socialReflectionEnabled;
   $("socialMonetaryOptIn").checked = settings.socialMonetaryOptIn;
   if ($("easterEggJuliusEnabled")) $("easterEggJuliusEnabled").checked = settings.easterEggJuliusEnabled;
-  if ($("language")) $("language").value = settings.language || "auto";
+  if ($("language")) setLangDropdownValue($("language"), settings.language || "auto");
 
   updateExtendedTimeUI(settings.extendedTimeDisplay);
   updateWageModeUI(settings.wageMode);
@@ -504,6 +568,20 @@ function localize(settings) {
       node.textContent = message;
     }
   });
+
+  document.querySelectorAll("[data-i18n-aria-label]").forEach((node) => {
+    const key = node.getAttribute("data-i18n-aria-label");
+    const message = i18n ? i18n.getMessage(key, [], settings) : chrome.i18n.getMessage(key);
+    if (message) {
+      node.setAttribute("aria-label", message);
+    }
+  });
+
+  const langRoot = $("language");
+  if (langRoot) {
+    const currentVal = getLangDropdownValue(langRoot);
+    setLangDropdownValue(langRoot, currentVal);
+  }
 }
 
 async function init() {
@@ -562,10 +640,10 @@ async function init() {
     $("manualUsdToBrlRate").disabled = $("exchangeRateMode").value !== "manual";
   });
 
-  const langSelect = $("language");
-  if (langSelect) {
-    langSelect.addEventListener("change", () => {
-      localize({ ...settings, language: langSelect.value });
+  const langRoot = $("language");
+  if (langRoot) {
+    initLangDropdown(langRoot, (value) => {
+      localize({ ...settings, language: value });
     });
   }
 
@@ -620,7 +698,7 @@ async function init() {
       affiliateDisabledStores: Array.from(document.querySelectorAll("[data-affiliate-site-id]"))
         .filter((input) => !input.checked)
         .map((input) => input.getAttribute("data-affiliate-site-id")),
-      language: $("language") ? $("language").value : "auto",
+      language: $("language") ? getLangDropdownValue($("language")) : "auto",
     });
 
     if (payload.exchangeRateMode === "manual" && payload.manualUsdToBrlRate <= 0) {

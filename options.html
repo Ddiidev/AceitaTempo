@@ -131,11 +131,23 @@
               <div class="grid settings-section__grid">
                 <label class="field">
                   <span data-i18n="languageLabel"></span>
-                  <select id="language" name="language">
-                    <option value="auto" data-i18n="languageAuto"></option>
-                    <option value="pt-BR">Português (BR)</option>
-                    <option value="en">English</option>
-                  </select>
+                  <span class="lang-selector" id="language">
+                    <button type="button" class="lang-trigger" aria-haspopup="listbox" aria-expanded="false" data-i18n-aria-label="languageLabel" aria-label="Idioma">Automático</button>
+                    <span class="lang-menu" role="listbox" data-i18n-aria-label="languageLabel" aria-label="Idioma">
+                      <button type="button" class="lang-option" role="option" data-value="auto">
+                        <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span data-i18n="languageAuto"></span>
+                      </button>
+                      <button type="button" class="lang-option" role="option" data-value="pt-BR">
+                        <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span>Português (BR)</span>
+                      </button>
+                      <button type="button" class="lang-option" role="option" data-value="en">
+                        <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span>English</span>
+                      </button>
+                    </span>
+                  </span>
                 </label>
 
                 <label class="field">

@@ -8,9 +8,22 @@
   </head>
   <body>
     <main class="onboarding shell">
-      <div class="lang-picker" id="langPicker">
-        <button type="button" class="lang-btn" data-lang="pt-BR">PT</button>
-        <button type="button" class="lang-btn" data-lang="en">EN</button>
+      <div class="lang-selector" id="langPicker">
+        <button type="button" class="lang-trigger" aria-haspopup="listbox" aria-expanded="false" data-i18n-aria-label="languageLabel" aria-label="Idioma">Automático</button>
+        <span class="lang-menu" role="listbox" data-i18n-aria-label="languageLabel" aria-label="Idioma">
+          <button type="button" class="lang-option" role="option" data-lang="auto">
+            <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span data-i18n="languageAuto"></span>
+          </button>
+          <button type="button" class="lang-option" role="option" data-lang="pt-BR">
+            <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Português</span>
+          </button>
+          <button type="button" class="lang-option" role="option" data-lang="en">
+            <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>English</span>
+          </button>
+        </span>
       </div>
 
       <section class="hero">

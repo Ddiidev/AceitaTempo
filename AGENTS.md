@@ -35,6 +35,13 @@
   - AliExpress e Shopee ficam cadastrados em `src/affiliate.js`, mas com `active: false` até existir API/deeplink oficial adequado para geração sob demanda.
   - Links de cadastro nos programas: `.plans/20260626-143200-a1b2c3-monetizacao-afiliacao-pix/afiliados-links.md`.
 
+- **i18n da landing page/docs** (2026-07): seletor manual de idioma nas páginas `docs/` (index, support, privacy-policy).
+  - Módulo `docs/assets/i18n.js`: dicionários PT-BR/EN embutidos, detecção automática via `navigator.language`, persistência em `localStorage` (`aceitaTempo_docs_lang`), atributos `data-i18n`, `data-i18n-html`, `data-i18n-aria-label`, `data-i18n-alt`.
+  - Seletor `<select id="lang-select">` na topbar de todas as páginas docs, com opções Auto/PT/EN.
+  - Default: `auto` (detecta pelo navegador). Links da Chrome Web Store recebem `hl` conforme idioma ativo.
+  - Script carregado antes do script inline em cada página; aplica traduções no `DOMContentLoaded`.
+  - Validação de chaves: todas as chaves `data-i18n` das 3 páginas existem em ambos os dicionários.
+
 ## Regras globais
 
 - **Nunca** adicionar Codex como co-author em commits.

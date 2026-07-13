@@ -57,8 +57,37 @@
     return storageSet(area, nextValues);
   }
 
+  let langPref = 'auto';
   let currentLang = ExtensionApi.i18n?.getUILanguage?.().startsWith('pt') ? 'pt-BR' : 'en';
   const messageCache = { 'pt-BR': null, en: null };
+
+  function resolveLang(pref) {
+    if (pref === 'pt-BR' || pref === 'en') return pref;
+    return ExtensionApi.i18n?.getUILanguage?.().startsWith('pt') ? 'pt-BR' : 'en';
+  }
+
+  const LANG_META = {
+    auto: { key: 'languageAuto', value: 'auto' },
+    'pt-BR': { key: null, value: 'pt-BR', label: 'Português' },
+    en: { key: null, value: 'en', label: 'English' },
+  };
+
+  function getLangLabel(pref) {
+    const meta = LANG_META[pref];
+    if (!meta) return pref;
+    if (meta.key) return t(meta.key);
+    return meta.label;
+  }
+
+  function syncLangDropdown(root) {
+    const btn = root.querySelector('.lang-trigger');
+    if (btn) btn.textContent = getLangLabel(langPref);
+    root.querySelectorAll('.lang-option').forEach((opt) => {
+      const selected = opt.dataset.lang === langPref;
+      opt.setAttribute('aria-selected', selected ? 'true' : 'false');
+      opt.classList.toggle('is-active', selected);
+    });
+  }
 
   async function loadMessages(lang) {
     const localeDir = lang === 'pt-BR' ? 'pt_BR' : 'en';
@@ -92,6 +121,13 @@
       const message = t(key);
       if (message) {
         node.textContent = message;
+      }
+    });
+    document.querySelectorAll('[data-i18n-aria-label]').forEach((node) => {
+      const key = node.getAttribute('data-i18n-aria-label');
+      const message = t(key);
+      if (message) {
+        node.setAttribute('aria-label', message);
       }
     });
   }
@@ -183,19 +219,45 @@
   }
 
   function bindLangPicker() {
-    const picker = document.getElementById('langPicker');
-    if (!picker) return;
-    picker.querySelectorAll('[data-lang]').forEach((btn) => {
-      btn.setAttribute('aria-pressed', btn.dataset.lang === currentLang ? 'true' : 'false');
-      btn.addEventListener('click', async () => {
-        currentLang = btn.dataset.lang;
-        picker.querySelectorAll('[data-lang]').forEach((b) => {
-          b.setAttribute('aria-pressed', b.dataset.lang === currentLang ? 'true' : 'false');
-        });
+    const root = document.getElementById('langPicker');
+    if (!root) return;
+
+    syncLangDropdown(root);
+
+    const btn = root.querySelector('.lang-trigger');
+    const menu = root.querySelector('.lang-menu');
+
+    if (btn && menu) {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const open = root.classList.toggle('is-open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      menu.addEventListener('click', async (e) => {
+        const opt = e.target.closest('.lang-option');
+        if (!opt) return;
+        langPref = opt.dataset.lang;
+        currentLang = resolveLang(langPref);
         await loadMessages(currentLang);
         localize();
+        syncLangDropdown(root);
+        root.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
       });
-    });
+      document.addEventListener('click', (e) => {
+        if (!root.contains(e.target)) {
+          root.classList.remove('is-open');
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && root.classList.contains('is-open')) {
+          root.classList.remove('is-open');
+          btn.setAttribute('aria-expanded', 'false');
+          btn.focus();
+        }
+      });
+    }
   }
 
   function bind() {

@@ -3,9 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AceitaTempo: Política de Privacidade</title>
+    <title data-i18n="_title_privacy">AceitaTempo: Política de Privacidade</title>
     <meta
       name="description"
+      data-i18n="_desc_privacy"
       content="Política de privacidade do AceitaTempo com resumo dos dados usados, tratamento local no navegador e consulta opcional de câmbio."
     />
     <meta name="theme-color" content="#f4efe7" />
@@ -109,6 +110,94 @@
         font-weight: 600;
         color: var(--muted);
         cursor: pointer;
+      }
+
+      .lang-selector {
+        display: inline-flex;
+        align-items: center;
+        position: relative;
+      }
+      .lang-trigger {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--muted);
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-pill);
+        padding: 8px 12px 8px 32px;
+        cursor: pointer;
+        position: relative;
+        background-image:
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b625a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M2 12h20'/%3E%3Cpath d='M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: left 10px center;
+      }
+      .lang-trigger::after {
+        content: "";
+        width: 10px;
+        height: 10px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b625a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: center;
+        transition: transform 0.15s ease;
+      }
+      .lang-selector.is-open .lang-trigger::after { transform: rotate(180deg); }
+      .lang-trigger:focus-visible { outline: 3px solid var(--accent); outline-offset: 1px; }
+      .lang-menu {
+        position: absolute;
+        top: calc(100% + 6px);
+        right: 0;
+        min-width: 160px;
+        display: none;
+        flex-direction: column;
+        gap: 2px;
+        padding: 6px;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        box-shadow: var(--shadow);
+        z-index: 60;
+      }
+      .lang-selector.is-open .lang-menu { display: flex; }
+      .lang-option {
+        padding: 8px 12px;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+        background: transparent;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        text-align: left;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .lang-option:hover, .lang-option:focus-visible { background: var(--accent-soft); color: var(--accent-dark); }
+      .lang-option.is-active { font-weight: 700; color: var(--accent-dark); }
+      .lang-option .check {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+        opacity: 0;
+      }
+      .lang-option.is-active .check { opacity: 1; }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0,0,0,0);
+        white-space: nowrap;
+        border: 0;
       }
 
       .button {
@@ -293,6 +382,8 @@
         }
         .nav.is-open { display: flex; }
         .nav a { justify-content: center; padding: 12px; }
+        .lang-selector { justify-content: center; padding: 8px 12px; position: relative; }
+        .lang-trigger { width: 100%; justify-content: center; }
         .page-hero { padding: 28px 0 36px; }
         .page-hero__actions { flex-direction: column; align-items: stretch; }
         .button { width: 100%; }
@@ -305,15 +396,32 @@
     <header class="header">
       <div class="container">
         <div class="topbar">
-          <a class="brand" href="./index.html" aria-label="AceitaTempo">
+          <a class="brand" href="./index.html" data-i18n-aria-label="brandAria" aria-label="AceitaTempo">
             <img src="./assets/logo.svg" alt="Logo do AceitaTempo" />
           </a>
-          <button class="menu-btn" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menu">Menu</button>
+          <button class="menu-btn" type="button" aria-expanded="false" aria-controls="main-nav" data-i18n="menuLabel" aria-label="Abrir menu">Menu</button>
           <nav class="nav" id="main-nav" aria-label="Navegação principal">
-            <a href="./index.html">Início</a>
-            <a href="./privacy-policy.html" aria-current="page">Privacidade</a>
-            <a href="./support.html">Suporte</a>
-            <a class="nav-cta" id="install-cta" href="https://chromewebstore.google.com/detail/aceitatempo/goekoeckmpmapdcdgldkimhjohfmpoce?hl=pt-BR" target="_blank" rel="noopener noreferrer">Instalar</a>
+            <a href="./index.html" data-i18n="navHome">Início</a>
+            <a href="./privacy-policy.html" aria-current="page" data-i18n="navPrivacy">Privacidade</a>
+            <a href="./support.html" data-i18n="navSupport">Suporte</a>
+            <span class="lang-selector" id="lang-select">
+              <button type="button" class="lang-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Idioma" data-i18n-aria-label="langLabel">Automático</button>
+              <span class="lang-menu" role="listbox" aria-label="Idioma">
+                <button type="button" class="lang-option" role="option" data-value="auto">
+                  <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span data-i18n="langAuto">Automático</span>
+                </button>
+                <button type="button" class="lang-option" role="option" data-value="pt-BR">
+                  <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span data-i18n="langPt">Português</span>
+                </button>
+                <button type="button" class="lang-option" role="option" data-value="en">
+                  <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span data-i18n="langEn">English</span>
+                </button>
+              </span>
+            </span>
+            <a class="nav-cta" id="install-cta" href="https://chromewebstore.google.com/detail/aceitatempo/goekoeckmpmapdcdgldkimhjohfmpoce?hl=pt-BR" target="_blank" rel="noopener noreferrer" data-i18n="navInstall">Instalar</a>
           </nav>
         </div>
       </div>
@@ -322,15 +430,15 @@
     <main>
       <section class="page-hero">
         <div class="container">
-          <span class="eyebrow">Privacidade</span>
-          <h1>Política de Privacidade do AceitaTempo</h1>
-          <p>
+          <span class="eyebrow" data-i18n="ppEyebrow">Privacidade</span>
+          <h1 data-i18n="ppHeroTitle">Política de Privacidade do AceitaTempo</h1>
+          <p data-i18n="ppHeroBody">
             O AceitaTempo foi projetado para calcular tudo no próprio navegador sempre que possível.
             Esta página resume quais dados entram no cálculo e como eles são tratados.
           </p>
           <div class="page-hero__actions">
-            <a class="button button-secondary" href="./support.html">Ir para o suporte</a>
-            <a class="button button-secondary" href="./index.html">Voltar para a página inicial</a>
+            <a class="button button-secondary" href="./support.html" data-i18n="ppActionSupport">Ir para o suporte</a>
+            <a class="button button-secondary" href="./index.html" data-i18n="ppActionHome">Voltar para a página inicial</a>
           </div>
         </div>
       </section>
@@ -339,20 +447,20 @@
         <div class="container">
           <div class="facts">
             <article class="card">
-              <span class="fact-value">Local no navegador</span>
-              <p>Salário, horas trabalhadas, preferências e snapshots temporários da feature social ficam salvos no <code>chrome.storage</code>.</p>
+              <span class="fact-value" data-i18n="ppFact1Value">Local no navegador</span>
+              <p data-i18n="ppFact1Body">Salário, horas trabalhadas, preferências e snapshots temporários da feature social ficam salvos no <code>chrome.storage</code>.</p>
             </article>
             <article class="card">
-              <span class="fact-value">Sem backend próprio</span>
-              <p>O projeto não mantém servidor para armazenar ou comercializar dados de navegação.</p>
+              <span class="fact-value" data-i18n="ppFact2Value">Sem backend próprio</span>
+              <p data-i18n="ppFact2Body">O projeto não mantém servidor para armazenar ou comercializar dados de navegação.</p>
             </article>
             <article class="card">
-              <span class="fact-value">Câmbio opcional</span>
-              <p>A consulta externa acontece apenas para taxa USD/BRL quando o modo automático está ativo.</p>
+              <span class="fact-value" data-i18n="ppFact3Value">Câmbio opcional</span>
+              <p data-i18n="ppFact3Body">A consulta externa acontece apenas para taxa USD/BRL quando o modo automático está ativo.</p>
             </article>
             <article class="card">
-              <span class="fact-value">Afiliação transparente</span>
-              <p>Links afiliados são sugeridos apenas em lojas parceiras e só abrem quando você clica no botão de apoio.</p>
+              <span class="fact-value" data-i18n="ppFact4Value">Afiliação transparente</span>
+              <p data-i18n="ppFact4Body">Links afiliados são sugeridos apenas em lojas parceiras e só abrem quando você clica no botão de apoio.</p>
             </article>
           </div>
         </div>
@@ -361,64 +469,64 @@
       <section class="section">
         <div class="container">
           <div class="section-head">
-            <span class="eyebrow">Dados usados</span>
-            <h2>O necessário para calcular o tempo de trabalho</h2>
-            <p>Nada além do que for preciso para converter preços e respeitar as preferências definidas por você.</p>
+            <span class="eyebrow" data-i18n="ppDataEyebrow">Dados usados</span>
+            <h2 data-i18n="ppDataTitle">O necessário para calcular o tempo de trabalho</h2>
+            <p data-i18n="ppDataSubtitle">Nada além do que for preciso para converter preços e respeitar as preferências definidas por você.</p>
           </div>
 
           <div class="grid-2">
             <article class="card">
               <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M8.5 7.5c0-1.38 1.57-2.5 3.5-2.5s3.5 1.12 3.5 2.5S13.93 10 12 10 8.5 11.12 8.5 12.5 10.07 15 12 15s3.5 1.12 3.5 2.5S13.93 20 12 20s-3.5-1.12-3.5-2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
-              <h3>Configurações informadas por você</h3>
+              <h3 data-i18n="ppDataCard1Title">Configurações informadas por você</h3>
               <ul>
-                <li>Salário mensal</li>
-                <li>Horas trabalhadas por mês</li>
-                <li>Moeda selecionada</li>
+                <li data-i18n="ppDataCard1Item1">Salário mensal</li>
+                <li data-i18n="ppDataCard1Item2">Horas trabalhadas por mês</li>
+                <li data-i18n="ppDataCard1Item3">Moeda selecionada</li>
               </ul>
             </article>
             <article class="card">
               <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M7 4v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M17 4v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><rect x="4" y="6" width="16" height="14" rx="3" stroke="currentColor" stroke-width="1.8" /></svg>
-              <h3>Preferências de comportamento</h3>
+              <h3 data-i18n="ppDataCard2Title">Preferências de comportamento</h3>
               <ul>
-                <li>Substituir ou não preços por horas</li>
-                <li>Modo de câmbio automático ou manual</li>
-                <li>Ativação ou desativação por site</li>
-                <li>Check-ins opcionais em redes sociais e conversão monetária opt-in</li>
+                <li data-i18n="ppDataCard2Item1">Substituir ou não preços por horas</li>
+                <li data-i18n="ppDataCard2Item2">Modo de câmbio automático ou manual</li>
+                <li data-i18n="ppDataCard2Item3">Ativação ou desativação por site</li>
+                <li data-i18n="ppDataCard2Item4">Check-ins opcionais em redes sociais e conversão monetária opt-in</li>
               </ul>
             </article>
             <article class="card">
               <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M12 5v14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><rect x="3.5" y="3.5" width="17" height="17" rx="4" stroke="currentColor" stroke-width="1.8" /></svg>
-              <h3>Conteúdo visível da página</h3>
+              <h3 data-i18n="ppDataCard3Title">Conteúdo visível da página</h3>
               <ul>
-                <li>Preços exibidos</li>
-                <li>Totais de carrinho ou checkout</li>
-                <li>Contexto necessário para identificar o bloco correto</li>
+                <li data-i18n="ppDataCard3Item1">Preços exibidos</li>
+                <li data-i18n="ppDataCard3Item2">Totais de carrinho ou checkout</li>
+                <li data-i18n="ppDataCard3Item3">Contexto necessário para identificar o bloco correto</li>
               </ul>
             </article>
             <article class="card">
               <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12a8 8 0 1 0 16 0 8 8 0 1 0-16 0" stroke="currentColor" stroke-width="1.8" /><path d="M12 8v4l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
-              <h3>Taxa USD/BRL</h3>
+              <h3 data-i18n="ppDataCard4Title">Taxa USD/BRL</h3>
               <ul>
-                <li>Consultada apenas no modo automático</li>
-                <li>Fonte atual: <a href="https://open.er-api.com/" rel="noreferrer noopener" target="_blank">open.er-api.com</a></li>
+                <li data-i18n="ppDataCard4Item1">Consultada apenas no modo automático</li>
+                <li data-i18n-html="ppDataCard4Item2">Fonte atual: <a href="https://open.er-api.com/" rel="noreferrer noopener" target="_blank">open.er-api.com</a></li>
               </ul>
             </article>
             <article class="card">
               <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M8 8h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M8 16h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
-              <h3>Sessões sociais opcionais</h3>
+              <h3 data-i18n="ppDataCard5Title">Sessões sociais opcionais</h3>
               <ul>
-                <li>Guardam apenas tempo ativo, site monitorado e anotação opcional</li>
-                <li>Ficam em <code>chrome.storage.local</code> para retomar um resumo discreto ao voltar ao site</li>
-                <li>São temporárias e removidas após a reflexão final ou depois de 24 horas</li>
+                <li data-i18n="ppDataCard5Item1">Guardam apenas tempo ativo, site monitorado e anotação opcional</li>
+                <li data-i18n="ppDataCard5Item2">Ficam em <code>chrome.storage.local</code> para retomar um resumo discreto ao voltar ao site</li>
+                <li data-i18n="ppDataCard5Item3">São temporárias e removidas após a reflexão final ou depois de 24 horas</li>
               </ul>
             </article>
             <article class="card">
               <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2v20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M17 6H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
-              <h3>Apoio afiliado e Pix</h3>
+              <h3 data-i18n="ppDataCard6Title">Apoio afiliado e Pix</h3>
               <ul>
-                <li>Amazon, Mercado Livre e Instant Gaming usam códigos afiliados ativos nesta versão</li>
-                <li>AliExpress e Shopee ficam desativados até existir integração oficial adequada</li>
-                <li>O QR Code Pix é opcional e não transmite dados para o AceitaTempo</li>
+                <li data-i18n="ppDataCard6Item1">Amazon, Mercado Livre e Instant Gaming usam códigos afiliados ativos nesta versão</li>
+                <li data-i18n="ppDataCard6Item2">AliExpress e Shopee ficam desativados até existir integração oficial adequada</li>
+                <li data-i18n="ppDataCard6Item3">O QR Code Pix é opcional e não transmite dados para o AceitaTempo</li>
               </ul>
             </article>
           </div>
@@ -428,32 +536,32 @@
       <section class="section">
         <div class="container">
           <div class="section-head">
-            <span class="eyebrow">Tratamento dos dados</span>
-            <h2>Como essas informações são usadas</h2>
-            <p>O foco da extensão é calcular e exibir o equivalente em horas de trabalho, sem depender de infraestrutura própria.</p>
+            <span class="eyebrow" data-i18n="ppTreatmentEyebrow">Tratamento dos dados</span>
+            <h2 data-i18n="ppTreatmentTitle">Como essas informações são usadas</h2>
+            <p data-i18n="ppTreatmentSubtitle">O foco da extensão é calcular e exibir o equivalente em horas de trabalho, sem depender de infraestrutura própria.</p>
           </div>
 
           <div class="grid-3">
             <article class="card">
-              <h3>Armazenamento</h3>
-              <p>As preferências ficam salvas no navegador para que o cálculo continue consistente entre páginas e sessões. Se você ativar a feature social, snapshots temporários locais ajudam a retomar a reflexão final.</p>
+              <h3 data-i18n="ppTreatment1Title">Armazenamento</h3>
+              <p data-i18n="ppTreatment1Body">As preferências ficam salvas no navegador para que o cálculo continue consistente entre páginas e sessões. Se você ativar a feature social, snapshots temporários locais ajudam a retomar a reflexão final.</p>
             </article>
             <article class="card">
-              <h3>Processamento</h3>
-              <p>O conteúdo visível é processado localmente para localizar preços, entender contexto e gerar a conversão em horas. Nas redes sociais opcionais, a extensão mede apenas tempo ativo e o alinhamento informado por você.</p>
+              <h3 data-i18n="ppTreatment2Title">Processamento</h3>
+              <p data-i18n="ppTreatment2Body">O conteúdo visível é processado localmente para localizar preços, entender contexto e gerar a conversão em horas. Nas redes sociais opcionais, a extensão mede apenas tempo ativo e o alinhamento informado por você.</p>
             </article>
             <article class="card">
-              <h3>Compartilhamento</h3>
-              <p>O AceitaTempo não vende dados, não usa analytics próprios e não compartilha conteúdo das páginas para fins comerciais.</p>
+              <h3 data-i18n="ppTreatment3Title">Compartilhamento</h3>
+              <p data-i18n="ppTreatment3Body">O AceitaTempo não vende dados, não usa analytics próprios e não compartilha conteúdo das páginas para fins comerciais.</p>
             </article>
             <article class="card">
-              <h3>Afiliação e Pix</h3>
-              <p>Quando você escolhe apoiar por link afiliado, a extensão monta o link localmente e abre a loja parceira. No Pix, o pagamento acontece no seu app bancário.</p>
+              <h3 data-i18n="ppTreatment4Title">Afiliação e Pix</h3>
+              <p data-i18n="ppTreatment4Body">Quando você escolhe apoiar por link afiliado, a extensão monta o link localmente e abre a loja parceira. No Pix, o pagamento acontece no seu app bancário.</p>
             </article>
           </div>
 
           <div class="notice">
-            <p>Se o modo automático de câmbio estiver desativado, não há consulta externa de taxa USD/BRL. Links afiliados só são abertos por clique explícito no botão de apoio.</p>
+            <p data-i18n="ppNotice">Se o modo automático de câmbio estiver desativado, não há consulta externa de taxa USD/BRL. Links afiliados só são abertos por clique explícito no botão de apoio.</p>
           </div>
         </div>
       </section>
@@ -461,30 +569,30 @@
       <section class="section">
         <div class="container">
           <div class="section-head">
-            <span class="eyebrow">Contato</span>
-            <h2>Dúvidas sobre privacidade ou suporte?</h2>
-            <p>Se você precisar de ajuda adicional, use os canais abaixo.</p>
+            <span class="eyebrow" data-i18n="ppContactEyebrow">Contato</span>
+            <h2 data-i18n="ppContactTitle">Dúvidas sobre privacidade ou suporte?</h2>
+            <p data-i18n="ppContactSubtitle">Se você precisar de ajuda adicional, use os canais abaixo.</p>
           </div>
 
           <div class="grid-2">
             <article class="card">
-              <h3>Suporte</h3>
-              <p><a href="./support.html">Abrir página de suporte</a></p>
+              <h3 data-i18n="ppContactSupportTitle">Suporte</h3>
+              <p><a href="./support.html" data-i18n="ppContactSupportLink">Abrir página de suporte</a></p>
             </article>
             <article class="card">
-              <h3>Extensão</h3>
+              <h3 data-i18n="ppContactExtTitle">Extensão</h3>
               <p>
-                <a href="https://chromewebstore.google.com/detail/aceitatempo/goekoeckmpmapdcdgldkimhjohfmpoce?hl=pt-BR" target="_blank" rel="noopener noreferrer">Chrome Web Store</a> ·
-                <a href="https://addons.mozilla.org/pt-BR/firefox/addon/aceitatempo/" target="_blank" rel="noopener noreferrer">Firefox Add-ons</a>
+                <a href="https://chromewebstore.google.com/detail/aceitatempo/goekoeckmpmapdcdgldkimhjohfmpoce?hl=pt-BR" target="_blank" rel="noopener noreferrer" data-i18n="ppContactExtChrome">Chrome Web Store</a> ·
+                <a href="https://addons.mozilla.org/pt-BR/firefox/addon/aceitatempo/" target="_blank" rel="noopener noreferrer" data-i18n="ppContactExtFirefox">Firefox Add-ons</a>
               </p>
             </article>
             <article class="card">
-              <h3>Repositório</h3>
-              <p><a href="https://github.com/Ddiidev/AceitaTempo" target="_blank" rel="noopener noreferrer">Abrir repositório no GitHub</a></p>
+              <h3 data-i18n="ppContactRepoTitle">Repositório</h3>
+              <p><a href="https://github.com/Ddiidev/AceitaTempo" target="_blank" rel="noopener noreferrer" data-i18n="ppContactRepoLink">Abrir repositório no GitHub</a></p>
             </article>
             <article class="card">
-              <h3>Atualização desta política</h3>
-              <p>Última atualização: 19 de março de 2026.</p>
+              <h3 data-i18n="ppContactUpdateTitle">Atualização desta política</h3>
+              <p data-i18n="ppContactUpdateBody">Última atualização: 19 de março de 2026.</p>
             </article>
           </div>
         </div>
@@ -494,26 +602,35 @@
     <footer class="footer">
       <div class="container">
         <p>
-          AceitaTempo: extensão para Chrome e Firefox que converte preços em horas de trabalho.
-          <a href="./privacy-policy.html">Privacidade</a> · <a href="./support.html">Suporte</a>
+          <span data-i18n="footerText">AceitaTempo: extensão para Chrome e Firefox que converte preços em horas de trabalho.</span>
+          <a href="./privacy-policy.html" data-i18n="footerPrivacy">Privacidade</a> · <a href="./support.html" data-i18n="footerSupport">Suporte</a>
         </p>
       </div>
     </footer>
 
+    <script src="./assets/i18n.js"></script>
     <script>
       const menuBtn = document.querySelector('.menu-btn');
       const nav = document.querySelector('.nav');
+      function menuLabel(open) {
+        return open
+          ? (window.AceitaTempoDocsI18n?.t('menuClose') || 'Fechar')
+          : (window.AceitaTempoDocsI18n?.t('menuLabel') || 'Menu');
+      }
       menuBtn.addEventListener('click', () => {
         const open = nav.classList.toggle('is-open');
         menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-        menuBtn.textContent = open ? 'Fechar' : 'Menu';
+        menuBtn.textContent = menuLabel(open);
       });
       nav.querySelectorAll('a').forEach((link) => {
         link.addEventListener('click', () => {
           nav.classList.remove('is-open');
           menuBtn.setAttribute('aria-expanded', 'false');
-          menuBtn.textContent = 'Menu';
+          menuBtn.textContent = menuLabel(false);
         });
+      });
+      document.addEventListener('aceitatempo:langchange', () => {
+        menuBtn.textContent = menuLabel(nav.classList.contains('is-open'));
       });
 
       // Redireciona o botão "Instalar" para a loja do navegador do visitante

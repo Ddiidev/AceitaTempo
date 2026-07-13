@@ -4,8 +4,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AceitaTempo: Suporte</title>
-    <meta name="description" content="Página de suporte do AceitaTempo para Chrome e Firefox. Reporte bugs, sites sem cobertura e dúvidas de configuração." />
+    <title data-i18n="_title_support">AceitaTempo: Suporte</title>
+    <meta name="description" data-i18n="_desc_support" content="Página de suporte do AceitaTempo para Chrome e Firefox. Reporte bugs, sites sem cobertura e dúvidas de configuração." />
     <meta name="theme-color" content="#f4efe7" />
     <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
     <style>
@@ -107,6 +107,94 @@
         font-weight: 600;
         color: var(--muted);
         cursor: pointer;
+      }
+
+      .lang-selector {
+        display: inline-flex;
+        align-items: center;
+        position: relative;
+      }
+      .lang-trigger {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--muted);
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-pill);
+        padding: 8px 12px 8px 32px;
+        cursor: pointer;
+        position: relative;
+        background-image:
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b625a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M2 12h20'/%3E%3Cpath d='M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: left 10px center;
+      }
+      .lang-trigger::after {
+        content: "";
+        width: 10px;
+        height: 10px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b625a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: center;
+        transition: transform 0.15s ease;
+      }
+      .lang-selector.is-open .lang-trigger::after { transform: rotate(180deg); }
+      .lang-trigger:focus-visible { outline: 3px solid var(--accent); outline-offset: 1px; }
+      .lang-menu {
+        position: absolute;
+        top: calc(100% + 6px);
+        right: 0;
+        min-width: 160px;
+        display: none;
+        flex-direction: column;
+        gap: 2px;
+        padding: 6px;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        box-shadow: var(--shadow);
+        z-index: 60;
+      }
+      .lang-selector.is-open .lang-menu { display: flex; }
+      .lang-option {
+        padding: 8px 12px;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+        background: transparent;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        text-align: left;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .lang-option:hover, .lang-option:focus-visible { background: var(--accent-soft); color: var(--accent-dark); }
+      .lang-option.is-active { font-weight: 700; color: var(--accent-dark); }
+      .lang-option .check {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+        opacity: 0;
+      }
+      .lang-option.is-active .check { opacity: 1; }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0,0,0,0);
+        white-space: nowrap;
+        border: 0;
       }
 
       .button {
@@ -256,6 +344,8 @@
         }
         .nav.is-open { display: flex; }
         .nav a { justify-content: center; padding: 12px; }
+        .lang-selector { justify-content: center; padding: 8px 12px; position: relative; }
+        .lang-trigger { width: 100%; justify-content: center; }
         .page-hero { padding: 28px 0 36px; }
         .page-hero__actions { flex-direction: column; align-items: stretch; }
         .button { width: 100%; }
@@ -268,15 +358,32 @@
     <header class="header">
       <div class="container">
         <div class="topbar">
-          <a class="brand" href="./index.html" aria-label="AceitaTempo">
+          <a class="brand" href="./index.html" data-i18n-aria-label="brandAria" aria-label="AceitaTempo">
             <img src="./assets/logo.svg" alt="Logo do AceitaTempo" />
           </a>
-          <button class="menu-btn" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menu">Menu</button>
+          <button class="menu-btn" type="button" aria-expanded="false" aria-controls="main-nav" data-i18n="menuLabel" aria-label="Abrir menu">Menu</button>
           <nav class="nav" id="main-nav" aria-label="Navegação principal">
-            <a href="./index.html">Início</a>
-            <a href="./privacy-policy.html">Privacidade</a>
-            <a href="./support.html" aria-current="page">Suporte</a>
-            <a class="nav-cta" id="install-cta" href="https://chromewebstore.google.com/detail/aceitatempo/goekoeckmpmapdcdgldkimhjohfmpoce?hl=pt-BR" target="_blank" rel="noopener noreferrer">Instalar</a>
+            <a href="./index.html" data-i18n="navHome">Início</a>
+            <a href="./privacy-policy.html" data-i18n="navPrivacy">Privacidade</a>
+            <a href="./support.html" aria-current="page" data-i18n="navSupport">Suporte</a>
+            <span class="lang-selector" id="lang-select">
+              <button type="button" class="lang-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Idioma" data-i18n-aria-label="langLabel">Automático</button>
+              <span class="lang-menu" role="listbox" aria-label="Idioma">
+                <button type="button" class="lang-option" role="option" data-value="auto">
+                  <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span data-i18n="langAuto">Automático</span>
+                </button>
+                <button type="button" class="lang-option" role="option" data-value="pt-BR">
+                  <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span data-i18n="langPt">Português</span>
+                </button>
+                <button type="button" class="lang-option" role="option" data-value="en">
+                  <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span data-i18n="langEn">English</span>
+                </button>
+              </span>
+            </span>
+            <a class="nav-cta" id="install-cta" href="https://chromewebstore.google.com/detail/aceitatempo/goekoeckmpmapdcdgldkimhjohfmpoce?hl=pt-BR" target="_blank" rel="noopener noreferrer" data-i18n="navInstall">Instalar</a>
           </nav>
         </div>
       </div>
@@ -285,15 +392,15 @@
     <main>
       <section class="page-hero">
         <div class="container">
-          <span class="eyebrow">Suporte</span>
-          <h1>Precisa de ajuda com o AceitaTempo?</h1>
-          <p>
+          <span class="eyebrow" data-i18n="supportEyebrow">Suporte</span>
+          <h1 data-i18n="supportHeroTitle">Precisa de ajuda com o AceitaTempo?</h1>
+          <p data-i18n="supportHeroBody">
             Se um site não estiver sendo convertido, se algo parecer quebrado ou se você tiver dúvida sobre configuração,
             aqui estão os caminhos mais rápidos para resolver.
           </p>
           <div class="page-hero__actions">
-            <a class="button button-primary" href="https://github.com/Ddiidev/AceitaTempo/issues" target="_blank" rel="noopener noreferrer">Abrir issue no GitHub</a>
-            <a class="button button-secondary" href="./index.html">Voltar para a página inicial</a>
+            <a class="button button-primary" href="https://github.com/Ddiidev/AceitaTempo/issues" target="_blank" rel="noopener noreferrer" data-i18n="supportActionGithub">Abrir issue no GitHub</a>
+            <a class="button button-secondary" href="./index.html" data-i18n="supportActionBack">Voltar para a página inicial</a>
           </div>
         </div>
       </section>
@@ -303,18 +410,18 @@
           <div class="grid-3">
             <article class="card">
               <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M12 4v16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><rect x="3.5" y="3.5" width="17" height="17" rx="4" stroke="currentColor" stroke-width="1.8" /></svg>
-              <h3>Site sem badge?</h3>
-              <p>Envie a URL da página, um print do preço e, se puder, o trecho de HTML correspondente.</p>
+              <h3 data-i18n="supportCard1Title">Site sem badge?</h3>
+              <p data-i18n="supportCard1Body">Envie a URL da página, um print do preço e, se puder, o trecho de HTML correspondente.</p>
             </article>
             <article class="card">
               <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 8v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><circle cx="12" cy="16.5" r="1" fill="currentColor" /><path d="M10.29 3.86 1.82 18A2 2 0 0 0 3.53 21h16.94a2 2 0 0 0 1.71-3l-8.47-14.14a2 2 0 0 0-3.42 0Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" /></svg>
-              <h3>Bug visual?</h3>
-              <p>Informe a página exata, o tamanho da janela e o que deveria aparecer para facilitar a reprodução.</p>
+              <h3 data-i18n="supportCard2Title">Bug visual?</h3>
+              <p data-i18n="supportCard2Body">Informe a página exata, o tamanho da janela e o que deveria aparecer para facilitar a reprodução.</p>
             </article>
             <article class="card">
               <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M12 17v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M4.93 4.93l2.83 2.83" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M16.24 16.24l2.83 2.83" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M3 12h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M17 12h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M4.93 19.07l2.83-2.83" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M16.24 7.76l2.83-2.83" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8" /></svg>
-              <h3>Dúvida nas opções?</h3>
-              <p>Vale enviar também como seu salário, moeda e horas mensais estão configurados nas opções.</p>
+              <h3 data-i18n="supportCard3Title">Dúvida nas opções?</h3>
+              <p data-i18n="supportCard3Body">Vale enviar também como seu salário, moeda e horas mensais estão configurados nas opções.</p>
             </article>
           </div>
         </div>
@@ -324,24 +431,24 @@
         <div class="container">
           <div class="grid-2">
             <article class="card">
-              <h3>Por que não aparece em um site específico?</h3>
-              <p>Alguns sites mudam o layout com frequência ou carregam preços de forma dinâmica. Um print do trecho do preço costuma acelerar bastante a correção.</p>
+              <h3 data-i18n="supportFaq1Title">Por que não aparece em um site específico?</h3>
+              <p data-i18n="supportFaq1Body">Alguns sites mudam o layout com frequência ou carregam preços de forma dinâmica. Um print do trecho do preço costuma acelerar bastante a correção.</p>
             </article>
             <article class="card">
-              <h3>Como desativo em um site?</h3>
-              <p>Abra as opções da extensão e ajuste o comportamento por site. Se a loja estiver listada, você pode desligá-la manualmente.</p>
+              <h3 data-i18n="supportFaq2Title">Como desativo em um site?</h3>
+              <p data-i18n="supportFaq2Body">Abra as opções da extensão e ajuste o comportamento por site. Se a loja estiver listada, você pode desligá-la manualmente.</p>
             </article>
             <article class="card">
-              <h3>Onde ficam as configurações?</h3>
-              <p>As preferências ficam no <code>chrome.storage</code> do navegador. Dependendo da sua conta, elas podem sincronizar entre dispositivos.</p>
+              <h3 data-i18n="supportFaq3Title">Onde ficam as configurações?</h3>
+              <p data-i18n="supportFaq3Body">As preferências ficam no <code>chrome.storage</code> do navegador. Dependendo da sua conta, elas podem sincronizar entre dispositivos.</p>
             </article>
             <article class="card">
-              <h3>O que enviar em um reporte?</h3>
-              <p>URL, print da página, resolução da janela e uma descrição curta do que deveria acontecer já ajudam muito.</p>
+              <h3 data-i18n="supportFaq4Title">O que enviar em um reporte?</h3>
+              <p data-i18n="supportFaq4Body">URL, print da página, resolução da janela e uma descrição curta do que deveria acontecer já ajudam muito.</p>
             </article>
           </div>
           <div class="notice">
-            <p>Se o problema estiver em um carrinho ou checkout, inclua também o total exibido na página. Isso ajuda a validar se o cálculo foi aplicado no bloco certo.</p>
+            <p data-i18n="supportNotice">Se o problema estiver em um carrinho ou checkout, inclua também o total exibido na página. Isso ajuda a validar se o cálculo foi aplicado no bloco certo.</p>
           </div>
         </div>
       </section>
@@ -350,22 +457,22 @@
         <div class="container">
           <div class="grid-2">
             <article class="card">
-              <h3>Projeto</h3>
-              <p><a href="https://github.com/Ddiidev/AceitaTempo" target="_blank" rel="noopener noreferrer">Abrir repositório no GitHub</a></p>
+              <h3 data-i18n="supportProjectTitle">Projeto</h3>
+              <p><a href="https://github.com/Ddiidev/AceitaTempo" target="_blank" rel="noopener noreferrer" data-i18n="supportProjectLink">Abrir repositório no GitHub</a></p>
             </article>
             <article class="card">
-              <h3>Reporte</h3>
-              <p><a href="https://github.com/Ddiidev/AceitaTempo/issues" target="_blank" rel="noopener noreferrer">Abrir issue de suporte</a></p>
+              <h3 data-i18n="supportReportTitle">Reporte</h3>
+              <p><a href="https://github.com/Ddiidev/AceitaTempo/issues" target="_blank" rel="noopener noreferrer" data-i18n="supportReportLink">Abrir issue de suporte</a></p>
             </article>
             <article class="card">
-              <h3>Privacidade</h3>
-              <p><a href="./privacy-policy.html">Ler a política de privacidade</a></p>
+              <h3 data-i18n="supportPrivacyCardTitle">Privacidade</h3>
+              <p><a href="./privacy-policy.html" data-i18n="supportPrivacyCardLink">Ler a política de privacidade</a></p>
             </article>
             <article class="card">
-              <h3>Extensão</h3>
+              <h3 data-i18n="supportExtTitle">Extensão</h3>
               <p>
-                <a href="https://chromewebstore.google.com/detail/aceitatempo/goekoeckmpmapdcdgldkimhjohfmpoce?hl=pt-BR" target="_blank" rel="noopener noreferrer">Chrome Web Store</a> ·
-                <a href="https://addons.mozilla.org/pt-BR/firefox/addon/aceitatempo/" target="_blank" rel="noopener noreferrer">Firefox Add-ons</a>
+                <a href="https://chromewebstore.google.com/detail/aceitatempo/goekoeckmpmapdcdgldkimhjohfmpoce?hl=pt-BR" target="_blank" rel="noopener noreferrer" data-i18n="supportExtChrome">Chrome Web Store</a> ·
+                <a href="https://addons.mozilla.org/pt-BR/firefox/addon/aceitatempo/" target="_blank" rel="noopener noreferrer" data-i18n="supportExtFirefox">Firefox Add-ons</a>
               </p>
             </article>
           </div>
@@ -376,26 +483,35 @@
     <footer class="footer">
       <div class="container">
         <p>
-          AceitaTempo: extensão para Chrome e Firefox que converte preços em horas de trabalho.
-          <a href="./privacy-policy.html">Privacidade</a> · <a href="./support.html">Suporte</a>
+          <span data-i18n="footerText">AceitaTempo: extensão para Chrome e Firefox que converte preços em horas de trabalho.</span>
+          <a href="./privacy-policy.html" data-i18n="footerPrivacy">Privacidade</a> · <a href="./support.html" data-i18n="footerSupport">Suporte</a>
         </p>
       </div>
     </footer>
 
+    <script src="./assets/i18n.js"></script>
     <script>
       const menuBtn = document.querySelector('.menu-btn');
       const nav = document.querySelector('.nav');
+      function menuLabel(open) {
+        return open
+          ? (window.AceitaTempoDocsI18n?.t('menuClose') || 'Fechar')
+          : (window.AceitaTempoDocsI18n?.t('menuLabel') || 'Menu');
+      }
       menuBtn.addEventListener('click', () => {
         const open = nav.classList.toggle('is-open');
         menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-        menuBtn.textContent = open ? 'Fechar' : 'Menu';
+        menuBtn.textContent = menuLabel(open);
       });
       nav.querySelectorAll('a').forEach((link) => {
         link.addEventListener('click', () => {
           nav.classList.remove('is-open');
           menuBtn.setAttribute('aria-expanded', 'false');
-          menuBtn.textContent = 'Menu';
+          menuBtn.textContent = menuLabel(false);
         });
+      });
+      document.addEventListener('aceitatempo:langchange', () => {
+        menuBtn.textContent = menuLabel(nav.classList.contains('is-open'));
       });
 
       // Redireciona o botão "Instalar" para a loja do navegador do visitante
