@@ -11,7 +11,7 @@
     "128": "icons/icon-128.png"
   },
   "permissions": ["storage", "alarms", "tabs"],
-  "host_permissions": ["https://open.er-api.com/*"],
+  "host_permissions": ["https://open.er-api.com/*", "https://aceitatempoapi.netlify.app/*"],
   "background": {
     "service_worker": "background.js"
   },

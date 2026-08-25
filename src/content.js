@@ -2058,7 +2058,7 @@
  function urlAlreadyHasAffiliateTag() {
    const siteId = state.siteConfig?.siteId;
    const store = Affiliate?.getAffiliateStore?.(siteId);
-   if (!store) return false;
+   if (!store || !store.params) return false;
    try {
      const url = new URL(location.href);
      return Object.keys(store.params).every((key) => url.searchParams.has(key));
@@ -2165,13 +2165,30 @@
    supportBtn.className = 'aceita-tempo-toast__btn aceita-tempo-toast__btn--primary';
     supportBtn.type = 'button';
     supportBtn.textContent = getAffiliateToastMessage('affiliateToastSupport');
-    supportBtn.addEventListener('click', () => {
+    supportBtn.addEventListener('click', async () => {
+      if (supportBtn.disabled) {
+        return;
+      }
       const siteId = state.siteConfig?.siteId;
-      const url = Affiliate?.buildAffiliateUrl?.(location.href, siteId);
+      const originalLabel = supportBtn.textContent;
+      supportBtn.disabled = true;
+      supportBtn.textContent = '...';
+
+      let url = null;
+      try {
+        url = await Affiliate?.getAffiliateRedirectUrl?.(location.href, siteId);
+      } catch {
+        url = null;
+      }
+
       if (url && url !== location.href) {
         markAffiliateToastShown();
         window.location.assign(url);
+        return;
       }
+
+      supportBtn.disabled = false;
+      supportBtn.textContent = originalLabel;
     });
 
     const dismissBtn = document.createElement('button');

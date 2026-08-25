@@ -4,6 +4,8 @@
     return;
   }
 
+  const LOMADEE_LINK_TIMEOUT_MS = 4000;
+
   const AFFILIATE_STORES = [
     {
       siteId: 'amazon',
@@ -17,17 +19,14 @@
       params: { aff_fbid: 'aceitatempo' },
       active: false,
     },
-    {
-      siteId: 'shopee',
-      name: 'Shopee',
-      params: { af_siteid: 'aceitatempo' },
-      active: false,
-    },
+    // Mercado Livre nao tem parametro de URL de auto-atribuicao (o `af_id`
+    // que existia aqui nunca gerou comissao de verdade). O programa de
+    // afiliados deles so gera link via painel manual, sem API oficial
+    // equivalente a Lomadee.
     {
       siteId: 'mercado-livre',
       name: 'Mercado Livre',
-      params: { af_id: 'aceitatempo' },
-      active: true,
+      active: false,
     },
     {
       siteId: 'instant-gaming',
@@ -36,14 +35,31 @@
       active: true,
       storeUrl: 'https://www.instant-gaming.com/br/',
     },
+    // Lojas abaixo nao tem parametro de afiliado simples: o link e gerado
+    // sob demanda pelo proxy AceitaTempoAPI (guarda a chave da Lomadee no
+    // servidor, ver https://github.com/Ddiidev/AceitaTempoAPI).
+    {
+      siteId: 'shopee',
+      name: 'Shopee',
+      lomadee: true,
+      active: true,
+    },
+    {
+      siteId: 'shein',
+      name: 'SHEIN',
+      lomadee: true,
+      active: true,
+    },
+    {
+      siteId: 'terabyte',
+      name: 'Terabyte',
+      lomadee: true,
+      active: true,
+    },
+    // Casas Bahia e Americanas ainda nao estao aprovadas na conta Lomadee
+    // usada pelo proxy (verificado 2026-08-25). Adicionar aqui com
+    // lomadee: true assim que aparecerem em GET /affiliate/brands.
   ];
-
-  // TODO: Lomadee integration for Casas Bahia and Americanas.
-  // These stores require API calls to generate deep links.
-  // When Lomadee sourceId/advertiserId are available, add:
-  //   { siteId: 'casas-bahia', name: 'Casas Bahia', params: { ... } }
-  //   { siteId: 'americanas', name: 'Americanas', params: { ... } }
-  // And update buildAffiliateUrl to handle the Lomadee redirect flow.
 
   const AFFILIATE_STORE_IDS = AFFILIATE_STORES.map((store) => store.siteId);
   const ACTIVE_AFFILIATE_STORE_IDS = AFFILIATE_STORES.filter((store) => store.active !== false).map((store) => store.siteId);
@@ -59,7 +75,7 @@
 
   function buildAffiliateUrl(href, siteId) {
     const store = getAffiliateStore(siteId);
-    if (!store) {
+    if (!store || !store.params) {
       return href;
     }
 
@@ -76,6 +92,53 @@
     }
   }
 
+  function requestLomadeeLink(siteId) {
+    return new Promise((resolve) => {
+      if (!globalObj.chrome?.runtime?.sendMessage) {
+        resolve(null);
+        return;
+      }
+
+      let settled = false;
+      const finish = (value) => {
+        if (settled) {
+          return;
+        }
+        settled = true;
+        resolve(value);
+      };
+
+      const timer = globalObj.setTimeout(() => finish(null), LOMADEE_LINK_TIMEOUT_MS);
+
+      try {
+        globalObj.chrome.runtime.sendMessage(
+          { type: 'aceitaTempo:getLomadeeLink', store: siteId },
+          (response) => {
+            globalObj.clearTimeout(timer);
+            finish(response?.ok ? response.url : null);
+          }
+        );
+      } catch {
+        globalObj.clearTimeout(timer);
+        finish(null);
+      }
+    });
+  }
+
+  async function getAffiliateRedirectUrl(href, siteId) {
+    const store = getAffiliateStore(siteId);
+    if (!store) {
+      return href;
+    }
+
+    if (store.lomadee) {
+      const url = await requestLomadeeLink(siteId);
+      return url || href;
+    }
+
+    return buildAffiliateUrl(href, siteId);
+  }
+
   globalObj.AceitaTempoAffiliate = {
     AFFILIATE_STORES,
     AFFILIATE_STORE_IDS,
@@ -83,5 +146,6 @@
     getAffiliateStore,
     hasAffiliate,
     buildAffiliateUrl,
+    getAffiliateRedirectUrl,
   };
 })();

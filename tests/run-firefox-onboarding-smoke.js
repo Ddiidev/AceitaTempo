@@ -268,7 +268,7 @@ async function runOnboardingPageWithFirefoxBrowserNamespace(browser) {
   );
   assert.deepStrictEqual(
     affiliateStoreIds,
-    ['amazon', 'instant-gaming', 'mercado-livre'],
+    ['amazon', 'instant-gaming', 'shein', 'shopee', 'terabyte'],
     'Firefox onboarding should expose only active affiliate stores'
   );
   assert.strictEqual(

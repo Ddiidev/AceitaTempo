@@ -25,6 +25,7 @@ const STORAGE_KEYS = Object.keys(DEFAULT_SETTINGS);
 const EXCHANGE_ALARM = "aceita-tempo-refresh-exchange-rate";
 const EXCHANGE_CACHE_TTL_MS = 12 * 60 * 60 * 1000;
 const EXCHANGE_ENDPOINT = "https://open.er-api.com/v6/latest/USD";
+const LOMADEE_LINK_ENDPOINT = "https://aceitatempoapi.netlify.app/api/lomadee-link";
 const EXTENSION_API = typeof browser !== "undefined" ? browser : chrome;
 const USES_BROWSER_PROMISE_API = typeof browser !== "undefined";
 
@@ -146,6 +147,24 @@ async function fetchUsdToBrlRate() {
   return rate;
 }
 
+async function fetchLomadeeAffiliateUrl(store) {
+  const url = new URL(LOMADEE_LINK_ENDPOINT);
+  url.searchParams.set("store", String(store || ""));
+
+  const response = await fetch(url.toString(), {
+    cache: "no-store",
+    headers: { Accept: "application/json" },
+  });
+
+  const payload = await response.json().catch(() => null);
+
+  if (!response.ok || !payload?.ok || typeof payload.url !== "string") {
+    throw new Error(payload?.error || `Lomadee link request failed with status ${response.status}`);
+  }
+
+  return payload.url;
+}
+
 async function refreshExchangeRate({ force = false } = {}) {
   const settings = await getSettings();
 
@@ -247,6 +266,19 @@ EXTENSION_API.runtime.onMessage.addListener((message, _sender, sendResponse) => 
   if (message.type === "aceitaTempo:refreshExchangeRate") {
     const response = refreshExchangeRate({ force: true })
       .then((result) => result)
+      .catch((error) => ({ ok: false, error: error.message }));
+
+    if (USES_BROWSER_PROMISE_API) {
+      return response;
+    }
+
+    response.then(sendResponse);
+    return true;
+  }
+
+  if (message.type === "aceitaTempo:getLomadeeLink") {
+    const response = fetchLomadeeAffiliateUrl(message.store)
+      .then((url) => ({ ok: true, url }))
       .catch((error) => ({ ok: false, error: error.message }));
 
     if (USES_BROWSER_PROMISE_API) {
