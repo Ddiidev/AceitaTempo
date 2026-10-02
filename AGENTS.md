@@ -42,6 +42,8 @@
   - Script carregado antes do script inline em cada página; aplica traduções no `DOMContentLoaded`.
   - Validação de chaves: todas as chaves `data-i18n` das 3 páginas existem em ambos os dicionários.
 
+- **Landing page simplificada** (2026-10): abertura curta com instalação e captura real, três passos sem cards, personalização e lojas adicionais em `<details>` nativos, e resumo de privacidade com link para a política completa. Preserve essa hierarquia enxuta e mantenha o texto de `docs/index.html` alinhado aos dicionários PT-BR/EN.
+
 ## Regras globais
 
 - **Nunca** adicionar Codex como co-author em commits.
