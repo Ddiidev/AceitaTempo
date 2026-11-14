@@ -18,6 +18,7 @@
 ## Features implementadas
 
 - **Conversão preço → tempo** (core): badge com tempo de trabalho ao lado de cada preço.
+  - Em `timeDisplayMode = period` e `salaryPeriod = monthly`, restos de pelo menos meia semana são arredondados pela razão de quatro semanas por período; restos menores preservam a formatação configurada.
 - **Saldo restante do período** (Issue #15): tooltip mostra quanto do período ainda sobra após a compra.
 - **Percentual do salário** (Issue #12): tooltip mostra quanto o produto representa do salário do período (ex.: "10% do seu salário"). Aparece **somente no tooltip**, nunca no badge. Controlado pelo toggle `showSalaryPercent` nas configurações (ligado por padrão). Não aparece no modo `wageMode = hourly`.
   - Função: `PriceUtils.calculateSalaryPercentage(convertedPrice, settings)` em `src/price-utils.js`.

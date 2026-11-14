@@ -405,10 +405,6 @@
     const fullPeriods = Math.floor(totalMinutes / periodMinutes);
     let remainderMinutes = totalMinutes - (fullPeriods * periodMinutes);
     const period = normalizeSalaryPeriod(settings);
-    const scale = getDurationScale(settings);
-    const dayMinutes = scale.hoursPerDay * 60;
-    const monthMinutes = scale.daysPerMonth * dayMinutes;
-    const yearMinutes = scale.daysPerYear * dayMinutes;
     const isPt = /^pt/i.test(locale || '');
 
     const formatCompact = (shortValue, longValue) => ({
@@ -421,9 +417,21 @@
       return rounded ? rounded.short.replace(/^~/, '') : '';
     };
 
+    const monthlyRemainderWeeks = (minutes) => Math.round((minutes / periodMinutes) * 4);
+    const formatMonthlyRemainder = (minutes) => {
+      const weeks = monthlyRemainderWeeks(minutes);
+      if (weeks > 0) {
+        return `${weeks} ${getPeriodUnitLabel('weekly', locale, weeks)}`;
+      }
+
+      return formatMonthRemainder(minutes);
+    };
+
     if (period === 'monthly') {
       let months = fullPeriods;
-      if (remainderMinutes >= (monthMinutes - dayMinutes)) {
+      // Keep week remainders proportional to a monthly salary period (four weeks).
+      const remainderWeeks = monthlyRemainderWeeks(remainderMinutes);
+      if (months > 0 && remainderWeeks >= 4) {
         months += 1;
         remainderMinutes = 0;
       }
@@ -438,7 +446,7 @@
             `${years} ${years === 1 ? (isPt ? 'ano' : 'year') : (isPt ? 'anos' : 'years')} e ${remMonths} ${remMonths === 1 ? (isPt ? 'mês' : 'month') : (isPt ? 'meses' : 'months')}`
           );
         }
-        const remainderText = remainderMinutes > 0 ? formatMonthRemainder(remainderMinutes, 1) : '';
+        const remainderText = remainderMinutes > 0 ? formatMonthlyRemainder(remainderMinutes) : '';
         if (remainderText) {
           return formatCompact(
             `${primary} e ${remainderText}`,
@@ -448,7 +456,7 @@
         return formatCompact(primary, primary);
       }
 
-      const remainderText = remainderMinutes > 0 ? formatMonthRemainder(remainderMinutes, months > 0 ? 1 : 2) : '';
+      const remainderText = remainderMinutes > 0 ? formatMonthlyRemainder(remainderMinutes) : '';
       const primary = `${months} ${months === 1 ? (isPt ? 'mês' : 'month') : (isPt ? 'meses' : 'months')}`;
       if (months > 0 && remainderText) {
         return formatCompact(`${primary} e ${remainderText}`, `${months} ${months === 1 ? (isPt ? 'mês' : 'month') : (isPt ? 'meses' : 'months')} e ${remainderText}`);
