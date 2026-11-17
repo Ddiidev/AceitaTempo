@@ -450,13 +450,13 @@
     "message": "How the support suggestion looks"
   },
   "onboardingToastPreviewBody": {
-    "message": "When you hover over a product work-time badge, we may show a discreet invite to reopen that page with our affiliate tag. It only shows if you leave it enabled."
+    "message": "After 15 seconds of continuous interaction with a product badge or tooltip, we may show an invite to reopen the page with our affiliate tag. It only shows if you leave it enabled."
   },
   "onboardingToastPreviewPerProduct": {
-    "message": "Per product. Each item gets its own invite, so you only see it when it actually matters."
+    "message": "The timer is canceled if you leave the badge and tooltip before 15 seconds."
   },
   "onboardingToastPreviewFrequency": {
-    "message": "It is not a recurring notification. The invite shows once per product in the same tab. If you reload the page, it will not show again automatically."
+    "message": "The invite appears at most once every 7 days across all stores and tabs. Dismissing it pauses suggestions for 30 days."
   },
   "onboardingToastPreviewCaption": {
     "message": "Example of the invite shown on product pages"

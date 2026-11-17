@@ -45,6 +45,8 @@
     'socialReflectionEnabled',
     'socialMonetaryOptIn',
     'easterEggJuliusEnabled',
+    'affiliateEnabled',
+    'affiliateDisabledStores',
     'language',
   ];
   const GENERIC_SCOPE_SELECTORS = SiteConfig.productScopeSelectors || [];
@@ -72,9 +74,9 @@
     targetToBadge: new WeakMap(),
     easterEggCounter: 0,
     easterEggTriggered: false,
-    badgeHovered: false,
-    affiliateToastShownFor: null,
+    affiliateInteractionActive: false,
     affiliateToastTimer: null,
+    affiliateToastLeaveTimer: null,
   };
   let popupMessageListenerBound = false;
 
@@ -352,7 +354,7 @@
         -webkit-backdrop-filter: blur(18px);
         font: 600 13px/1.45 Aptos, "Segoe UI Variable Display", "Trebuchet MS", sans-serif;
         letter-spacing: 0;
-        pointer-events: none;
+        pointer-events: auto;
         opacity: 0;
         visibility: hidden;
         transform: translate3d(0, 6px, 0) scale(0.985);
@@ -1338,6 +1340,10 @@
     tooltip.setAttribute(TOOLTIP_ATTR, '1');
     tooltip.setAttribute('role', 'tooltip');
     tooltip.setAttribute('aria-hidden', 'true');
+    tooltip.addEventListener('pointerenter', beginAffiliateInteraction);
+    tooltip.addEventListener('mouseenter', beginAffiliateInteraction);
+    tooltip.addEventListener('pointerleave', scheduleAffiliateInteractionEnd);
+    tooltip.addEventListener('mouseleave', scheduleAffiliateInteractionEnd);
 
     const mountPoint = document.body || document.documentElement;
     mountPoint.appendChild(tooltip);
@@ -1369,7 +1375,10 @@
     appendTextBlock('aceita-tempo-tooltip__balance', model?.balance || '');
   }
 
-  function hideTooltip() {
+  function hideTooltip(options = {}) {
+    if (!options.preserveAffiliateInteraction) {
+      endAffiliateInteraction();
+    }
     const tooltip = state.tooltipElement;
     state.tooltipAnchor = null;
 
@@ -1420,13 +1429,15 @@
     tooltip.style.top = `${Math.round(top)}px`;
   }
 
-  function showTooltip(anchor, model) {
+  function showTooltip(anchor, model, affiliateInteraction = false) {
     if (!anchor || !model) {
       hideTooltip();
       return;
     }
 
-    state.badgeHovered = true;
+    if (affiliateInteraction) {
+      beginAffiliateInteraction();
+    }
 
     const tooltip = getTooltipElement();
     if (typeof maybeShowAffiliateToast === 'function') {
@@ -1630,15 +1641,15 @@
 
     if (tooltipModel) {
       badge._tooltipModel = tooltipModel;
-      const enterHandler = () => showTooltip(badge, badge._tooltipModel);
-      const leaveHandler = hideTooltip;
+      const enterHandler = () => showTooltip(badge, badge._tooltipModel, true);
+      const leaveHandler = scheduleAffiliateInteractionEnd;
       badge.addEventListener('pointerenter', enterHandler);
       badge.addEventListener('mouseenter', enterHandler);
       badge.addEventListener('pointerleave', leaveHandler);
       badge.addEventListener('mouseleave', leaveHandler);
-      badge.addEventListener('pointercancel', hideTooltip);
-      badge.addEventListener('focus', enterHandler);
-      badge.addEventListener('blur', leaveHandler);
+      badge.addEventListener('pointercancel', () => hideTooltip());
+      badge.addEventListener('focus', () => showTooltip(badge, badge._tooltipModel, true));
+      badge.addEventListener('blur', () => hideTooltip());
     }
 
     return badge;
@@ -2004,33 +2015,61 @@
   const Affiliate = globalObj.AceitaTempoAffiliate;
   const AFFILIATE_TOAST_ID = 'aceita-tempo-affiliate-toast';
   const AFFILIATE_TOAST_STYLE_ID = 'aceita-tempo-affiliate-toast-style';
-  const AFFILIATE_TRIGGER_DELAY_MS = 4000;
+  const AFFILIATE_TRIGGER_DELAY_MS = 15_000;
+  const AFFILIATE_INTERACTION_LEAVE_GRACE_MS = 250;
 
-  function getAffiliateProductId() {
-    const path = String(location.pathname || '');
-    const segments = path.split('/').filter(Boolean);
-    return segments.slice(-2).join('/') || path || 'product';
+  function sendAffiliateToastRequest(type) {
+    return new Promise((resolve) => {
+      try {
+        if (!chrome.runtime?.sendMessage) {
+          resolve(null);
+          return;
+        }
+        let settled = false;
+        const finish = (response) => {
+          if (settled) return;
+          settled = true;
+          resolve(response || null);
+        };
+        const result = chrome.runtime.sendMessage({ type }, finish);
+        if (result && typeof result.then === 'function') {
+          result.then(finish).catch(() => finish(null));
+        }
+      } catch {
+        resolve(null);
+      }
+    });
   }
 
-  function affiliateToastAlreadyShown() {
-    try {
-      const siteId = state.siteConfig?.siteId || 'unknown';
-      const productId = getAffiliateProductId();
-      const key = `aceitaTempo_affiliate_toast_${siteId}_${productId}`;
-      return sessionStorage.getItem(key) === '1';
-    } catch {
-      return false;
+  function beginAffiliateInteraction() {
+    if (state.affiliateToastLeaveTimer) {
+      window.clearTimeout(state.affiliateToastLeaveTimer);
+      state.affiliateToastLeaveTimer = null;
     }
+    state.affiliateInteractionActive = true;
+    maybeShowAffiliateToast();
   }
 
-  function markAffiliateToastShown() {
-    try {
-      const siteId = state.siteConfig?.siteId || 'unknown';
-      const productId = getAffiliateProductId();
-      const key = `aceitaTempo_affiliate_toast_${siteId}_${productId}`;
-      sessionStorage.setItem(key, '1');
-    } catch {
-      // ignore
+  function scheduleAffiliateInteractionEnd() {
+    if (state.affiliateToastLeaveTimer) {
+      window.clearTimeout(state.affiliateToastLeaveTimer);
+    }
+    state.affiliateToastLeaveTimer = window.setTimeout(() => {
+      state.affiliateToastLeaveTimer = null;
+      endAffiliateInteraction();
+      hideTooltip({ preserveAffiliateInteraction: true });
+    }, AFFILIATE_INTERACTION_LEAVE_GRACE_MS);
+  }
+
+  function endAffiliateInteraction() {
+    state.affiliateInteractionActive = false;
+    if (state.affiliateToastLeaveTimer) {
+      window.clearTimeout(state.affiliateToastLeaveTimer);
+      state.affiliateToastLeaveTimer = null;
+    }
+    if (state.affiliateToastTimer) {
+      window.clearTimeout(state.affiliateToastTimer);
+      state.affiliateToastTimer = null;
     }
   }
 
@@ -2182,7 +2221,6 @@
       }
 
       if (url && url !== location.href) {
-        markAffiliateToastShown();
         window.location.assign(url);
         return;
       }
@@ -2196,7 +2234,7 @@
     dismissBtn.type = 'button';
     dismissBtn.textContent = getAffiliateToastMessage('affiliateToastDismiss');
     dismissBtn.addEventListener('click', () => {
-      markAffiliateToastShown();
+      void sendAffiliateToastRequest('aceitaTempo:affiliateToast:dismiss');
       removeAffiliateToast();
     });
 
@@ -2211,7 +2249,7 @@
     settingsLink.textContent = getAffiliateToastMessage('affiliateToastSettings');
     settingsLink.addEventListener('click', (event) => {
       event.preventDefault();
-      markAffiliateToastShown();
+      void sendAffiliateToastRequest('aceitaTempo:affiliateToast:dismiss');
      try {
       const optionsUrl = chrome.runtime?.getURL?.('options.html#affiliate-section');
        if (optionsUrl) window.open(optionsUrl, '_blank', 'noopener');
@@ -2245,27 +2283,22 @@
   }
 
   function maybeShowAffiliateToast() {
-    if (!isAffiliateEligibleForCurrentPage() || affiliateToastAlreadyShown()) {
+    if (!state.affiliateInteractionActive || !isAffiliateEligibleForCurrentPage()) {
       if (state.affiliateToastTimer) {
         window.clearTimeout(state.affiliateToastTimer);
         state.affiliateToastTimer = null;
       }
       return;
     }
-    if (!state.badgeHovered) {
-      return;
-    }
+    if (state.affiliateToastTimer) return;
 
-    if (state.affiliateToastTimer) {
-      return;
-    }
-
-    state.affiliateToastTimer = window.setTimeout(() => {
+    state.affiliateToastTimer = window.setTimeout(async () => {
       state.affiliateToastTimer = null;
-      if (!isAffiliateEligibleForCurrentPage() || affiliateToastAlreadyShown()) {
-        return;
+      if (!state.affiliateInteractionActive || !isAffiliateEligibleForCurrentPage()) return;
+      const response = await sendAffiliateToastRequest('aceitaTempo:affiliateToast:claim');
+      if (response?.allowed === true && state.affiliateInteractionActive && isAffiliateEligibleForCurrentPage()) {
+        showAffiliateToast();
       }
-      showAffiliateToast();
     }, AFFILIATE_TRIGGER_DELAY_MS);
   }
 

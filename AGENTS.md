@@ -27,13 +27,13 @@
 
 - **Monetização por afiliação + doação Pix** (2026-06): receita não-intrusiva e transparente.
   - Onboarding pós-instalação (`onboarding.html`): aberta na 1ª instalação (flag `onboardingSeen` em storage sync). Explica a extensão, a afiliação transparente e mostra QR Code Pix grande (`pix-qrcode.png`) + email `contato@devtu.qzz.io`. **Sem** configuração de provedores aqui.
-  - Toast de afiliado (`src/content.js`): em páginas de produto (kind commerce, não carrinho/checkout) após 4s **e** após o usuário passar o mouse sobre um badge/tooltip do AceitaTempo (`state.badgeHovered` setado em `showTooltip`). Botão "Apoiar com este link" redireciona (clique real do usuário, respeita TOS Amazon) via `AceitaTempoAffiliate.buildAffiliateUrl(location.href, siteId)`. Throttle uma vez por produto/sessão/aba via `sessionStorage` (`aceitaTempo_affiliate_toast_<siteId>_<productId>`). Link "Desativar nas configurações" no rodapé em itálico.
+  - Toast de afiliado (`src/content.js`): em páginas de produto (kind commerce, não carrinho/checkout) após 15s de interação contínua com badge/tooltip; sair cancela a contagem (há tolerância de 250ms para atravessar do badge ao tooltip). O service worker (`background.js`) limita a uma exibição global a cada 7 dias em todas as lojas/abas; dispensar aplica pausa global de 30 dias, ambos em `chrome.storage.local`. O botão "Apoiar com este link" só redireciona após clique explícito, via `AceitaTempoAffiliate.getAffiliateRedirectUrl(location.href, siteId)`. Link "Desativar nas configurações" no rodapé em itálico.
   - Settings (`options.html`/`options.js`): seção "Apoiar o projeto" com switch master "Tudo" (`affiliateEnabled`) + mini QR Code ao lado (hover → tooltip com QR maior + email) + lista de provedores com afiliado (`affiliateDisabledStores`, granular por siteId). Provedores sem afiliado (Steam, GOG, Epic) **não aparecem** na lista.
   - Módulo `src/affiliate.js`: `AFFILIATE_STORES` (siteId + params por loja), `buildAffiliateUrl(href, siteId)`, `hasAffiliate(siteId)`. Carregado em content scripts (manifest) e em options (para filtrar COMMERCE_SITE_CONFIGS).
   - Keys de storage dedicadas (`affiliateEnabled`, `affiliateDisabledStores`) separadas de `disabledSiteNames` (core). Defaults em `background.js`, `popup.js`, `options.js` e `src/content.js` (`normalizeSettings`).
   - i18n: chaves `onboarding*`, `affiliate*`, `affiliateToast*`, `affiliatePixEmail`, `affiliateDisclaimer` em `_locales/pt_BR` e `_locales/en`.
-  - Lojas com afiliado ativo nesta versão: Amazon (`tag=aceitatempo-20`), Mercado Livre (`af_id=aceitatempo`) e Instant Gaming (`igr=aceitatempo`). Esses códigos são reais.
-  - AliExpress e Shopee ficam cadastrados em `src/affiliate.js`, mas com `active: false` até existir API/deeplink oficial adequado para geração sob demanda.
+  - Lojas ativas e métodos de geração são definidos em `src/affiliate.js`: Amazon e Instant Gaming usam parâmetros diretos; Shopee, SHEIN e Terabyte usam geração Lomadee.
+  - AliExpress e Mercado Livre ficam com `active: false`; Mercado Livre não possui um parâmetro de URL de autoatribuição eficaz nesta integração.
   - Links de cadastro nos programas: `.plans/20260626-143200-a1b2c3-monetizacao-afiliacao-pix/afiliados-links.md`.
 
 - **i18n da landing page/docs** (2026-07): seletor manual de idioma nas páginas `docs/` (index, support, privacy-policy).

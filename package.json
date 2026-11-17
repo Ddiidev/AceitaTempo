@@ -10,6 +10,7 @@
     "smoke:aliexpress": "node tests/run-aliexpress-fixture.js",
     "smoke:amazon": "node tests/run-amazon-fixture.js",
     "smoke:games": "node tests/run-game-stores-fixture.js",
+    "smoke:affiliate-toast": "node tests/run-affiliate-toast-smoke.js",
     "smoke:sites": "node tests/run-sites-smoke.js",
     "smoke:cart": "node tests/run-cart-smoke.js",
     "smoke:social": "node tests/run-social-smoke.js",

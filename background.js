@@ -24,10 +24,51 @@ const DEFAULT_SETTINGS = {
 const STORAGE_KEYS = Object.keys(DEFAULT_SETTINGS);
 const EXCHANGE_ALARM = "aceita-tempo-refresh-exchange-rate";
 const EXCHANGE_CACHE_TTL_MS = 12 * 60 * 60 * 1000;
+const AFFILIATE_TOAST_LAST_SHOWN_KEY = "affiliateToastLastShownAt";
+const AFFILIATE_TOAST_DISMISSED_UNTIL_KEY = "affiliateToastDismissedUntil";
+const AFFILIATE_TOAST_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000;
+const AFFILIATE_TOAST_DISMISSAL_MS = 30 * 24 * 60 * 60 * 1000;
 const EXCHANGE_ENDPOINT = "https://open.er-api.com/v6/latest/USD";
 const LOMADEE_LINK_ENDPOINT = "https://aceitatempoapi.netlify.app/api/lomadee-link";
 const EXTENSION_API = typeof browser !== "undefined" ? browser : chrome;
 const USES_BROWSER_PROMISE_API = typeof browser !== "undefined";
+let affiliateToastOperationQueue = Promise.resolve();
+
+function handleAffiliateToastRequest(type) {
+  const operation = affiliateToastOperationQueue.then(async () => {
+    const area = EXTENSION_API.storage?.local;
+    if (!area) {
+      return { allowed: false };
+    }
+
+    const now = Date.now();
+    if (type === "aceitaTempo:affiliateToast:dismiss") {
+      await storageSet(area, {
+        [AFFILIATE_TOAST_DISMISSED_UNTIL_KEY]: now + AFFILIATE_TOAST_DISMISSAL_MS,
+      });
+      return { ok: true };
+    }
+
+    if (type !== "aceitaTempo:affiliateToast:claim") {
+      return { allowed: false };
+    }
+
+    const stored = await storageGet(area, [
+      AFFILIATE_TOAST_LAST_SHOWN_KEY,
+      AFFILIATE_TOAST_DISMISSED_UNTIL_KEY,
+    ]);
+    const lastShownAt = Number(stored[AFFILIATE_TOAST_LAST_SHOWN_KEY]) || 0;
+    const dismissedUntil = Number(stored[AFFILIATE_TOAST_DISMISSED_UNTIL_KEY]) || 0;
+    if (now - lastShownAt < AFFILIATE_TOAST_COOLDOWN_MS || now < dismissedUntil) {
+      return { allowed: false };
+    }
+
+    await storageSet(area, { [AFFILIATE_TOAST_LAST_SHOWN_KEY]: now });
+    return { allowed: true };
+  });
+  affiliateToastOperationQueue = operation.catch(() => undefined);
+  return operation;
+}
 
 function getLastRuntimeError() {
   const chromeRuntime = typeof chrome !== "undefined" ? chrome.runtime : null;
@@ -248,6 +289,21 @@ EXTENSION_API.alarms.onAlarm.addListener(async (alarm) => {
 EXTENSION_API.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (!message || typeof message !== "object") {
     return undefined;
+  }
+
+  if (
+    message.type === "aceitaTempo:affiliateToast:claim" ||
+    message.type === "aceitaTempo:affiliateToast:dismiss"
+  ) {
+    const response = handleAffiliateToastRequest(message.type)
+      .catch((error) => ({ allowed: false, error: error.message }));
+
+    if (USES_BROWSER_PROMISE_API) {
+      return response;
+    }
+
+    response.then(sendResponse);
+    return true;
   }
 
   if (message.type === "aceitaTempo:getSettings") {

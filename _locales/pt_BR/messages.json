@@ -450,13 +450,13 @@
     "message": "Como a sugestão de apoio aparece"
   },
   "onboardingToastPreviewBody": {
-    "message": "Quando você passa o mouse sobre o tempo de trabalho de um produto, a gente pode mostrar um convite discreto para reabrir aquela página com a nossa tag de afiliado. Só aparece se você deixar ativado."
+    "message": "Depois de 15 segundos de interação contínua com o badge ou tooltip de um produto, podemos mostrar um convite para reabrir a página com nossa tag de afiliado. Só aparece se você deixar ativado."
   },
   "onboardingToastPreviewPerProduct": {
-    "message": "Aparece por produto. Cada item tem seu próprio convite, então você só vê quando faz sentido."
+    "message": "A contagem é cancelada se você sair do badge e do tooltip antes dos 15 segundos."
   },
   "onboardingToastPreviewFrequency": {
-    "message": "Não é notificação recorrente. O convite aparece uma única vez por produto, dentro da mesma aba. Se você recarregar a página, ele não aparece de novo automaticamente."
+    "message": "O convite aparece no máximo uma vez a cada 7 dias, em todas as lojas e abas. Ao dispensá-lo, ele fica pausado por 30 dias."
   },
   "onboardingToastPreviewCaption": {
     "message": "Exemplo do convite que aparece nas páginas de produto"
